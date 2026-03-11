@@ -1,0 +1,26 @@
+# Segurança 
+.env
+
+# Python
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Banco de Dados - caso usar
+*.sqlite3
+
+#  Docker 
+postgres_data/
+
+# IDEs e Sistema 
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Arquivos de Mídia/Static do Django
+static/
+media/
