@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'mude-isso-no-env-em-producao')
 # Converte o texto 'True' do .env para o valor booleano True do Python
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
