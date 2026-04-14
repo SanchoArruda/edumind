@@ -1,0 +1,160 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dashboard do Administrador - EduMind{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Administrador</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card gradient-1">
+            <div class="card-body">
+                <h3 class="card-title text-white">
+                    Bem-vindo, {{ request.user.nome|default:request.user.username }}
+                </h3>
+                <p class="text-white mb-0">
+                    Gerencie quizzes, disciplinas e acompanhe os dados da plataforma EduMind.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Total de estudantes</h4>
+                <h2>120</h2>
+                <p class="text-muted mb-0">Usuários cadastrados no sistema</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quizzes ativos</h4>
+                <h2>18</h2>
+                <p class="text-muted mb-0">Disponíveis para os estudantes</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Disciplinas</h4>
+                <h2>9</h2>
+                <p class="text-muted mb-0">Cadastradas na plataforma</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Tentativas realizadas</h4>
+                <h2>450</h2>
+                <p class="text-muted mb-0">Respostas registradas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Visão geral da plataforma</h4>
+                <p class="text-muted">
+                    Aqui você poderá acompanhar crescimento de usuários, desempenho geral e uso dos quizzes.
+                </p>
+
+                <div style="height: 280px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
+                    <span class="text-muted">Gráfico administrativo futuramente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Ações rápidas</h4>
+                <div class="list-group mt-3">
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action">
+                        Cadastrar nova disciplina
+                    </a>
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action">
+                        Criar novo quiz
+                    </a>
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action">
+                        Gerenciar questões
+                    </a>
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action">
+                        Visualizar estudantes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Últimos quizzes cadastrados</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Disciplina</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Quiz de Banco de Dados</td>
+                                <td>Banco de Dados</td>
+                                <td><span class="badge badge-success">Ativo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Quiz de Redes</td>
+                                <td>Redes de Computadores</td>
+                                <td><span class="badge badge-success">Ativo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Quiz de Engenharia de Software</td>
+                                <td>Engenharia de Software</td>
+                                <td><span class="badge badge-warning">Rascunho</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Observações administrativas</h4>
+                <ul class="mt-3 pl-3">
+                    <li>Revisar quizzes com baixo índice de acerto</li>
+                    <li>Atualizar disciplinas cadastradas</li>
+                    <li>Monitorar crescimento de usuários</li>
+                    <li>Planejar novos simulados para ENADE e POSCOMP</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

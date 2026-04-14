@@ -1,0 +1,75 @@
+Table usuarios {
+  id int [pk, increment]
+  nome varchar(100) [not null]
+  email varchar(150) [not null, unique]
+  senha varchar(255) [not null]
+  tipo_usuario varchar(20) [not null] // estudante ou administrador
+  semestre int
+  criado_em timestamp
+}
+
+Table disciplinas {
+  id int [pk, increment]
+  nome varchar(100) [not null, unique]
+}
+
+Table quizzes {
+  id int [pk, increment]
+  titulo varchar(150) [not null]
+  descricao text
+  tipo_exame varchar(20) [not null] // ENADE ou POSCOMP
+  disciplina_id int [not null]
+  criado_por int [not null] // administrador
+  criado_em timestamp
+}
+
+Table questoes {
+  id int [pk, increment]
+  quiz_id int [not null]
+  enunciado text [not null]
+  explicacao_resposta text
+}
+
+Table alternativas {
+  id int [pk, increment]
+  questao_id int [not null]
+  texto text [not null]
+  correta boolean [not null]
+}
+
+Table tentativas_quiz {
+  id int [pk, increment]
+  estudante_id int [not null]
+  quiz_id int [not null]
+  data_tentativa timestamp [not null]
+  pontuacao decimal(5,2)
+  quantidade_acertos int
+  quantidade_erros int
+}
+
+Table respostas {
+  id int [pk, increment]
+  tentativa_id int [not null]
+  questao_id int [not null]
+  alternativa_id int [not null]
+  acertou boolean [not null]
+}
+
+Table progresso {
+  id int [pk, increment]
+  estudante_id int [not null, unique]
+  quizzes_realizados int [default: 0]
+  percentual_acertos decimal(5,2) [default: 0]
+  desempenho_geral decimal(5,2) [default: 0]
+}
+
+Ref: quizzes.disciplina_id > disciplinas.id
+Ref: quizzes.criado_por > usuarios.id
+Ref: questoes.quiz_id > quizzes.id
+Ref: alternativas.questao_id > questoes.id
+Ref: tentativas_quiz.estudante_id > usuarios.id
+Ref: tentativas_quiz.quiz_id > quizzes.id
+Ref: respostas.tentativa_id > tentativas_quiz.id
+Ref: respostas.questao_id > questoes.id
+Ref: respostas.alternativa_id > alternativas.id
+Ref: progresso.estudante_id > usuarios.id

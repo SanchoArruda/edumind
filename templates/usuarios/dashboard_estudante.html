@@ -1,0 +1,88 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dashboard do Estudante - EduMind{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Estudante</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card gradient-1">
+            <div class="card-body">
+                <h3 class="card-title text-white">Bem-vindo, {{ request.user.nome|default:request.user.username }}</h3>
+                <p class="text-white mb-0">
+                    Continue sua preparação no EduMind acompanhando quizzes, desempenho e evolução.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quizzes realizados</h4>
+                <h2>12</h2>
+                <p class="text-muted mb-0">Total de quizzes concluídos</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Desempenho médio</h4>
+                <h2>78%</h2>
+                <p class="text-muted mb-0">Aproveitamento geral</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Posição no ranking</h4>
+                <h2>#5</h2>
+                <p class="text-muted mb-0">Colocação atual</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Resumo da sua evolução</h4>
+                <p class="text-muted">
+                    Aqui você poderá visualizar seu progresso por disciplina e acompanhar sua evolução ao longo do
+                    tempo.
+                </p>
+                <div
+                    style="height: 280px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
+                    <span class="text-muted">Gráfico de evolução futuramente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Próximas ações</h4>
+                <ul class="mt-3 pl-3">
+                    <li>Responder quizzes pendentes</li>
+                    <li>Revisar disciplinas com menor desempenho</li>
+                    <li>Acompanhar posição no ranking</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

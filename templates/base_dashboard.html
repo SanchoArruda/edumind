@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}EduMind{% endblock %}</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+
+        <div class="nav-header">
+            <div class="brand-logo">
+                <a href="{% url 'dashboard_estudante' %}">
+                    <b class="logo-abbr">
+                        <img src="{% static 'images/logo-compact.png' %}" alt="Logo">
+                    </b>
+                    <span class="brand-title">
+                        <img src="{% static 'images/logo-text.png' %}" alt="EduMind">
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="header-content clearfix">
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="toggle-icon"><i class="icon-menu"></i></span>
+                    </div>
+                </div>
+
+                <div class="header-left">
+                    <div class="input-group icons">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3">
+                                <i class="mdi mdi-magnify"></i>
+                            </span>
+                        </div>
+                        <input type="search" class="form-control" placeholder="Pesquisar">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <ul class="clearfix">
+                        <li class="icons dropdown">
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                                <span class="activity active"></span>
+                                <img src="{% static 'images/user/1.png' %}" height="40" width="40" alt="">
+                            </div>
+
+                            <div class="drop-down dropdown-profile dropdown-menu">
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0)">
+                                                <i class="icon-user"></i>
+                                                <span>{{ request.user.nome|default:request.user.username }}</span>
+                                            </a>
+                                        </li>
+                                        <hr class="my-2">
+                                        <li>
+                                            <a href="{% url 'logout' %}">
+                                                <i class="icon-key"></i>
+                                                <span>Sair</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="nk-sidebar">
+            <div class="nk-nav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li class="nav-label">Área do estudante</li>
+
+                    <li>
+                        <a href="{% url 'dashboard_estudante' %}">
+                            <i class="icon-speedometer menu-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="icon-book-open menu-icon"></i>
+                            <span class="nav-text">Quizzes</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="icon-chart menu-icon"></i>
+                            <span class="nav-text">Desempenho</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="icon-clock menu-icon"></i>
+                            <span class="nav-text">Histórico</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="icon-trophy menu-icon"></i>
+                            <span class="nav-text">Ranking</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="row page-titles mx-0">
+                <div class="col p-md-0">
+                    {% block breadcrumb %}{% endblock %}
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="copyright">
+                <p>© 2026 EduMind. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'plugins/common/common.min.js' %}"></script>
+    <script src="{% static 'js/custom.min.js' %}"></script>
+    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'js/gleek.js' %}"></script>
+    <script src="{% static 'js/styleSwitcher.js' %}"></script>
+</body>
+</html>

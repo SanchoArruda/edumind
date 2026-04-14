@@ -1,0 +1,99 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Usuario {
+  - id_usuario : int
+  - nome : string
+  - email : string
+  - senha : string
+  - tipo_usuario : string
+  + fazerLogin()
+  + recuperarSenha()
+}
+
+class Estudante {
+  - semestre : int
+  + visualizarQuizzes()
+  + responderQuiz()
+  + visualizarHistorico()
+  + visualizarEvolucao()
+  + visualizarRanking()
+}
+
+class Administrador {
+  + cadastrarQuiz()
+  + editarQuiz()
+  + excluirQuiz()
+  + cadastrarQuestao()
+  + editarQuestao()
+  + excluirQuestao()
+}
+
+class Disciplina {
+  - id_disciplina : int
+  - nome : string
+}
+
+class Quiz {
+  - id_quiz : int
+  - titulo : string
+  - descricao : string
+  - tipo_exame : string
+  + listarQuestoes()
+}
+
+class Questao {
+  - id_questao : int
+  - enunciado : string
+  - explicacao_resposta : string
+  + validarResposta()
+}
+
+class Alternativa {
+  - id_alternativa : int
+  - texto : string
+  - correta : boolean
+}
+
+class TentativaQuiz {
+  - id_tentativa : int
+  - data_tentativa : date
+  - pontuacao : float
+  - quantidade_acertos : int
+  - quantidade_erros : int
+  + calcularResultado()
+}
+
+class Resposta {
+  - id_resposta : int
+  - acertou : boolean
+}
+
+class Progresso {
+  - id_progresso : int
+  - desempenho_geral : float
+  - quizzes_realizados : int
+  - percentual_acertos : float
+  + atualizarProgresso()
+}
+
+Usuario <|-- Estudante
+Usuario <|-- Administrador
+
+Administrador "1" -- "0..*" Quiz : gerencia
+Administrador "1" -- "0..*" Questao : gerencia
+
+Disciplina "1" -- "0..*" Quiz : classifica
+Quiz "1" -- "1..*" Questao : possui
+Questao "1" -- "2..*" Alternativa : possui
+
+Resposta "0..*" -- "1" Alternativa : seleciona
+
+Estudante "1" -- "0..*" TentativaQuiz : realiza
+Quiz "1" -- "0..*" TentativaQuiz : recebe
+
+TentativaQuiz "1" -- "1..*" Resposta : possui
+Questao "1" -- "0..*" Resposta : relaciona
+
+Estudante "1" -- "0..1" Progresso : possui
+@enduml

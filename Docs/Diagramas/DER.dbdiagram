@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "darkMode": true,
+  "gridEnabling": true,
+  "detailLevel": "All",
+  "tablePositions": [
+    {
+      "name": "usuarios",
+      "schemaName": "public",
+      "x": 0,
+      "y": 50
+    },
+    {
+      "name": "assuntos",
+      "schemaName": "public",
+      "x": 300.0517578125,
+      "y": 50
+    },
+    {
+      "name": "quizzes",
+      "schemaName": "public",
+      "x": 608,
+      "y": 0
+    },
+    {
+      "name": "questoes",
+      "schemaName": "public",
+      "x": 895.9150390625,
+      "y": 50
+    },
+    {
+      "name": "alternativas",
+      "schemaName": "public",
+      "x": 0,
+      "y": 356
+    },
+    {
+      "name": "tentativas_quiz",
+      "schemaName": "public",
+      "x": 300.0517578125,
+      "y": 196
+    },
+    {
+      "name": "respostas",
+      "schemaName": "public",
+      "x": 601.6904296875,
+      "y": 356
+    },
+    {
+      "name": "progresso",
+      "schemaName": "public",
+      "x": 895.9150390625,
+      "y": 260
+    }
+  ],
+  "tableGroupCollapseStates": [],
+  "stickyNoteLayouts": [],
+  "referencePaths": []
+}

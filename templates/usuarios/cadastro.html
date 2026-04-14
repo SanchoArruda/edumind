@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMind - Cadastro</title>
+
+    <link rel="icon" type="image/png" href="{% static 'images/logo-compact.png' %}">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/cadastro.css' %}" rel="stylesheet">
+</head>
+<body>
+
+    <main class="register-page">
+        <div class="register-wrapper">
+            <div class="register-brand">
+                <div class="brand-icon">
+                    <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
+                </div>
+                <h1>Edu<span>Mind</span></h1>
+            </div>
+
+            <div class="register-box">
+                <h2>Criar conta</h2>
+                <p class="register-subtitle">
+                    Cadastre-se como estudante para começar a estudar.
+                </p>
+
+                <form method="post" class="register-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-3">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.nome.id_for_label }}">Nome completo</label>
+                        {{ form.nome }}
+                        {% for error in form.nome.errors %}
+                            <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.email.id_for_label }}">E-mail</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                            <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.password.id_for_label }}">Senha</label>
+                        {{ form.password }}
+                        {% for error in form.password.errors %}
+                            <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.confirmar_password.id_for_label }}">Confirmar senha</label>
+                        {{ form.confirmar_password }}
+                        {% for error in form.confirmar_password.errors %}
+                            <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.semestre.id_for_label }}">Semestre</label>
+                        {{ form.semestre }}
+                        {% for error in form.semestre.errors %}
+                            <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.username.id_for_label }}">Nome de usuário</label>
+                        {{ form.username }}
+                        {% for error in form.username.errors %}
+                            <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn-register">
+                        Criar conta
+                    </button>
+                </form>
+
+                <p class="login-link">
+                    Já tem uma conta?
+                    <a href="{% url 'login' %}">Fazer login</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'plugins/common/common.min.js' %}"></script>
+    <script src="{% static 'js/custom.min.js' %}"></script>
+    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'js/gleek.js' %}"></script>
+    <script src="{% static 'js/styleSwitcher.js' %}"></script>
+</body>
+</html>
