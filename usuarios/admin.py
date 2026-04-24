@@ -1,55 +1,24 @@
 from django.contrib import admin
-from .models import Usuario, Estudante, Administrador
+from django.contrib.auth.admin import UserAdmin
+from .models import Usuario, TipoUsuario
 
+@admin.register(TipoUsuario)
+class TipoUsuarioAdmin(admin.ModelAdmin):
+    list_display = ("id", "perfil")
+    search_fields = ("perfil",)
 
 @admin.register(Usuario)
-class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ("id", "nome", "email", "tipo_usuario", "is_active")
-    list_display_links = ("id", "nome")
-    search_fields = ("nome", "email")
-    list_filter = ("tipo_usuario", "is_active")
-    ordering = ("nome",)
-    list_per_page = 20
+class UsuarioAdmin(UserAdmin):
+    model = Usuario
 
-    fieldsets = (
-        ("Informações principais", {
-            "fields": ("nome", "email", "username", "password", "tipo_usuario")
-        }),
-        ("Status", {
-            "fields": ("is_active", "is_staff", "is_superuser")
-        }),
-        ("Datas e permissões", {
-            "fields": ("last_login", "date_joined", "criado_em", "groups", "user_permissions"),
-            "classes": ("collapse",)
+    list_display = ("id", "username", "nome", "email", "tipo_usuario", "is_staff", "is_active")
+    search_fields = ("username", "nome", "email")
+    list_filter = ("tipo_usuario", "is_staff", "is_active")
+
+    fieldsets = UserAdmin.fieldsets + (
+        ("Dados do EduMind", {
+            "fields": ("nome", "tipo_usuario", "criado_em")
         }),
     )
 
-    readonly_fields = ("last_login", "date_joined", "criado_em")
-
-
-@admin.register(Estudante)
-class EstudanteAdmin(admin.ModelAdmin):
-    list_display = ("id", "usuario", "semestre")
-    list_display_links = ("id", "usuario")
-    search_fields = ("usuario__nome", "usuario__email")
-    ordering = ("usuario__nome",)
-    list_per_page = 20
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "usuario":
-            kwargs["queryset"] = Usuario.objects.filter(tipo_usuario="estudante")
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-@admin.register(Administrador)
-class AdministradorAdmin(admin.ModelAdmin):
-    list_display = ("id", "usuario")
-    list_display_links = ("id", "usuario")
-    search_fields = ("usuario__nome", "usuario__email")
-    ordering = ("usuario__nome",)
-    list_per_page = 20
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "usuario":
-            kwargs["queryset"] = Usuario.objects.filter(tipo_usuario="administrador")
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    readonly_fields = ("criado_em",)

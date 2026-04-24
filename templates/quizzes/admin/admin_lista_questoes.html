@@ -1,0 +1,85 @@
+{% extends "base/base_admin.html" %}
+
+{% block title %}Questões do Quiz - EduMind{% endblock %}
+
+{% block menu_admin_quizzes %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Questões do Quiz</h1>
+        <p class="text-muted mb-0">
+            {{ quiz.titulo }} · {{ quiz.disciplina.nome }}
+        </p>
+    </div>
+
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+        <a href="{% url 'quizzes:admin_criar_questao' quiz.id %}" class="btn ed-btn-primary px-4 py-3">
+            + Nova Questão
+        </a>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+
+        {% for questao in questoes %}
+            <div class="border rounded p-4 mb-3">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="ed-badge-warning">Questão {{ forloop.counter }}</span>
+                        <h5 class="font-weight-bold mt-3 mb-2">
+                            {{ questao.enunciado }}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    {% for alternativa in questao.alternativas.all %}
+                        <div class="d-flex align-items-center justify-content-between border rounded p-3 mb-2">
+                            <span>
+                                <strong>{{ alternativa.letra }})</strong>
+                                {{ alternativa.texto }}
+                            </span>
+
+                            {% if alternativa.correta %}
+                                <span class="badge badge-success">Correta</span>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">
+                            Nenhuma alternativa cadastrada.
+                        </p>
+                    {% endfor %}
+                </div>
+
+                {% if questao.explicacao_resposta %}
+                    <div class="alert alert-light border mt-3 mb-0">
+                        <strong>Explicação:</strong> {{ questao.explicacao_resposta }}
+                    </div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <div class="text-center py-5">
+                <h5 class="font-weight-bold">Nenhuma questão cadastrada</h5>
+                <p class="text-muted mb-4">
+                    Cadastre questões para que os estudantes possam responder este quiz.
+                </p>
+
+                <a href="{% url 'quizzes:admin_criar_questao' quiz.id %}" class="btn ed-btn-primary px-4 py-3">
+                    + Cadastrar primeira questão
+                </a>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'quizzes:admin_lista_quizzes' %}" class="btn btn-light border px-4 py-3">
+        Voltar para quizzes
+    </a>
+</div>
+
+{% endblock %}

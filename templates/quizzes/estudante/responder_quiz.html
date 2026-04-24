@@ -1,0 +1,77 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Responder Quiz - EduMind{% endblock %}
+
+{% block menu_quizzes %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">{{ quiz.titulo }}</h1>
+        <p class="text-muted mb-0">
+            {{ quiz.disciplina.nome }} · {{ quiz.questoes.count }} questões
+        </p>
+    </div>
+
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+        <a href="{% url 'quizzes:lista_quizzes' %}" class="btn btn-light border">
+            Voltar
+        </a>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% for questao in questoes %}
+        <div class="card ed-card border-0 mb-4">
+            <div class="card-body">
+                <div class="mb-3">
+                    <span class="ed-badge-warning">Questão {{ forloop.counter }}</span>
+                </div>
+
+                <h5 class="font-weight-bold mb-4">
+                    {{ questao.enunciado }}
+                </h5>
+
+                {% for alternativa in questao.alternativas.all %}
+                    <label class="d-block border rounded p-3 mb-2" style="cursor: pointer;">
+                        <input
+                            type="radio"
+                            name="questao_{{ questao.id }}"
+                            value="{{ alternativa.id }}"
+                            class="mr-2"
+                            required
+                        >
+                        <strong>{{ alternativa.letra }})</strong>
+                        {{ alternativa.texto }}
+                    </label>
+                {% empty %}
+                    <p class="text-muted mb-0">
+                        Nenhuma alternativa cadastrada para esta questão.
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="card ed-card border-0">
+            <div class="card-body text-center py-5">
+                <h5 class="font-weight-bold">Nenhuma questão cadastrada</h5>
+                <p class="text-muted mb-0">
+                    Cadastre questões para este quiz no painel administrativo.
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if questoes %}
+        <div class="text-right mb-4">
+            <button type="submit" class="btn ed-btn-primary px-4 py-3">
+                Finalizar Quiz
+            </button>
+        </div>
+    {% endif %}
+</form>
+
+{% endblock %}

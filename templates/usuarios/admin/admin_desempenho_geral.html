@@ -1,0 +1,131 @@
+{% extends "base/base_admin.html" %}
+
+{% block title %}Desempenho Geral - EduMind{% endblock %}
+
+{% block menu_admin_desempenho %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Desempenho Geral</h1>
+        <p class="text-muted mb-0">
+            Visão geral do desempenho dos estudantes na plataforma.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Tentativas concluídas</p>
+                <h3 class="font-weight-bold mb-0">{{ total_tentativas }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Estudantes ativos</p>
+                <h3 class="font-weight-bold mb-0">{{ total_estudantes_ativos }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Taxa média de acerto</p>
+                <h3 class="font-weight-bold mb-0">{{ taxa_media_acerto }}%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Pontuação total</p>
+                <h3 class="font-weight-bold mb-0">{{ pontuacao_total|floatformat:1 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <h4 class="font-weight-bold mb-3">Top 5 estudantes</h4>
+
+                {% if ranking_estudantes %}
+                    {% for estudante in ranking_estudantes %}
+                        <div class="border rounded p-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="font-weight-bold mb-1">
+                                        {{ estudante.usuario__nome|default:estudante.usuario__username }}
+                                    </h6>
+                                    <small class="text-muted d-block">
+                                        Usuário: {{ estudante.usuario__username }}
+                                    </small>
+                                    <small class="text-muted d-block">
+                                        Tentativas: {{ estudante.total_tentativas }}
+                                    </small>
+                                    <small class="text-muted d-block">
+                                        Acertos: {{ estudante.total_acertos }} | Erros: {{ estudante.total_erros }}
+                                    </small>
+                                </div>
+
+                                <span class="badge badge-light border p-2">
+                                    {{ estudante.total_pontos|floatformat:1 }} pts
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted mb-0">Ainda não há dados de desempenho.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <h4 class="font-weight-bold mb-3">Quizzes mais respondidos</h4>
+
+                {% if quizzes_populares %}
+                    {% for quiz in quizzes_populares %}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="font-weight-bold mb-1">
+                                {{ quiz.quiz__titulo }}
+                            </h6>
+
+                            <small class="text-muted d-block">
+                                Disciplina: {{ quiz.quiz__disciplina__nome }}
+                            </small>
+
+                            <small class="text-muted d-block">
+                                Tentativas: {{ quiz.total_tentativas }}
+                            </small>
+
+                            <small class="text-muted d-block">
+                                Média de pontos: {{ quiz.media_pontos|floatformat:1 }}
+                            </small>
+
+                            <small class="text-muted d-block">
+                                Média de acertos: {{ quiz.media_acertos|floatformat:1 }}
+                            </small>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted mb-0">Nenhum quiz respondido ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

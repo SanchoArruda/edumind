@@ -1,0 +1,69 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Resultado do Quiz - EduMind{% endblock %}
+
+{% block menu_quizzes %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Resultado do Quiz</h1>
+        <p class="text-muted mb-0">
+            {{ tentativa.quiz.titulo }} · {{ tentativa.quiz.disciplina.nome }}
+        </p>
+    </div>
+
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+        <a href="{% url 'quizzes:lista_quizzes' %}" class="btn btn-light border">
+            Voltar para quizzes
+        </a>
+    </div>
+</div>
+
+<div class="card ed-card border-0 mb-4">
+    <div class="card-body text-center py-5">
+        <h2 class="font-weight-bold mb-2">
+            {{ tentativa.percentual_acertos }}%
+        </h2>
+
+        <p class="text-muted mb-4">
+            {{ tentativa.desempenho_geral }}
+        </p>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="border rounded p-4">
+                    <p class="text-muted mb-1">Pontuação</p>
+                    <h3 class="font-weight-bold mb-0">{{ tentativa.pontuacao }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="border rounded p-4">
+                    <p class="text-muted mb-1">Acertos</p>
+                    <h3 class="font-weight-bold text-success mb-0">{{ tentativa.quantidade_acertos }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="border rounded p-4">
+                    <p class="text-muted mb-1">Erros</p>
+                    <h3 class="font-weight-bold text-danger mb-0">{{ tentativa.quantidade_erros }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{% url 'quizzes:responder_quiz' tentativa.quiz.id %}" class="btn ed-btn-primary px-4 py-3 mr-2">
+                Tentar novamente
+            </a>
+
+            <a href="{% url 'dashboard_estudante' %}" class="btn btn-light border px-4 py-3">
+                Ir para dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

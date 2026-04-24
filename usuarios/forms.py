@@ -11,6 +11,7 @@ class LoginForm(AuthenticationForm):
             "placeholder": "Digite seu usuário"
         })
     )
+
     password = forms.CharField(
         label="Senha",
         widget=forms.PasswordInput(attrs={
@@ -28,18 +29,12 @@ class CadastroEstudanteForm(forms.ModelForm):
             "placeholder": "Digite sua senha"
         })
     )
+
     confirmar_password = forms.CharField(
         label="Confirmar senha",
         widget=forms.PasswordInput(attrs={
             "class": "form-control",
             "placeholder": "Confirme sua senha"
-        })
-    )
-    semestre = forms.IntegerField(
-        label="Semestre",
-        widget=forms.NumberInput(attrs={
-            "class": "form-control",
-            "placeholder": "Digite seu semestre"
         })
     )
 
@@ -63,14 +58,18 @@ class CadastroEstudanteForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
+
         if Usuario.objects.filter(email=email).exists():
             raise forms.ValidationError("Já existe um usuário com este e-mail.")
+
         return email
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+
         if Usuario.objects.filter(username=username).exists():
             raise forms.ValidationError("Já existe um usuário com este nome de usuário.")
+
         return username
 
     def clean(self):
@@ -82,3 +81,15 @@ class CadastroEstudanteForm(forms.ModelForm):
             raise forms.ValidationError("As senhas não coincidem.")
 
         return cleaned_data
+    
+
+class UsuarioAdminForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ["nome", "username", "email", "is_active"]
+        widgets = {
+            "nome": forms.TextInput(attrs={"class": "form-control"}),
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }

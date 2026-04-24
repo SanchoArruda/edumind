@@ -1,0 +1,48 @@
+{% extends template_base %}
+
+{% block title %}Meu Perfil - EduMind{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Meu Perfil</h1>
+        <p class="text-muted mb-0">
+            Veja suas informações cadastradas na plataforma.
+        </p>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="text-muted d-block mb-1">Nome</label>
+                <h5 class="font-weight-bold mb-0">
+                    {{ usuario_obj.nome|default:"Não informado" }}
+                </h5>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label class="text-muted d-block mb-1">Usuário</label>
+                <h5 class="font-weight-bold mb-0">
+                    {{ usuario_obj.username }}
+                </h5>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label class="text-muted d-block mb-1">E-mail</label>
+                <h5 class="font-weight-bold mb-0">
+                    {{ usuario_obj.email|default:"Não informado" }}
+                </h5>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label class="text-muted d-block mb-1">Perfil</label>
+                <h5 class="font-weight-bold mb-0">
+                    {{ usuario_obj.tipo_usuario.perfil }}
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

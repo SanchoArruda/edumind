@@ -1,0 +1,62 @@
+{% extends "base/base_admin.html" %}
+
+{% block title %}Gerenciar Quizzes - EduMind{% endblock %}
+
+{% block menu_admin_quizzes %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Gerenciar Quizzes</h1>
+        <p class="text-muted mb-0">
+            Cadastre e acompanhe os quizzes disponíveis no sistema.
+        </p>
+    </div>
+
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+        <a href="{% url 'quizzes:admin_criar_quiz' %}" class="btn ed-btn-primary px-4 py-3">
+            + Novo Quiz
+        </a>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Disciplina</th>
+                        <th>Questões</th>
+                        <th class="text-right">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for quiz in quizzes %}
+                        <tr>
+                            <td class="font-weight-bold">{{ quiz.titulo }}</td>
+                            <td>{{ quiz.disciplina.nome }}</td>
+                            <td>{{ quiz.questoes.count }}</td>
+                            <td class="text-right">
+                                <a href="javascript:void(0)" class="btn btn-sm btn-light border">
+                                    Questões
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                Nenhum quiz cadastrado ainda.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'usuarios',
     'disciplinas',
     'quizzes',
-    'desempenho',
 ]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
@@ -130,7 +129,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/staticfiles/'
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STATICFILES_DIRS = [
-os.path.join(BASE_DIR, 'static')
+    BASE_DIR / 'static',
 ]
+
+LOGIN_URL = '/usuarios/login/'
+LOGIN_REDIRECT_URL = '/usuarios/estudante-dashboard/'
+LOGOUT_REDIRECT_URL = '/usuarios/login/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

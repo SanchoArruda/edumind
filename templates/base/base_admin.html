@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Admin - EduMind{% endblock %}</title>
+
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
+    <!-- CSS principal do template Bootstrap -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- CSS próprio do dashboard -->
+    <link href="{% static 'css/base/dashboard.css' %}" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="edumind-body">
+
+<div class="container-fluid p-0">
+    <div class="row no-gutters min-vh-100">
+
+        <!-- SIDEBAR ADMIN -->
+        <aside class="col-xl-2 col-lg-3 col-md-4 d-none d-md-flex flex-column bg-white border-right ed-sidebar">
+
+            <!-- Logo -->
+            <div class="d-flex align-items-center px-4 py-4">
+                <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-3">
+                    <i class="icon-graduation"></i>
+                </div>
+
+                <div>
+                    <h4 class="mb-0 font-weight-bold ed-brand-title">EduMind</h4>
+                    <small class="text-muted">Painel Administrativo</small>
+                </div>
+            </div>
+
+            <!-- Menu Admin -->
+            <nav class="flex-grow-1 px-3 py-3">
+
+                <a href="{% url 'dashboard_admin' %}"
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_dashboard %}{% endblock %}">
+                    <i class="icon-speedometer mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{% url 'quizzes:admin_lista_quizzes' %}"
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_quizzes %}{% endblock %}">
+                    <i class="icon-book-open mr-3"></i>
+                    <span>Gerenciar Quizzes</span>
+                </a>
+
+                <a href="{% url 'quizzes:admin_todas_questoes' %}"
+                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_questoes %}{% endblock %}">
+                    <i class="icon-question mr-3"></i>
+                    <span>Gerenciar Questões</span>
+                </a>
+
+                <a href="{% url 'disciplinas:admin_lista_disciplinas' %}"
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_disciplinas %}{% endblock %}">
+                    <i class="icon-folder mr-3"></i>
+                    <span>Disciplinas</span>
+                </a>
+
+                <a href="{% url 'admin_lista_estudantes' %}"
+                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_estudantes %}{% endblock %}">
+                    <i class="icon-people mr-3"></i>
+                    <span>Estudantes</span>
+                </a>
+
+                <a href="{% url 'admin_desempenho_geral' %}"
+                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_desempenho %}{% endblock %}">
+                    <i class="icon-chart mr-3"></i>
+                    <span>Desempenho Geral</span>
+                </a>
+
+            </nav>
+
+            <!-- Sair -->
+            <div class="px-3 py-4 border-top">
+                <a href="{% url 'logout' %}" class="d-flex align-items-center px-3 py-3 rounded ed-menu-link">
+                    <i class="icon-logout mr-3"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ÁREA DIREITA -->
+        <main class="col-xl-10 col-lg-9 col-md-8 col-12 ed-main">
+
+            <!-- NAVBAR SUPERIOR ADMIN -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom ed-navbar px-xl-5 px-lg-4 px-md-4 px-3">
+
+                <!-- Logo mobile -->
+                <a class="navbar-brand d-md-none d-flex align-items-center" href="{% url 'dashboard_admin' %}">
+                    <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-2">
+                        <i class="icon-graduation"></i>
+                    </div>
+                    <strong class="ed-brand-title">EduMind Admin</strong>
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#edumindAdminNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="edumindAdminNavbar">
+
+                    <!-- Pesquisa -->
+                    <form class="form-inline my-2 my-lg-0 mr-auto ed-search-form">
+                        <div class="input-group ed-search">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-white border-right-0">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                            </div>
+                            <input class="form-control border-left-0" type="search" placeholder="Pesquisar no painel">
+                        </div>
+                    </form>
+
+                    <!-- Links mobile -->
+                    <ul class="navbar-nav d-md-none mt-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard_admin' %}">Dashboard</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'quizzes:admin_lista_quizzes' %}">Gerenciar Quizzes</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:void(0)">Disciplinas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:void(0)">Estudantes</a>
+                        </li>
+                    </ul>
+
+                    <!-- Usuário -->
+                    <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+
+                        <li class="nav-item mr-lg-3 d-none d-lg-block">
+                            <span class="text-muted small">
+                                Administrador: {{ request.user.nome|default:request.user.username }}
+                            </span>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown"
+                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                <div class="ed-user-avatar d-flex align-items-center justify-content-center mr-2">
+                                    {{ request.user.nome|default:request.user.username|first|upper }}
+                                </div>
+
+                                <span class="d-lg-none">Minha conta</span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right shadow-sm border-0" aria-labelledby="adminDropdown">
+                                <div class="dropdown-header">
+                                    <strong>{{ request.user.nome|default:request.user.username }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ request.user.email }}</small>
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+                                
+                                <a class="dropdown-item" href="{% url 'meu_perfil' %}">
+                                    <i class="icon-user mr-2"></i>
+                                    Meu Perfil
+                                </a>
+
+                                <a class="dropdown-item" href="/admin/">
+                                    <i class="icon-settings mr-2"></i>
+                                    Django Admin
+                                </a>
+
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="icon-logout mr-2"></i>
+                                    Sair
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- CONTEÚDO -->
+            <div class="container-fluid py-4 px-xl-5 px-lg-4 px-md-4 px-3">
+
+                {% if messages %}
+                    <div class="row">
+                        <div class="col-12">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+
+            </div>
+        </main>
+
+    </div>
+</div>
+
+<script src="{% static 'plugins/common/common.min.js' %}"></script>
+<script src="{% static 'js/custom.min.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/gleek.js' %}"></script>
+<script src="{% static 'js/styleSwitcher.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

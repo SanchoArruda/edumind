@@ -1,0 +1,82 @@
+{% extends "base/base_admin.html" %}
+
+{% block title %}Estudantes - EduMind{% endblock %}
+
+{% block menu_admin_estudantes %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Estudantes</h1>
+        <p class="text-muted mb-0">
+            {{ total_estudantes }} estudantes cadastrados na plataforma
+        </p>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+
+        {% for estudante in estudantes %}
+            <div class="border rounded p-4 mb-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="mb-3 mb-md-0">
+                        <h5 class="font-weight-bold mb-1">
+                            {{ estudante.nome|default:estudante.username }}
+                        </h5>
+
+                        <small class="text-muted d-block">
+                            Usuário: {{ estudante.username }}
+                        </small>
+
+                        <small class="text-muted d-block">
+                            E-mail: {{ estudante.email|default:"Não informado" }}
+                        </small>
+
+                        <small class="text-muted d-block">
+                            Perfil: {{ estudante.tipo_usuario.perfil }}
+                        </small>
+
+                        <small class="text-muted d-block">
+                            Status:
+                            {% if estudante.is_active %}
+                                <span class="text-success font-weight-bold">Ativo</span>
+                            {% else %}
+                                <span class="text-secondary font-weight-bold">Inativo</span>
+                            {% endif %}
+                        </small>
+                    </div>
+
+                    <div class="text-md-right">
+                        <span class="badge badge-light border d-inline-block mb-3">
+                            ID {{ estudante.id }}
+                        </span>
+
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <a href="{% url 'admin_editar_estudante' estudante.id %}"
+                               class="btn btn-sm btn-primary mb-2 mb-md-0 mr-md-2">
+                                Editar
+                            </a>
+
+                            <a href="{% url 'admin_excluir_estudante' estudante.id %}"
+                               class="btn btn-sm btn-outline-danger">
+                                Excluir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center py-5">
+                <h5 class="font-weight-bold">Nenhum estudante cadastrado</h5>
+                <p class="text-muted mb-0">
+                    Quando novos usuários se cadastrarem como estudantes, eles aparecerão aqui.
+                </p>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

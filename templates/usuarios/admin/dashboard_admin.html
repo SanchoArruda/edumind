@@ -1,15 +1,11 @@
-{% extends "base_dashboard.html" %}
+{% extends "base/base_admin.html" %}
 
 {% block title %}Dashboard do Administrador - EduMind{% endblock %}
 
-{% block breadcrumb %}
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="javascript:void(0)">Administrador</a></li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
-</ol>
-{% endblock %}
+{% block menu_admin_dashboard %}active{% endblock %}
 
 {% block content %}
+
 <div class="row">
     <div class="col-12">
         <div class="card gradient-1">
@@ -94,8 +90,8 @@
                     <a href="javascript:void(0)" class="list-group-item list-group-item-action">
                         Criar novo quiz
                     </a>
-                    <a href="javascript:void(0)" class="list-group-item list-group-item-action">
-                        Gerenciar questões
+                    <a href="{% url 'quizzes:admin_lista_quizzes' %}" class="btn ed-btn-primary px-4 py-3">
+                        Gerenciar Quizzes
                     </a>
                     <a href="javascript:void(0)" class="list-group-item list-group-item-action">
                         Visualizar estudantes

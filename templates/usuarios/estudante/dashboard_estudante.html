@@ -1,0 +1,215 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Dashboard do Estudante - EduMind{% endblock %}
+
+{% block menu_dashboard %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">
+            Olá, {{ request.user.nome|default:request.user.username }} 👋
+        </h1>
+        <p class="text-muted mb-0">
+            Continue sua preparação para ENADE e POSCOMP
+        </p>
+    </div>
+
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+        <a href="javascript:void(0)" class="btn ed-btn-primary px-4 py-3">
+            ⚡ Praticar Agora
+        </a>
+    </div>
+</div>
+
+<div class="card ed-card border-0 mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="font-weight-bold mb-0">Seu progresso</h5>
+            <span class="ed-badge-warning">🔥 Nv. {{ nivel_atual }}</span>
+        </div>
+
+        <p class="text-muted mb-3">
+            Você tem <strong>{{ xp_total|floatformat:0 }} XP</strong> acumulados.
+        </p>
+
+        <div class="d-flex justify-content-between mb-2">
+            <small class="text-muted font-weight-bold">
+                {{ xp_no_nivel|floatformat:0 }} / {{ xp_para_proximo_nivel|floatformat:0 }} XP
+            </small>
+            <small class="text-muted">
+                Faltam {{ xp_faltante|floatformat:0 }} XP
+            </small>
+        </div>
+
+        <div class="progress" style="height: 8px; border-radius: 999px;">
+            <div class="progress-bar"
+                 role="progressbar"
+                 style="width: {{ percentual_nivel }}%; background: #5b4ee6; border-radius: 999px;"
+                 aria-valuenow="{{ percentual_nivel }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">Quizzes Feitos</p>
+                    <h3 class="font-weight-bold mb-0">{{ total_quizzes_feitos }}</h3>
+                </div>
+
+                <div class="ed-stat-icon ed-icon-purple d-flex align-items-center justify-content-center">
+                    <i class="icon-book-open"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">Taxa de Acerto</p>
+                    <h3 class="font-weight-bold mb-0">{{ taxa_acerto }}%</h3>
+                </div>
+
+                <div class="ed-stat-icon ed-icon-green d-flex align-items-center justify-content-center">
+                    <i class="icon-target"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">XP Total</p>
+                    <h3 class="font-weight-bold mb-0">{{ xp_total }}</h3>
+                </div>
+
+                <div class="ed-stat-icon ed-icon-orange d-flex align-items-center justify-content-center">
+                    <i class="icon-fire"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">Questões Certas</p>
+                    <h3 class="font-weight-bold mb-0">{{ total_acertos }}</h3>
+                    <small class="text-muted">de {{ total_questoes }}</small>
+                </div>
+
+                <div class="ed-stat-icon ed-icon-purple d-flex align-items-center justify-content-center">
+                    <i class="icon-star"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-7 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body" style="min-height: 230px;">
+                <h4 class="font-weight-bold mb-4">Desempenho por Área</h4>
+
+                <div class="d-flex align-items-center justify-content-center" style="height: 140px;">
+                    <p class="text-muted mb-0">
+                        Complete quizzes para ver seu desempenho por área
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-5 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body" style="min-height: 230px;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="font-weight-bold mb-0">Atividade Recente</h4>
+                    <a href="javascript:void(0)" class="text-primary font-weight-bold">Ver tudo →</a>
+                </div>
+
+                {% if tentativas_recentes %}
+                    {% for tentativa in tentativas_recentes %}
+                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                            <div>
+                                <strong>{{ tentativa.quiz.titulo }}</strong>
+                                <br>
+                                <small class="text-muted">{{ tentativa.data_tentativa|date:"d/m/Y H:i" }}</small>
+                            </div>
+
+                            <span class="badge badge-success">
+                                {{ tentativa.percentual_acertos }}%
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center" style="height: 120px;">
+                        <p class="text-muted text-center mb-0">
+                            Nenhum quiz realizado ainda
+                            <br>
+                            <a href="javascript:void(0)" class="text-primary font-weight-bold">Começar agora →</a>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="font-weight-bold mb-0">Quizzes Disponíveis</h4>
+            <a href="javascript:void(0)" class="text-primary font-weight-bold">Ver todos →</a>
+        </div>
+
+        <div class="row">
+            {% for quiz in quizzes_disponiveis %}
+                <div class="col-xl-4 col-md-6 mb-3">
+                    <div class="card border h-100" style="border-radius: 14px;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="font-weight-bold mb-2">
+                                    {{ quiz.titulo }}
+                                </h5>
+
+                                <span class="ed-badge-success">
+                                    disponível
+                                </span>
+                            </div>
+
+                            <p class="text-muted mb-2">
+                                {{ quiz.disciplina.nome }}
+                            </p>
+
+                            <small class="text-muted font-weight-bold">
+                                {{ quiz.questoes.count }} questões
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-0">Nenhum quiz disponível ainda.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
