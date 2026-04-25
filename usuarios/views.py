@@ -103,6 +103,50 @@ def dashboard_estudante(request):
     return render(request, "usuarios/estudante/dashboard_estudante.html", contexto)
 
 
+@login_required
+def perfil_estudante(request):
+    if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
+        return redirect("login")
+
+    from quizzes.models import TentativaQuiz
+    from .utils import calcular_progresso_nivel
+
+    tentativas = TentativaQuiz.objects.filter(
+        usuario=request.user,
+        concluida=True
+    ).select_related("quiz", "quiz__disciplina")
+
+    total_quizzes = tentativas.count()
+    total_acertos = sum(t.quantidade_acertos for t in tentativas)
+    total_erros = sum(t.quantidade_erros for t in tentativas)
+    total_questoes = total_acertos + total_erros
+    xp_total = sum(t.pontuacao for t in tentativas)
+
+    taxa_acerto = 0
+    if total_questoes > 0:
+        taxa_acerto = round((total_acertos / total_questoes) * 100, 1)
+
+    progresso_nivel = calcular_progresso_nivel(xp_total)
+
+    contexto = {
+        "total_quizzes": total_quizzes,
+        "total_acertos": total_acertos,
+        "total_erros": total_erros,
+        "total_questoes": total_questoes,
+        "taxa_acerto": taxa_acerto,
+        "xp_total": xp_total,
+        "tentativas": tentativas[:10],
+
+        "nivel_atual": progresso_nivel["nivel_atual"],
+        "xp_no_nivel": progresso_nivel["xp_no_nivel"],
+        "xp_para_proximo_nivel": progresso_nivel["xp_para_proximo_nivel"],
+        "xp_faltante": progresso_nivel["xp_faltante"],
+        "percentual_nivel": progresso_nivel["percentual_nivel"],
+    }
+
+    return render(request, "usuarios/estudante/perfil_estudante.html", contexto)
+
+
 #-----------------------
 #admin 
 #-----------------------

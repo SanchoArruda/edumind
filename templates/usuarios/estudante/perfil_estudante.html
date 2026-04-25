@@ -1,0 +1,161 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Meu Perfil - EduMind{% endblock %}
+
+{% block menu_perfil_estudante %}active{% endblock %}
+
+{% block content %}
+
+<div class="card border-0 mb-4" style="border-radius: 24px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-center mr-4"
+                 style="width: 84px; height: 84px; border-radius: 20px; background: rgba(255,255,255,0.14); font-size: 2rem; font-weight: 700;">
+                {{ request.user.nome|default:request.user.username|first|upper }}
+            </div>
+
+            <div>
+                <h2 class="font-weight-bold mb-2">{{ request.user.nome|default:request.user.username }}</h2>
+
+                <div class="d-flex flex-wrap">
+                    <span class="badge badge-light mr-2 mb-2 px-3 py-2">🔥 Nível {{ nivel_atual }}</span>
+                    <span class="badge badge-light mr-2 mb-2 px-3 py-2">{{ xp_total|floatformat:0 }} XP</span>
+                    <span class="badge badge-light mr-2 mb-2 px-3 py-2">{{ total_quizzes }} quizzes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card ed-card border-0 mb-4">
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <span class="ed-badge-warning mr-3">🔥 Nv. {{ nivel_atual }}</span>
+
+            <div class="progress flex-grow-1 mr-3" style="height: 10px; border-radius: 999px;">
+                <div class="progress-bar"
+                     style="width: {{ percentual_nivel }}%; background: #5b4ee6; border-radius: 999px;">
+                </div>
+            </div>
+
+            <small class="text-muted font-weight-bold">
+                {{ xp_no_nivel|floatformat:0 }} / {{ xp_para_proximo_nivel|floatformat:0 }} XP
+            </small>
+        </div>
+
+        <small class="text-muted d-block mt-2">
+            Faltam {{ xp_faltante|floatformat:0 }} XP para o próximo nível
+        </small>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">Quizzes</p>
+                    <h3 class="font-weight-bold mb-0">{{ total_quizzes }}</h3>
+                </div>
+                <div class="ed-stat-icon ed-icon-purple d-flex align-items-center justify-content-center">
+                    <i class="icon-book-open"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">Média</p>
+                    <h3 class="font-weight-bold mb-0">{{ taxa_acerto }}%</h3>
+                </div>
+                <div class="ed-stat-icon ed-icon-green d-flex align-items-center justify-content-center">
+                    <i class="icon-target"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">Acertos</p>
+                    <h3 class="font-weight-bold mb-0">{{ total_acertos }}/{{ total_questoes }}</h3>
+                </div>
+                <div class="ed-stat-icon ed-icon-orange d-flex align-items-center justify-content-center">
+                    <i class="icon-star"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <p class="text-muted font-weight-bold mb-1">XP Total</p>
+                    <h3 class="font-weight-bold mb-0">{{ xp_total|floatformat:0 }}</h3>
+                </div>
+                <div class="ed-stat-icon ed-icon-purple d-flex align-items-center justify-content-center">
+                    <i class="icon-fire"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card ed-card border-0 mb-4">
+    <div class="card-body">
+        <h4 class="font-weight-bold mb-4">Desempenho por Área</h4>
+
+        <div class="d-flex align-items-center justify-content-center" style="min-height: 180px;">
+            <p class="text-muted mb-0">
+                Complete quizzes para ver seu desempenho por área
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+        <h4 class="font-weight-bold mb-4">Histórico de Quizzes</h4>
+
+        {% if tentativas %}
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Quiz</th>
+                            <th>Disciplina</th>
+                            <th>Acertos</th>
+                            <th>Taxa</th>
+                            <th>XP</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tentativa in tentativas %}
+                            <tr>
+                                <td>{{ tentativa.quiz.titulo }}</td>
+                                <td>{{ tentativa.quiz.disciplina.nome }}</td>
+                                <td>{{ tentativa.quantidade_acertos }}/{{ tentativa.quantidade_acertos|add:tentativa.quantidade_erros }}</td>
+                                <td>{{ tentativa.percentual_acertos }}%</td>
+                                <td>{{ tentativa.pontuacao|floatformat:0 }}</td>
+                                <td>{{ tentativa.data_tentativa|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="d-flex align-items-center justify-content-center" style="min-height: 180px;">
+                <p class="text-muted mb-0">Nenhum quiz realizado</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
