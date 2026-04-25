@@ -1,0 +1,147 @@
+.edumind-body {
+    background: #f6f7fb;
+}
+
+.ed-main {
+    background: #f6f7fb;
+    min-height: 100vh;
+}
+
+.ed-sidebar {
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+.ed-navbar {
+    min-height: 76px;
+}
+
+.ed-brand-title {
+    color: #5b4ee6;
+}
+
+.ed-logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #5b4ee6;
+    color: #ffffff;
+    box-shadow: 0 10px 22px rgba(91, 78, 230, 0.25);
+}
+
+.ed-menu-link {
+    color: #344054;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.ed-menu-link:hover {
+    color: #5b4ee6;
+    background: #f1f2ff;
+    text-decoration: none;
+}
+
+.ed-menu-link.active {
+    color: #5b4ee6;
+    background: #eef0ff;
+}
+
+.ed-search-form {
+    width: 100%;
+    max-width: 360px;
+}
+
+.ed-search {
+    width: 100%;
+}
+
+.ed-search .form-control,
+.ed-search .input-group-text {
+    height: 42px;
+    border-color: #e5e7eb;
+}
+
+.ed-search .form-control:focus {
+    box-shadow: none;
+    border-color: #e5e7eb;
+}
+
+.ed-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f1f2ff;
+    color: #5b4ee6;
+    font-weight: 800;
+}
+
+.ed-card {
+    border: 1px solid #eef0f6;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(16, 24, 40, 0.035);
+}
+
+.ed-btn-primary {
+    background: #5b4ee6;
+    border-color: #5b4ee6;
+    color: #ffffff;
+    border-radius: 10px;
+    font-weight: 700;
+    box-shadow: 0 10px 22px rgba(91, 78, 230, 0.25);
+}
+
+.ed-btn-primary:hover {
+    background: #4338ca;
+    border-color: #4338ca;
+    color: #ffffff;
+}
+
+.ed-stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    color: #ffffff;
+}
+
+.ed-icon-purple {
+    background: #5b4ee6;
+}
+
+.ed-icon-green {
+    background: #2f9e68;
+}
+
+.ed-icon-orange {
+    background: #d97706;
+}
+
+.ed-badge-success {
+    background: #ecfdf3;
+    color: #027a48;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+}
+
+.ed-badge-warning {
+    background: #fff7ed;
+    color: #c2410c;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+}
+
+@media (max-width: 767.98px) {
+    .ed-navbar {
+        min-height: auto;
+    }
+
+    .ed-search-form {
+        max-width: 100%;
+        margin-top: 12px;
+    }
+}

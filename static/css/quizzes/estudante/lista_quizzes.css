@@ -1,0 +1,18 @@
+.quiz-tipo-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.quiz-tipo-enade {
+    background: rgba(91, 78, 230, 0.12);
+    color: #5b4ee6;
+}
+
+.quiz-tipo-poscomp {
+    background: rgba(18, 183, 106, 0.12);
+    color: #12b76a;
+}
