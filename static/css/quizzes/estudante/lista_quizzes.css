@@ -1,18 +1,91 @@
-.quiz-tipo-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
+.quiz-card {
+    border-radius: 18px;
+    transition: 0.2s ease;
+}
+
+.quiz-card:hover {
+    transform: translateY(-4px);
+}
+
+.quiz-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #5b4ee6, #7a6cf0);
+    color: #ffffff;
+    font-size: 18px;
+    box-shadow: 0 10px 20px rgba(91, 78, 230, 0.22);
+}
+
+.quiz-tipo-pill {
+    background-color: #eef0ff;
+    color: #6c4cf5;
     font-size: 12px;
-    font-weight: 700;
-    line-height: 1;
+    letter-spacing: 0.4px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 95px;
 }
 
-.quiz-tipo-enade {
-    background: rgba(91, 78, 230, 0.12);
-    color: #5b4ee6;
+.quiz-filter-control {
+    height: 46px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: none;
+    font-size: 15px;
 }
 
-.quiz-tipo-poscomp {
-    background: rgba(18, 183, 106, 0.12);
-    color: #12b76a;
+.quiz-filter-control:focus {
+    border-color: #5b4ee6;
+    box-shadow: 0 0 0 0.15rem rgba(91, 78, 230, 0.12);
+}
+
+.quiz-filter-btn {
+    height: 46px;
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+.quiz-search-wrap {
+    position: relative;
+}
+
+.quiz-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 18px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.quiz-search-input {
+    height: 50px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding-left: 48px;
+    box-shadow: none;
+    background: #fff;
+}
+
+.quiz-search-input:focus {
+    border-color: #6f42c1;
+    box-shadow: none;
+}
+
+@media (max-width: 767.98px) {
+    .quiz-search-input {
+        height: 48px;
+        border-radius: 14px;
+        padding-left: 46px;
+    }
+
+    .quiz-search-icon {
+        left: 16px;
+        font-size: 17px;
+    }
 }

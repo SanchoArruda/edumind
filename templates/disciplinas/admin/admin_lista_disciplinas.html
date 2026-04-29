@@ -36,24 +36,23 @@
 
                     <div class="d-flex align-items-center">
                         <a href="{% url 'disciplinas:admin_editar_disciplina' disciplina.id %}"
-                        class="btn btn-sm btn-light border mr-2"
-                        title="Editar">
-                            ✎
+                           class="btn btn-sm btn-outline-primary mr-2">
+                            <i class="icon-note mr-1"></i> Editar
                         </a>
 
                         <form method="post"
-                            action="{% url 'disciplinas:admin_excluir_disciplina' disciplina.id %}"
-                            onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?');">
+                              action="{% url 'disciplinas:admin_excluir_disciplina' disciplina.id %}"
+                              class="mb-0"
+                              onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?');">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-light border text-danger" title="Excluir">
-                                🗑
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="icon-trash mr-1"></i> Excluir
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
         {% empty %}
-        
             <div class="text-center py-5">
                 <h5 class="font-weight-bold">Nenhuma disciplina cadastrada</h5>
                 <p class="text-muted mb-4">

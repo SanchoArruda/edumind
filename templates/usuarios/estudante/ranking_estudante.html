@@ -1,99 +1,149 @@
 {% extends "base/base_dashboard.html" %}
+{% load static %}
 
 {% block title %}Ranking - EduMind{% endblock %}
+{% block menu_ranking_estudante %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios/estudante/ranking_estudante.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<div class="row align-items-center mb-4">
-    <div class="col-md-8">
-        <h1 class="font-weight-bold mb-1">Ranking</h1>
-        <p class="text-muted mb-0">
-            Veja sua posição e acompanhe os melhores desempenhos da plataforma.
-        </p>
+<div class="ranking-page">
+    <div class="d-flex justify-content-between align-items-start flex-wrap mb-4">
+        <div>
+            <h1 class="font-weight-bold mb-1">Ranking de Estudantes (XP)</h1>
+            <p class="text-muted mb-0">Acompanhe seu progresso e suba no ranking!</p>
+        </div>
     </div>
-</div>
 
-{% if minha_posicao %}
-    <div class="card ed-card border-0 mb-4">
-        <div class="card-body">
-            <h5 class="font-weight-bold mb-3">Sua posição</h5>
+    {% if top_3 %}
+        <div class="card ed-card border-0 ranking-podium-card mb-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="row justify-content-center align-items-end text-center ranking-podium-row">
 
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <p class="text-muted mb-1">Posição</p>
-                    <h3 class="font-weight-bold mb-0">{{ minha_posicao.posicao }}º</h3>
-                </div>
+                    {% for item in top_3 %}
+                        {% if item.posicao == 2 %}
+                            <div class="col-md-3 col-6 mb-4 mb-md-0 order-1">
+                                <div class="ranking-podium-user ranking-podium-user--second">
+                                    <div class="ranking-avatar ranking-avatar--lg ranking-avatar--silver">
+                                        {{ item.usuario__nome|default:item.usuario__username|slice:":1"|upper }}
+                                    </div>
 
-                <div class="col-md-3 mb-3">
-                    <p class="text-muted mb-1">Pontos</p>
-                    <h3 class="font-weight-bold mb-0">{{ minha_posicao.total_pontos|floatformat:1 }}</h3>
-                </div>
+                                    <div class="ranking-medal ranking-medal--silver">2</div>
 
-                <div class="col-md-3 mb-3">
-                    <p class="text-muted mb-1">Acertos</p>
-                    <h3 class="font-weight-bold mb-0">{{ minha_posicao.total_acertos }}</h3>
-                </div>
+                                    <h4 class="ranking-user-name mt-3 mb-1">
+                                        {{ item.usuario__nome|default:item.usuario__username }}
+                                    </h4>
 
-                <div class="col-md-3 mb-3">
-                    <p class="text-muted mb-1">Taxa de acerto</p>
-                    <h3 class="font-weight-bold mb-0">{{ minha_posicao.taxa_acerto }}%</h3>
+                                    <div class="ranking-user-xp">
+                                        {{ item.total_pontos|floatformat:0 }} XP
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for item in top_3 %}
+                        {% if item.posicao == 1 %}
+                            <div class="col-md-4 col-12 mb-4 mb-md-0 order-0 order-md-1">
+                                <div class="ranking-podium-user ranking-podium-user--first">
+                                    <div class="ranking-crown">👑</div>
+
+                                    <div class="ranking-avatar ranking-avatar--xl ranking-avatar--gold">
+                                        {{ item.usuario__nome|default:item.usuario__username|slice:":1"|upper }}
+                                    </div>
+
+                                    <div class="ranking-medal ranking-medal--gold">1</div>
+
+                                    <h3 class="ranking-user-name mt-3 mb-1">
+                                        {{ item.usuario__nome|default:item.usuario__username }}
+                                    </h3>
+
+                                    <div class="ranking-user-xp ranking-user-xp--first">
+                                        {{ item.total_pontos|floatformat:0 }} XP
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for item in top_3 %}
+                        {% if item.posicao == 3 %}
+                            <div class="col-md-3 col-6 mb-4 mb-md-0 order-2">
+                                <div class="ranking-podium-user ranking-podium-user--third">
+                                    <div class="ranking-avatar ranking-avatar--lg ranking-avatar--bronze">
+                                        {{ item.usuario__nome|default:item.usuario__username|slice:":1"|upper }}
+                                    </div>
+
+                                    <div class="ranking-medal ranking-medal--bronze">3</div>
+
+                                    <h4 class="ranking-user-name mt-3 mb-1">
+                                        {{ item.usuario__nome|default:item.usuario__username }}
+                                    </h4>
+
+                                    <div class="ranking-user-xp">
+                                        {{ item.total_pontos|floatformat:0 }} XP
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
                 </div>
             </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
-<div class="card ed-card border-0">
-    <div class="card-body">
-        <h5 class="font-weight-bold mb-3">Classificação geral</h5>
+    <div class="ranking-list">
+        {% for item in ranking_restante %}
+            <div class="card ed-card border-0 mb-3 {% if item.usuario__id == request.user.id %}ranking-row-you{% endif %}">
+                <div class="card-body py-3 px-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
 
-        {% if ranking %}
-            <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Estudante</th>
-                            <th>Pontos</th>
-                            <th>Acertos</th>
-                            <th>Erros</th>
-                            <th>Tentativas</th>
-                            <th>Taxa de acerto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in ranking %}
-                            <tr {% if item.usuario__id == request.user.id %}class="table-active"{% endif %}>
-                                <td>
-                                    {% if item.posicao == 1 %}
-                                        🥇 {{ item.posicao }}º
-                                    {% elif item.posicao == 2 %}
-                                        🥈 {{ item.posicao }}º
-                                    {% elif item.posicao == 3 %}
-                                        🥉 {{ item.posicao }}º
-                                    {% else %}
-                                        {{ item.posicao }}º
+                        <div class="d-flex align-items-center">
+                            <div class="ranking-position-number mr-4">
+                                {{ item.posicao }}
+                            </div>
+
+                            <div class="ranking-avatar ranking-avatar--md mr-3">
+                                {{ item.usuario__nome|default:item.usuario__username|slice:":1"|upper }}
+                            </div>
+
+                            <div>
+                                <div class="ranking-user-name-sm">
+                                    {{ item.usuario__nome|default:item.usuario__username }}
+                                    {% if item.usuario__id == request.user.id %}
+                                        <span class="ranking-you-tag">Você</span>
                                     {% endif %}
-                                </td>
-                                <td>{{ item.usuario__nome|default:item.usuario__username }}</td>
-                                <td>{{ item.total_pontos|floatformat:1 }}</td>
-                                <td>{{ item.total_acertos }}</td>
-                                <td>{{ item.total_erros }}</td>
-                                <td>{{ item.total_tentativas }}</td>
-                                <td>{{ item.taxa_acerto }}%</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ranking-xp-right mt-3 mt-md-0">
+                            {{ item.total_pontos|floatformat:0 }} XP
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% else %}
-            <div class="text-center py-5">
-                <h5 class="font-weight-bold">Ainda não há ranking disponível</h5>
-                <p class="text-muted mb-0">
-                    O ranking aparecerá quando houver quizzes concluídos.
-                </p>
+        {% empty %}
+            <div class="card ed-card border-0">
+                <div class="card-body text-center py-5">
+                    <h5 class="font-weight-bold">Ainda não há ranking disponível</h5>
+                    <p class="text-muted mb-0">
+                        O ranking aparecerá quando houver quizzes concluídos.
+                    </p>
+                </div>
             </div>
-        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="card border-0 ranking-footer-tip mt-4">
+        <div class="card-body py-3 px-4 text-center">
+            <span class="mr-2">🏆</span>
+            Estude, participe e evolua. Seu próximo nível te espera!
+        </div>
     </div>
 </div>
 

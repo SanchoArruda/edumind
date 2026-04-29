@@ -11,10 +11,7 @@
 
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
-    <!-- CSS principal do template Bootstrap -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
-    <!-- CSS próprio do dashboard -->
     <link href="{% static 'css/base/dashboard.css' %}" rel="stylesheet">
 
     {% block extra_css %}{% endblock %}
@@ -40,17 +37,24 @@
                 </div>
             </div>
 
-            <!-- Menu Admin -->
+            <!-- Menu -->
             <nav class="flex-grow-1 px-3 py-3">
 
+                <div class="ed-sidebar-section-title">
+                    ADMINISTRADOR
+                </div>
+                
                 <a href="{% url 'dashboard_admin' %}"
-                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_dashboard %}{% endblock %}">
-                    <i class="icon-speedometer mr-3"></i>
-                    <span>Dashboard</span>
+                class="d-flex align-items-center justify-content-between px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_dashboard %}{% endblock %}">
+                    <span>
+                        <i class="icon-grid mr-3"></i>
+                        Dashboard
+                    </span>
+                    <i class="icon-arrow-right small"></i>
                 </a>
 
                 <a href="{% url 'quizzes:admin_lista_quizzes' %}"
-                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_quizzes %}{% endblock %}">
+                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_quizzes %}{% endblock %}">
                     <i class="icon-book-open mr-3"></i>
                     <span>Gerenciar Quizzes</span>
                 </a>
@@ -62,14 +66,14 @@
                 </a>
 
                 <a href="{% url 'disciplinas:admin_lista_disciplinas' %}"
-                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_disciplinas %}{% endblock %}">
+                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_disciplinas %}{% endblock %}">
                     <i class="icon-folder mr-3"></i>
                     <span>Disciplinas</span>
                 </a>
 
                 <a href="{% url 'admin_lista_estudantes' %}"
                 class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_estudantes %}{% endblock %}">
-                    <i class="icon-people mr-3"></i>
+                    <i class="icon-user-follow mr-3"></i>
                     <span>Estudantes</span>
                 </a>
 
@@ -104,6 +108,7 @@
                     <strong class="ed-brand-title">EduMind Admin</strong>
                 </a>
 
+                <!-- Botão mobile -->
                 <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#edumindAdminNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -133,11 +138,19 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">Disciplinas</a>
+                            <a class="nav-link" href="{% url 'quizzes:admin_todas_questoes' %}">Gerenciar Questões</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">Estudantes</a>
+                            <a class="nav-link" href="{% url 'disciplinas:admin_lista_disciplinas' %}">Disciplinas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_lista_estudantes' %}">Estudantes</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_desempenho_geral' %}">Desempenho Geral</a>
                         </li>
                     </ul>
 
@@ -169,7 +182,7 @@
                                 </div>
 
                                 <div class="dropdown-divider"></div>
-                                
+
                                 <a class="dropdown-item" href="{% url 'meu_perfil' %}">
                                     <i class="icon-user mr-2"></i>
                                     Meu Perfil
@@ -192,25 +205,27 @@
             </nav>
 
             <!-- CONTEÚDO -->
-            <div class="container-fluid py-4 px-xl-5 px-lg-4 px-md-4 px-3">
+            <div class="ed-content-scroll">
+                <div class="container-fluid py-4 px-xl-5 px-lg-4 px-md-4 px-3">
 
-                {% if messages %}
-                    <div class="row">
-                        <div class="col-12">
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="close" data-dismiss="alert">
-                                        <span>&times;</span>
-                                    </button>
-                                </div>
-                            {% endfor %}
+                    {% if messages %}
+                        <div class="row">
+                            <div class="col-12">
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert">
+                                            <span>&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
 
-                {% block content %}{% endblock %}
+                    {% block content %}{% endblock %}
 
+                </div>
             </div>
         </main>
 

@@ -1,4 +1,5 @@
 {% extends "base/base_dashboard.html" %}
+{% load static %}
 
 {% block title %}Dashboard do Estudante - EduMind{% endblock %}
 
@@ -119,19 +120,80 @@
 </div>
 
 <div class="row">
-    <div class="col-xl-7 mb-4">
+    <div class="col-xl-8 mb-4">
         <div class="card ed-card border-0 h-100">
-            <div class="card-body" style="min-height: 230px;">
+            <div class="card-body">
                 <h4 class="font-weight-bold mb-4">Desempenho por Área</h4>
 
-                <div class="d-flex align-items-center justify-content-center" style="height: 140px;">
-                    <p class="text-muted mb-0">
-                        Complete quizzes para ver seu desempenho por área
-                    </p>
-                </div>
+                {% if labels_area and dados_area %}
+                    {{ labels_area|json_script:"labels-area-data" }}
+                    {{ dados_area|json_script:"dados-area-data" }}
+
+                    <div class="chart-wrapper chart-wrapper--dashboard">
+                        <canvas id="desempenhoAreaChart"></canvas>
+                    </div>
+                {% else %}
+                    <div class="empty-state-box">
+                        <p class="text-muted mb-0">
+                            Complete quizzes para ver seu desempenho por área
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
+
+    <div class="col-xl-4 mb-4">
+        <div class="card ed-card border-0 h-100">
+            <div class="card-body">
+                <h4 class="font-weight-bold mb-4">Resumo por Área</h4>
+
+                {% if desempenho_detalhado %}
+                    <div class="area-highlight-list">
+                        {% if melhor_area %}
+                            <div class="area-highlight-card">
+                                <small class="text-muted d-block mb-1">Melhor área</small>
+                                <h6 class="font-weight-bold mb-1">{{ melhor_area.disciplina }}</h6>
+                                <span class="area-summary-badge">{{ melhor_area.media_acerto }}%</span>
+                            </div>
+                        {% endif %}
+
+                        {% if pior_area %}
+                            <div class="area-highlight-card">
+                                <small class="text-muted d-block mb-1">Precisa melhorar</small>
+                                <h6 class="font-weight-bold mb-1">{{ pior_area.disciplina }}</h6>
+                                <span class="area-summary-badge area-summary-badge--warning">
+                                    {{ pior_area.media_acerto }}%
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="area-summary-list mt-4">
+                        {% for item in desempenho_detalhado %}
+                            <div class="area-summary-item">
+                                <div>
+                                    <h6 class="mb-1 font-weight-bold">{{ item.disciplina }}</h6>
+                                    <small class="text-muted">Média de acertos</small>
+                                </div>
+
+                                <span class="area-summary-badge">
+                                    {{ item.media_acerto }}%
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state-box empty-state-box--small">
+                        <p class="text-muted mb-0">
+                            Responda quizzes para gerar seu resumo por disciplina.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="col-xl-5 mb-4">
         <div class="card ed-card border-0 h-100">
@@ -211,5 +273,15 @@
         </div>
     </div>
 </div>
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios/estudante/dashboard_estudante.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'plugins/chart.js/Chart.bundle.min.js' %}"></script>
+<script src="{% static 'js/usuarios/estudante/dashboard_estudante.js' %}"></script>
+{% endblock %}
 
 {% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base/base_admin.html" %}
+
+{% block title %}Excluir Quiz - EduMind{% endblock %}
+
+{% block menu_admin_quizzes %}active{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Excluir Quiz</h1>
+        <p class="text-muted mb-0">
+            Confirme a exclusão do quiz abaixo.
+        </p>
+    </div>
+
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+        <a href="{% url 'quizzes:admin_lista_quizzes' %}" class="btn btn-light border px-4 py-3">
+            Voltar
+        </a>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body">
+        <h4 class="font-weight-bold text-danger mb-3">
+            Tem certeza que deseja excluir este quiz?
+        </h4>
+
+        <div class="mb-4">
+            <p class="mb-2"><strong>Título:</strong> {{ quiz.titulo }}</p>
+            <p class="mb-2"><strong>Disciplina:</strong> {{ quiz.disciplina.nome }}</p>
+            <p class="mb-0"><strong>Questões associadas:</strong> {{ quiz.questoes.count }}</p>
+        </div>
+
+        <div class="alert alert-warning">
+            Esta ação não poderá ser desfeita.
+        </div>
+
+        <form method="post" class="text-right">
+            {% csrf_token %}
+
+            <a href="{% url 'quizzes:admin_lista_quizzes' %}" class="btn btn-light border px-4 py-3 mr-2">
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn btn-danger px-4 py-3">
+                <i class="icon-trash mr-1"></i> Excluir Quiz
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

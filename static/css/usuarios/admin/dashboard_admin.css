@@ -1,0 +1,186 @@
+.admin-dashboard__title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 0.35rem;
+}
+
+.admin-dashboard__subtitle {
+    font-size: 1rem;
+    color: #7b88a8;
+    margin-bottom: 0;
+}
+
+.admin-stat-card {
+    border-radius: 18px;
+    height: 100%;
+}
+
+.admin-stat-card .card-body {
+    padding: 1.5rem;
+}
+
+.admin-stat-card__label {
+    font-size: 1rem;
+    color: #6f7d97;
+    margin-bottom: 0.5rem;
+}
+
+.admin-stat-card__value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 0;
+    line-height: 1.1;
+}
+
+.admin-stat-card__small {
+    color: #98a2b3;
+    font-size: 0.9rem;
+}
+
+.admin-stat-card__icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.admin-stat-card__icon--purple {
+    background: linear-gradient(135deg, #6c63ff, #4f46e5);
+}
+
+.admin-stat-card__icon--violet {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.admin-stat-card__icon--orange {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.admin-stat-card__icon--green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.admin-shortcut-card {
+    border-radius: 18px;
+    transition: 0.2s ease;
+    height: 100%;
+}
+
+.admin-shortcut-card .card-body {
+    padding: 1.4rem 1.5rem;
+}
+
+.admin-shortcut-card:hover {
+    transform: translateY(-2px);
+}
+
+.admin-shortcut-card__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.admin-shortcut-card__icon--purple {
+    background: linear-gradient(135deg, #6c63ff, #4f46e5);
+}
+
+.admin-shortcut-card__icon--violet {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.admin-shortcut-card__icon--orange {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.admin-shortcut-card__icon--green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.admin-shortcut-card__title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 0.25rem;
+}
+
+.admin-shortcut-card__text {
+    color: #8a94a6;
+    margin-bottom: 0;
+}
+
+.admin-shortcut-card__arrow {
+    color: #c0c7d4;
+    font-size: 1.2rem;
+}
+
+.admin-recent-card {
+    border-radius: 18px;
+}
+
+.admin-recent-card .card-body {
+    padding: 1.6rem;
+}
+
+.admin-recent-card__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 1.5rem;
+}
+
+.admin-recent-card__empty {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9aa4b2;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.admin-dashboard-table thead th {
+    border-top: none;
+    color: #667085;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.admin-dashboard-table tbody td {
+    vertical-align: middle;
+    color: #172033;
+}
+
+.admin-dashboard-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 767.98px) {
+    .admin-dashboard__title {
+        font-size: 1.8rem;
+    }
+
+    .admin-stat-card__value {
+        font-size: 1.7rem;
+    }
+
+    .admin-shortcut-card__title {
+        font-size: 1.1rem;
+    }
+
+    .admin-shortcut-card__text {
+        font-size: 0.92rem;
+    }
+}

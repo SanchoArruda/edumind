@@ -11,6 +11,7 @@ from .forms import LoginForm, CadastroEstudanteForm, UsuarioAdminForm
 from .models import Usuario, TipoUsuario
 
 from .utils import calcular_progresso_nivel
+from django.db.models import Avg
 
 
 def usuario_e_admin(user):
@@ -64,11 +65,12 @@ def dashboard_estudante(request):
         return redirect("login")
 
     from quizzes.models import Quiz, TentativaQuiz
+    from .utils import calcular_progresso_nivel
 
     tentativas = TentativaQuiz.objects.filter(
         usuario=request.user,
         concluida=True
-    ).select_related("quiz")
+    ).select_related("quiz", "quiz__disciplina")
 
     quizzes_disponiveis = Quiz.objects.all().select_related("disciplina")[:3]
 
@@ -84,6 +86,30 @@ def dashboard_estudante(request):
 
     progresso_nivel = calcular_progresso_nivel(xp_total)
 
+    desempenho_por_area_qs = (
+        tentativas.values("quiz__disciplina__nome")
+        .annotate(media_acerto=Avg("percentual_acertos"))
+        .order_by("quiz__disciplina__nome")
+    )
+
+    labels_area = [item["quiz__disciplina__nome"] for item in desempenho_por_area_qs]
+    dados_area = [round(item["media_acerto"], 1) for item in desempenho_por_area_qs]
+
+    desempenho_detalhado = [
+        {
+            "disciplina": item["quiz__disciplina__nome"],
+            "media_acerto": round(item["media_acerto"], 1),
+        }
+        for item in desempenho_por_area_qs
+    ]
+
+    melhor_area = None
+    pior_area = None
+
+    if desempenho_detalhado:
+        melhor_area = max(desempenho_detalhado, key=lambda item: item["media_acerto"])
+        pior_area = min(desempenho_detalhado, key=lambda item: item["media_acerto"])
+
     contexto = {
         "total_quizzes_feitos": total_quizzes_feitos,
         "total_acertos": total_acertos,
@@ -93,11 +119,18 @@ def dashboard_estudante(request):
         "xp_total": xp_total,
         "quizzes_disponiveis": quizzes_disponiveis,
         "tentativas_recentes": tentativas[:5],
+
         "nivel_atual": progresso_nivel["nivel_atual"],
         "xp_no_nivel": progresso_nivel["xp_no_nivel"],
         "xp_para_proximo_nivel": progresso_nivel["xp_para_proximo_nivel"],
         "xp_faltante": progresso_nivel["xp_faltante"],
         "percentual_nivel": progresso_nivel["percentual_nivel"],
+
+        "labels_area": labels_area,
+        "dados_area": dados_area,
+        "desempenho_detalhado": desempenho_detalhado,
+        "melhor_area": melhor_area,
+        "pior_area": pior_area,
     }
 
     return render(request, "usuarios/estudante/dashboard_estudante.html", contexto)
@@ -149,14 +182,42 @@ def perfil_estudante(request):
 
 #-----------------------
 #admin 
-#-----------------------
+#----------------------- 
+
+
+# parte central do dashboard de admin
 
 @login_required
 def dashboard_admin(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "administrador":
         return redirect("login")
 
-    return render(request, "usuarios/admin/dashboard_admin.html")
+    from quizzes.models import Quiz, Questao, TentativaQuiz
+    from disciplinas.models import Disciplina
+
+    estudantes = Usuario.objects.filter(
+        tipo_usuario__perfil__iexact="Estudante"
+    )
+
+    tentativas = TentativaQuiz.objects.filter(
+        concluida=True
+    ).select_related("usuario", "quiz")
+
+    media_geral = tentativas.aggregate(
+        media=Avg("percentual_acertos")
+    )["media"] or 0
+
+    contexto = {
+        "total_estudantes": estudantes.count(),
+        "total_quizzes": Quiz.objects.count(),
+        "total_questoes": Questao.objects.count(),
+        "total_disciplinas": Disciplina.objects.count(),
+        "total_tentativas": tentativas.count(),
+        "media_geral": round(media_geral, 1),
+        "tentativas_recentes": tentativas.order_by("-id")[:5],
+    }
+
+    return render(request, "usuarios/admin/dashboard_admin.html", contexto)
 
 
 def sair(request):
@@ -405,8 +466,13 @@ def ranking_estudante(request):
         if item["usuario__id"] == request.user.id:
             minha_posicao = item
 
+    top_3 = [item for item in ranking if item["posicao"] <= 3]
+    ranking_restante = [item for item in ranking if item["posicao"] > 3]
+
     contexto = {
         "ranking": ranking,
+        "top_3": top_3,
+        "ranking_restante": ranking_restante,
         "minha_posicao": minha_posicao,
     }
 

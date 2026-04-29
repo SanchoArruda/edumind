@@ -41,9 +41,14 @@
                             <td>{{ quiz.disciplina.nome }}</td>
                             <td>{{ quiz.questoes.count }}</td>
                             <td class="text-right">
-                                <a href="javascript:void(0)" class="btn btn-sm btn-light border">
-                                    Questões
+                                <a href="{% url 'quizzes:admin_editar_quiz' quiz.id %}" class="btn btn-sm btn-outline-primary mr-2">
+                                    <i class="icon-note mr-1"></i> Editar
                                 </a>
+
+                                <a href="{% url 'quizzes:admin_excluir_quiz' quiz.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="icon-trash mr-1"></i> Excluir
+                                </a>
+                    
                             </td>
                         </tr>
                     {% empty %}

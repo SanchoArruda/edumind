@@ -1,0 +1,125 @@
+.resultado-resumo-card {
+    border-radius: 24px;
+}
+
+.resultado-emoji-circle {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: #fff7e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultado-emoji {
+    font-size: 42px;
+    line-height: 1;
+}
+
+.resultado-metricas {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.resultado-metrica-item {
+    height: 100%;
+    padding: 6px 12px;
+}
+
+.resultado-metrica-item--divisor {
+    border-left: 1px solid #e9edf5;
+    border-right: 1px solid #e9edf5;
+}
+
+.resultado-metrica-valor {
+    font-size: 2.4rem;
+    line-height: 1.1;
+}
+
+.resultado-questao-card {
+    border-radius: 22px;
+}
+
+.resultado-questao-numero {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.resultado-questao-numero--acerto {
+    background: #dff7ea;
+    color: #14955b;
+}
+
+.resultado-questao-numero--erro {
+    background: #ffe3e3;
+    color: #dc3545;
+}
+
+.resultado-badge {
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.resultado-alternativa {
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #edf1f7;
+}
+
+.resultado-alternativa--correta {
+    background: #eaf8f0;
+    border-color: #ccefdc;
+    color: #0f8a55;
+}
+
+.resultado-alternativa--errada {
+    background: #fff0f2;
+    border-color: #f8c7d0;
+    color: #c53030;
+}
+
+.resultado-alternativa--neutra {
+    background: #ffffff;
+    color: #475467;
+}
+
+.resultado-explicacao {
+    background: #eef4ff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #344054;
+}
+
+@media (max-width: 767.98px) {
+    .resultado-emoji-circle {
+        width: 82px;
+        height: 82px;
+    }
+
+    .resultado-emoji {
+        font-size: 34px;
+    }
+
+    .resultado-metrica-item--divisor {
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .resultado-metrica-valor {
+        font-size: 2rem;
+    }
+}
+
+.resultado-btn{
+    border-radius: 20px;
+}

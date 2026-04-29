@@ -1,0 +1,189 @@
+.ranking-page {
+    padding-bottom: 24px;
+}
+
+.ranking-period-badge {
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ranking-podium-card {
+    border-radius: 28px;
+    background: linear-gradient(180deg, #f8f5ff 0%, #ffffff 100%);
+}
+
+.ranking-podium-row {
+    min-height: 280px;
+}
+
+.ranking-podium-user {
+    position: relative;
+}
+
+.ranking-crown {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.ranking-avatar {
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #5b4ee6;
+    background: #efeaff;
+    box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+}
+
+.ranking-avatar--xl {
+    width: 140px;
+    height: 140px;
+    font-size: 52px;
+}
+
+.ranking-avatar--lg {
+    width: 110px;
+    height: 110px;
+    font-size: 40px;
+}
+
+.ranking-avatar--md {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+}
+
+.ranking-avatar--gold {
+    border: 5px solid #f4c542;
+}
+
+.ranking-avatar--silver {
+    border: 4px solid #c7ced6;
+}
+
+.ranking-avatar--bronze {
+    border: 4px solid #d99058;
+}
+
+.ranking-medal {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin: -18px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #1f2937;
+    border: 3px solid #fff;
+}
+
+.ranking-medal--gold {
+    background: #ffd84d;
+}
+
+.ranking-medal--silver {
+    background: #d9dde2;
+}
+
+.ranking-medal--bronze {
+    background: #e4a06b;
+}
+
+.ranking-user-name {
+    color: #1f2937;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.ranking-user-xp {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #6c4cf5;
+    line-height: 1.1;
+}
+
+.ranking-user-xp--first {
+    font-size: 2.4rem;
+}
+
+.ranking-position-number {
+    min-width: 36px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #6c4cf5;
+    text-align: center;
+}
+
+.ranking-user-name-sm {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.ranking-you-tag {
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #5b4ee6;
+    background: #efeaff;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.ranking-xp-right {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #6c4cf5;
+}
+
+.ranking-row-you {
+    background: #f7f3ff;
+}
+
+.ranking-footer-tip {
+    border-radius: 20px;
+    background: linear-gradient(90deg, #f4efff 0%, #faf7ff 100%);
+    color: #5b4ee6;
+    font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+    .ranking-avatar--xl {
+        width: 110px;
+        height: 110px;
+        font-size: 42px;
+    }
+
+    .ranking-avatar--lg {
+        width: 90px;
+        height: 90px;
+        font-size: 34px;
+    }
+
+    .ranking-user-xp {
+        font-size: 1.6rem;
+    }
+
+    .ranking-user-xp--first {
+        font-size: 1.9rem;
+    }
+
+    .ranking-position-number {
+        font-size: 1.5rem;
+        min-width: 28px;
+    }
+
+    .ranking-user-name-sm {
+        font-size: 1rem;
+    }
+
+    .ranking-xp-right {
+        font-size: 1.1rem;
+        width: 100%;
+        text-align: right;
+    }
+}

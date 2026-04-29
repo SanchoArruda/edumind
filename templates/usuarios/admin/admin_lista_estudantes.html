@@ -53,15 +53,15 @@
                             ID {{ estudante.id }}
                         </span>
 
-                        <div class="d-flex flex-column flex-md-row gap-2">
+                        <div class="d-flex flex-column flex-md-row">
                             <a href="{% url 'admin_editar_estudante' estudante.id %}"
-                               class="btn btn-sm btn-primary mb-2 mb-md-0 mr-md-2">
-                                Editar
+                               class="btn btn-sm btn-outline-primary mb-2 mb-md-0 mr-md-2">
+                                <i class="icon-note mr-1"></i> Editar
                             </a>
 
                             <a href="{% url 'admin_excluir_estudante' estudante.id %}"
                                class="btn btn-sm btn-outline-danger">
-                                Excluir
+                                <i class="icon-trash mr-1"></i> Excluir
                             </a>
                         </div>
                     </div>

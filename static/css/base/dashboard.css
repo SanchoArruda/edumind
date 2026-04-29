@@ -1,20 +1,48 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
 .edumind-body {
     background: #f6f7fb;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .ed-main {
     background: #f6f7fb;
+    height: 100vh;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .ed-sidebar {
     min-height: 100vh;
+    height: 100vh;
     position: sticky;
     top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 30;
 }
 
 .ed-navbar {
     min-height: 76px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #ffffff;
+}
+
+.ed-content-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .ed-brand-title {
@@ -136,12 +164,51 @@
 }
 
 @media (max-width: 767.98px) {
+    html,
+    body {
+        overflow: auto;
+        height: auto;
+    }
+
+    .edumind-body {
+        height: auto;
+        overflow: auto;
+    }
+
+    .ed-main {
+        height: auto;
+        min-height: auto;
+        overflow: visible;
+    }
+
+    .ed-sidebar {
+        position: static;
+        height: auto;
+        min-height: auto;
+        overflow: visible;
+    }
+
     .ed-navbar {
         min-height: auto;
+        position: static;
+    }
+
+    .ed-content-scroll {
+        overflow: visible;
     }
 
     .ed-search-form {
         max-width: 100%;
         margin-top: 12px;
     }
+}
+
+.ed-sidebar-section-title {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 0 12px;
+    margin: 8px 0 14px 0;
 }

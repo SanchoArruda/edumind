@@ -52,26 +52,21 @@
                         <span class="badge badge-light border mr-2 mb-2">
                             {{ questao.disciplina.nome }}
                         </span>
-
-                        <span class="badge badge-light border mr-2 mb-2">
-                            {{ questao.disciplina.nome }}
-                        </span>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <a href="{% url 'quizzes:admin_editar_questao' questao.id %}"
-                       class="btn btn-sm btn-light border mr-2"
-                       title="Editar">
-                        ✎
+                    <a href="{% url 'quizzes:admin_editar_questao' questao.id %}" class="btn btn-sm btn-outline-primary mr-2">
+                        <i class="icon-note mr-1"></i> Editar
                     </a>
 
                     <form method="post"
                           action="{% url 'quizzes:admin_excluir_questao' questao.id %}"
+                          class="mb-0"
                           onsubmit="return confirm('Tem certeza que deseja excluir esta questão?');">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-light border text-danger" title="Excluir">
-                            🗑
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="icon-trash mr-1"></i> Excluir
                         </button>
                     </form>
                 </div>

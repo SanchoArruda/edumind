@@ -5,12 +5,15 @@ app_name = "quizzes"
 
 urlpatterns = [
     path("", views.lista_quizzes, name="lista_quizzes"),
-    path("<int:quiz_id>/responder/", views.responder_quiz, name="responder_quiz"),
+    path("<int:quiz_id>/iniciar/", views.iniciar_quiz, name="iniciar_quiz"),
+    path("tentativa/<int:tentativa_id>/responder/", views.responder_quiz, name="responder_quiz"),
     path("resultado/<int:tentativa_id>/", views.resultado_quiz, name="resultado_quiz"),
 
     # área administrativa
     path("admin/quizzes/", views.admin_lista_quizzes, name="admin_lista_quizzes"),
     path("admin/quizzes/novo/", views.admin_criar_quiz, name="admin_criar_quiz"),
+    path("admin/<int:quiz_id>/editar/", views.admin_editar_quiz, name="admin_editar_quiz"),
+    path("admin/<int:quiz_id>/excluir/", views.admin_excluir_quiz, name="admin_excluir_quiz"),
 
     path("admin/questoes/", views.admin_todas_questoes, name="admin_todas_questoes"),
     path("admin/questoes/nova/", views.admin_criar_questao_geral, name="admin_criar_questao_geral"),

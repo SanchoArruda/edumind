@@ -92,6 +92,7 @@ class TentativaQuiz(models.Model):
     desempenho_geral = models.CharField(max_length=100, blank=True)
     tempo_gasto = models.DurationField(null=True, blank=True)
     concluida = models.BooleanField(default=False)
+    respostas = models.JSONField(default=dict, blank=True)
 
     class Meta:
         verbose_name = "Tentativa de Quiz"

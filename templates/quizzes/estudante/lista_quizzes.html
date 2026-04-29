@@ -5,55 +5,62 @@
 
 {% block menu_quizzes %}active{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/quizzes/estudante/lista_quizzes.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<div class="row align-items-center mb-4">
-    <div class="col-md-8">
-        <h1 class="font-weight-bold mb-1">Quizzes Disponíveis</h1>
-        <p class="text-muted mb-0">
-            Escolha um quiz para praticar seus conhecimentos.
-        </p>
-    </div>
+<div class="mb-4">
+    <h1 class="font-weight-bold mb-1">Quizzes</h1>
+    <p class="text-muted mb-0">Escolha um quiz e teste seus conhecimentos</p>
 </div>
 
-<div class="card ed-card border-0 mb-4">
-    <div class="card-body">
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body py-3">
         <form method="get">
-            <div class="row align-items-end">
-                <div class="col-md-4 mb-3">
-                    <label for="tipo_prova" class="font-weight-bold">Tipo da prova</label>
-                    <select name="tipo_prova" id="tipo_prova" class="form-control">
-                        <option value="">Todos</option>
-                        {% for valor, rotulo in tipos_prova %}
-                            <option value="{{ valor }}" {% if tipo_prova_selecionado == valor %}selected{% endif %}>
-                                {{ rotulo }}
-                            </option>
-                        {% endfor %}
+            <div class="form-row align-items-center">
+
+                <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                    <div class="quiz-search-wrap">
+                        <i class="mdi mdi-magnify quiz-search-icon"></i>
+                        <input
+                            type="text"
+                            name="q"
+                            value="{{ q|default:'' }}"
+                            class="form-control quiz-search-input"
+                            placeholder="Buscar quizzes..."
+                        >
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-3 mb-md-0">
+                    <select name="tipo_prova" class="form-control quiz-filter-control">
+                        <option value="">Todas</option>
+                        <option value="ENADE" {% if tipo_prova_selecionado == "ENADE" %}selected{% endif %}>ENADE</option>
+                        <option value="POSCOMP" {% if tipo_prova_selecionado == "POSCOMP" %}selected{% endif %}>POSCOMP</option>
                     </select>
                 </div>
 
-                <div class="col-md-4 mb-3">
-                    <label for="disciplina" class="font-weight-bold">Disciplina</label>
-                    <select name="disciplina" id="disciplina" class="form-control">
-                        <option value="">Todas</option>
+                <div class="col-lg-3 col-md-6 mb-3 mb-md-0">
+                    <select name="disciplina" class="form-control quiz-filter-control">
+                        <option value="">Todas as áreas</option>
                         {% for disciplina in disciplinas %}
-                            <option value="{{ disciplina.id }}" {% if disciplina_selecionada == disciplina.id|stringformat:"s" %}selected{% endif %}>
+                            <option value="{{ disciplina.id }}"
+                                {% if disciplina_selecionada == disciplina.id|stringformat:"s" %}selected{% endif %}>
                                 {{ disciplina.nome }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
 
-                <div class="col-md-4 mb-3">
-                    <div class="d-flex">
-                        <button type="submit" class="btn ed-btn-primary px-4 mr-2">
-                            Filtrar
-                        </button>
-                        <a href="{% url 'quizzes:lista_quizzes' %}" class="btn btn-light border px-4">
-                            Limpar
-                        </a>
-                    </div>
+                <div class="col-lg-1 col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block quiz-filter-btn">
+                        Filtrar
+                    </button>
                 </div>
+
             </div>
         </form>
     </div>
@@ -61,48 +68,56 @@
 
 <div class="row">
     {% for quiz in quizzes %}
-        <div class="col-xl-4 col-md-6 mb-4">
-            <div class="card ed-card border-0 h-100">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card ed-card border-0 shadow-sm h-100 quiz-card">
                 <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h5 class="font-weight-bold mb-1">
-                                {{ quiz.titulo }}
-                            </h5>
-                            <small class="text-muted d-block">
-                                {{ quiz.disciplina.nome }}
-                            </small>
+
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="quiz-icon d-flex align-items-center justify-content-center">
+                            <i class="icon-book-open"></i>
                         </div>
 
-                        <span class="ed-badge-success">
-                             {{ quiz.tipo_prova }}
+                        <span class="badge badge-pill px-3 py-2 font-weight-bold quiz-tipo-pill">
+                            {{ quiz.tipo_prova }}
                         </span>
                     </div>
 
-                    <p class="text-muted small mb-4" style="min-height: 40px;">
-                        {{ quiz.descricao|default:"Sem descrição cadastrada."|truncatechars:90 }}
+                    <h4 class="font-weight-bold mb-2">{{ quiz.titulo }}</h4>
+
+                    <p class="text-muted small font-weight-bold mb-2">
+                        {{ quiz.disciplina.nome }}
                     </p>
 
-                    <div class="mt-auto d-flex justify-content-between align-items-center">
-                        <small class="text-muted font-weight-bold">
-                            {{ quiz.questoes.count }} questões
-                        </small>
+                    <p class="text-muted mb-4">
+                        {% if quiz.descricao %}
+                            {{ quiz.descricao|truncatechars:95 }}
+                        {% else %}
+                            Quiz para praticar conteúdos de {{ quiz.disciplina.nome }}.
+                        {% endif %}
+                    </p>
 
-                        <a href="{% url 'quizzes:responder_quiz' quiz.id %}" class="btn ed-btn-primary btn-sm px-4">
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div class="text-muted small d-flex flex-wrap align-items-center">
+                            <span class="mr-3">
+                                <i class="icon-book-open mr-1"></i>
+                                {{ quiz.questoes.count }} questão{{ quiz.questoes.count|pluralize:"ões" }}
+                            </span>
+                        </div>
+
+                        <a href="{% url 'quizzes:iniciar_quiz' quiz.id %}" class="btn btn-sm ed-btn-primary px-3">
                             Iniciar
                         </a>
                     </div>
+
                 </div>
             </div>
         </div>
     {% empty %}
         <div class="col-12">
-            <div class="card ed-card border-0">
+            <div class="card ed-card border-0 shadow-sm">
                 <div class="card-body text-center py-5">
-                    <h5 class="font-weight-bold">Nenhum quiz encontrado</h5>
-                    <p class="text-muted mb-0">
-                        Tente ajustar os filtros ou aguarde novos quizzes.
-                    </p>
+                    <h5 class="font-weight-bold mb-2">Nenhum quiz encontrado</h5>
+                    <p class="text-muted mb-0">Tente ajustar os filtros para ver mais resultados.</p>
                 </div>
             </div>
         </div>
