@@ -1,0 +1,138 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/desafios/estudante/desafios.css' %}">
+{% endblock %}
+
+{% block title %}Lista de Desafios - EduMind{% endblock %}
+
+{% block content %}
+
+<div class="desafios-page {% if tipo_prova == 'POSCOMP' %}tema-poscomp{% else %}tema-enade{% endif %}">
+
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h1 class="font-weight-bold mb-1 desafios-page-title">
+                Desafios {{ tipo_prova }}
+                <span class="desafios-count">({{ desafios_liberados|length }} disponíveis)</span>
+            </h1>
+
+            <p class="text-muted mb-0 desafios-page-subtitle">
+                Conclua um desafio para desbloquear o próximo.
+            </p>
+        </div>
+
+        <div class="col-md-4 text-md-right mt-3 mt-md-0">
+            <a href="{% url 'desafios:inicio_desafios' %}" class="btn btn-light border px-4 py-2 desafios-btn-voltar">
+                Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="row desafios-grid">
+        {% for item in desafios_liberados %}
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                <div class="desafio-card {% if not item.liberado %}desafio-card-bloqueado{% endif %}">
+
+                    <div class="desafio-card-top">
+                        <div class="desafio-icon">
+                            {% if item.liberado %}
+                                {{ item.desafio.ordem }}
+                            {% else %}
+                                <i class="icon-lock"></i>
+                            {% endif %}
+                        </div>
+
+                        {% if item.desafio.nivel == 1 %}
+                            <span class="desafio-dificuldade dificuldade-facil">
+                                {{ item.desafio.get_nivel_display }}
+                            </span>
+                        {% elif item.desafio.nivel == 2 %}
+                            <span class="desafio-dificuldade dificuldade-medio">
+                                {{ item.desafio.get_nivel_display }}
+                            </span>
+                        {% else %}
+                            <span class="desafio-dificuldade dificuldade-dificil">
+                                {{ item.desafio.get_nivel_display }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="desafio-card-body">
+                        <h4 class="desafio-titulo">
+                            Desafio {{ item.desafio.ordem }} — {{ item.desafio.titulo }}
+                        </h4>
+
+                        <p class="desafio-descricao">
+                            Desafio {{ item.desafio.ordem }} de {{ tipo_prova }}.
+                        </p>
+
+                        <div class="desafio-info">
+                            <span>
+                                <i class="icon-question"></i>
+                                {{ item.desafio.quantidade_questoes }} questões
+                            </span>
+
+                            <span>
+                                <i class="icon-clock"></i>
+                                {{ item.desafio.tempo_formatado }}
+                            </span>
+                        </div>
+
+                        <div class="desafio-status-area">
+                            {% if item.concluido %}
+                                <span class="desafio-status status-concluido">
+                                    <i class="icon-check"></i>
+                                    Concluído
+                                </span>
+                            {% elif item.liberado %}
+                                <span class="desafio-status status-liberado">
+                                    <i class="icon-energy"></i>
+                                    Liberado
+                                </span>
+                            {% else %}
+                                <span class="desafio-status status-bloqueado">
+                                    <i class="icon-lock"></i>
+                                    Conclua o desafio anterior para desbloquear
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="desafio-card-footer">
+                        {% if item.liberado %}
+                            <a href="{% url 'desafios:iniciar_desafio' item.desafio.id %}" class="btn desafio-btn-principal btn-block">
+                                <i class="icon-control-play mr-2"></i>
+                                {% if item.concluido %}
+                                    Refazer Desafio
+                                {% else %}
+                                    Iniciar Desafio
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            <button class="btn desafio-btn-bloqueado btn-block" disabled>
+                                Bloqueado
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="card ed-card border-0">
+                    <div class="card-body text-center py-5">
+                        <h5 class="font-weight-bold">Nenhum desafio encontrado</h5>
+                        <p class="text-muted mb-0">
+                            Ainda não há desafios cadastrados para {{ tipo_prova }}.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

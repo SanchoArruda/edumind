@@ -5,6 +5,18 @@ from disciplinas.models import Disciplina
 
 
 class Questao(models.Model):
+    NIVEL_DIFICULDADE_CHOICES = [
+        ("FACIL", "Fácil"),
+        ("MEDIA", "Média"),
+        ("DIFICIL", "Difícil"),
+    ]
+
+    TIPO_PROVA_CHOICES = [
+        ("ENADE", "ENADE"),
+        ("POSCOMP", "POSCOMP"),
+        ("AMBOS", "Ambos"),
+    ]
+
     disciplina = models.ForeignKey(
         Disciplina,
         on_delete=models.CASCADE,
@@ -12,6 +24,18 @@ class Questao(models.Model):
     )
     enunciado = models.TextField()
     explicacao_resposta = models.TextField(blank=True)
+
+    nivel_dificuldade = models.CharField(
+        max_length=10,
+        choices=NIVEL_DIFICULDADE_CHOICES,
+        default="MEDIA"
+    )
+
+    tipo_prova = models.CharField(
+        max_length=10,
+        choices=TIPO_PROVA_CHOICES,
+        default="AMBOS"
+    )
 
     class Meta:
         verbose_name = "Questão"
@@ -73,16 +97,34 @@ class Quiz(models.Model):
         return self.titulo
 
 
-class TentativaQuiz(models.Model):
+class Tentativa(models.Model):
+    TIPO_TENTATIVA_CHOICES = [
+        ("QUIZ", "Quiz"),
+        ("DESAFIO", "Desafio"),
+    ]
+
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="tentativas"
+        related_name="tentativas_genericas"
     )
     quiz = models.ForeignKey(
-        Quiz,
+        "Quiz",
         on_delete=models.CASCADE,
-        related_name="tentativas"
+        related_name="tentativas_genericas",
+        null=True,
+        blank=True
+    )
+    desafio = models.ForeignKey(
+        "desafios.Desafio",
+        on_delete=models.CASCADE,
+        related_name="tentativas_genericas",
+        null=True,
+        blank=True
+    )
+    tipo_tentativa = models.CharField(
+        max_length=10,
+        choices=TIPO_TENTATIVA_CHOICES
     )
     data_tentativa = models.DateTimeField(auto_now_add=True)
     pontuacao = models.FloatField(default=0)
@@ -92,12 +134,17 @@ class TentativaQuiz(models.Model):
     desempenho_geral = models.CharField(max_length=100, blank=True)
     tempo_gasto = models.DurationField(null=True, blank=True)
     concluida = models.BooleanField(default=False)
+    aprovado = models.BooleanField(default=False)
     respostas = models.JSONField(default=dict, blank=True)
 
     class Meta:
-        verbose_name = "Tentativa de Quiz"
-        verbose_name_plural = "Tentativas de Quiz"
+        verbose_name = "Tentativa"
+        verbose_name_plural = "Tentativas"
         ordering = ["-data_tentativa"]
 
     def __str__(self):
-        return f"{self.usuario} - {self.quiz.titulo}"
+        if self.tipo_tentativa == "QUIZ" and self.quiz:
+            return f"{self.usuario} - Quiz: {self.quiz.titulo}"
+        if self.tipo_tentativa == "DESAFIO" and self.desafio:
+            return f"{self.usuario} - Desafio: {self.desafio.titulo}"
+        return f"{self.usuario} - Tentativa {self.id}"

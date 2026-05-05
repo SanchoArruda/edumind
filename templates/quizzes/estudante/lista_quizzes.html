@@ -16,7 +16,6 @@
     <p class="text-muted mb-0">Escolha um quiz e teste seus conhecimentos</p>
 </div>
 
-
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-body py-3">
         <form method="get">
@@ -69,7 +68,7 @@
 <div class="row">
     {% for quiz in quizzes %}
         <div class="col-xl-4 col-lg-6 mb-4">
-            <div class="card ed-card border-0 shadow-sm h-100 quiz-card">
+            <div class="card ed-card border-0 shadow-sm h-100 quiz-card {% if quiz.tipo_prova == 'POSCOMP' %}quiz-card-poscomp{% else %}quiz-card-enade{% endif %}">
                 <div class="card-body d-flex flex-column">
 
                     <div class="d-flex justify-content-between align-items-start mb-4">
@@ -82,13 +81,15 @@
                         </span>
                     </div>
 
-                    <h4 class="font-weight-bold mb-2">{{ quiz.titulo }}</h4>
+                    <h4 class="font-weight-bold mb-2 quiz-card-title">
+                        {{ quiz.titulo }}
+                    </h4>
 
                     <p class="text-muted small font-weight-bold mb-2">
                         {{ quiz.disciplina.nome }}
                     </p>
 
-                    <p class="text-muted mb-4">
+                    <p class="text-muted mb-4 quiz-card-desc">
                         {% if quiz.descricao %}
                             {{ quiz.descricao|truncatechars:95 }}
                         {% else %}
@@ -104,7 +105,7 @@
                             </span>
                         </div>
 
-                        <a href="{% url 'quizzes:iniciar_quiz' quiz.id %}" class="btn btn-sm ed-btn-primary px-3">
+                        <a href="{% url 'quizzes:iniciar_quiz' quiz.id %}" class="btn btn-sm quiz-btn-iniciar px-3">
                             Iniciar
                         </a>
                     </div>

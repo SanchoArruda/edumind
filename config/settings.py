@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'usuarios',
     'disciplinas',
     'quizzes',
+    'desafios'
 ]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'

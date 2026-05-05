@@ -1,0 +1,234 @@
+.desafio-radio-input {
+    display: none;
+}
+
+.desafio-opcao-card {
+    position: relative;
+    display: block;
+    padding: 24px 22px;
+    border: 2px solid #dfe5f1;
+    border-radius: 20px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    min-height: 220px;
+    text-decoration: none;
+}
+
+.desafio-opcao-top {
+    margin-bottom: 18px;
+}
+
+.desafio-opcao-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 20px;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.desafio-icon-enade {
+    background: linear-gradient(135deg, #2d8cff, #18b7d8);
+}
+
+.desafio-icon-poscomp {
+    background: linear-gradient(135deg, #7b3ff2, #a64dff);
+}
+
+.desafio-opcao-titulo {
+    font-size: 22px;
+    font-weight: 800;
+    color: #101828;
+    margin-bottom: 6px;
+}
+
+.desafio-opcao-subtitulo {
+    color: #667085;
+    margin-bottom: 18px;
+}
+
+.desafio-opcao-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.desafio-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #667085;
+    font-size: 15px;
+}
+
+.desafio-info-item i {
+    font-size: 14px;
+}
+
+/* HOVER ENADE */
+.desafio-opcao-enade:hover {
+    transform: translateY(-2px);
+    background: #f3f9ff;
+    border-color: #a9d2ff;
+    box-shadow: 0 14px 30px rgba(45, 140, 255, 0.10);
+}
+
+/* HOVER POSCOMP */
+.desafio-opcao-poscomp:hover {
+    transform: translateY(-2px);
+    background: #f7f3ff;
+    border-color: #d4c2ff;
+    box-shadow: 0 14px 30px rgba(123, 63, 242, 0.10);
+}
+
+/* ENADE selecionado */
+#tipo_prova_enade:checked + .desafio-opcao-enade {
+    background: #f3f9ff;
+    border-color: #a9d2ff;
+    box-shadow: 0 14px 30px rgba(45, 140, 255, 0.10);
+}
+
+/* POSCOMP selecionado */
+#tipo_prova_poscomp:checked + .desafio-opcao-poscomp {
+    background: #f7f3ff;
+    border-color: #d4c2ff;
+    box-shadow: 0 14px 30px rgba(123, 63, 242, 0.10);
+}
+
+/* =========================
+   CARDS DE EXPLICAÇÃO
+========================= */
+
+.desafio-dicas-card,
+.desafio-estrelas-card {
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.05);
+}
+
+.desafio-dicas-icon,
+.desafio-estrelas-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.desafio-dicas-icon {
+    background: #fff4e3;
+}
+
+.desafio-estrelas-icon {
+    background: #fff4e3;
+    color: #d97706;
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+/* DICAS */
+
+.desafio-dica-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eef1f7;
+}
+
+.desafio-dica-item:last-child {
+    border-bottom: 0;
+}
+
+.desafio-dica-item p {
+    margin: 0;
+    color: #5f6f89;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.desafio-dica-marcador {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #eef0ff;
+    color: #5b4ee6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+/* ESTRELAS */
+
+.desafio-estrelas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.desafio-estrelas-lista div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #eef1f7;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.desafio-estrelas-lista span {
+    color: #65738c;
+    font-weight: 700;
+}
+
+.desafio-estrelas-lista strong {
+    color: #111827;
+    font-weight: 800;
+}
+
+.desafio-desbloqueio-alert {
+    border-radius: 14px;
+    background: #ecfdf3;
+    color: #14955b;
+    padding: 12px 14px;
+    font-weight: 700;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 767.98px) {
+    .desafio-opcao-card {
+        min-height: auto;
+        padding: 20px 18px;
+    }
+
+    .desafio-opcao-titulo {
+        font-size: 20px;
+    }
+
+    .desafio-opcao-subtitulo {
+        font-size: 14px;
+    }
+
+    .desafio-info-item {
+        font-size: 14px;
+    }
+
+    .desafio-dicas-icon,
+    .desafio-estrelas-icon {
+        width: 40px;
+        height: 40px;
+    }
+}

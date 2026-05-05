@@ -1,0 +1,49 @@
+.questao-card-admin {
+    border-radius: 18px;
+    transition: all 0.18s ease;
+}
+
+.questao-card-admin:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 32px rgba(16, 24, 40, 0.07);
+}
+
+.questao-numero-admin {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2ea8ff, #0f9edb);
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 24px rgba(15, 158, 219, 0.22);
+}
+
+.questao-enunciado-admin {
+    line-height: 1.4;
+}
+
+@media (max-width: 575.98px) {
+    .questao-numero-admin {
+        width: 44px;
+        height: 44px;
+        font-size: 17px;
+        margin-right: 1rem !important;
+    }
+
+    .questao-acoes-admin {
+        width: 100%;
+    }
+
+    .questao-acoes-admin .btn,
+    .questao-acoes-admin form {
+        flex: 1;
+    }
+
+    .questao-acoes-admin form .btn {
+        width: 100%;
+    }
+}

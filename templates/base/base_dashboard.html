@@ -64,6 +64,12 @@
                     <span>Quizzes</span>
                 </a>
 
+                <a href="{% url 'desafios:inicio_desafios' %}"
+                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_desafios %}{% endblock %}">
+                    <i class="icon-energy mr-3"></i>
+                    <span>Desafios</span>
+                </a>
+
                 <a href="{% url 'ranking_estudante' %}"
                     class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_ranking_estudante %}{% endblock %}">
                     <i class="icon-trophy mr-3"></i>
@@ -75,6 +81,7 @@
                     <i class="icon-user mr-3"></i>
                     <span>Meu Perfil</span>
                 </a>
+
 
 
             </nav>
@@ -109,17 +116,6 @@
 
                 <div class="collapse navbar-collapse" id="edumindNavbar">
 
-                    <!-- Pesquisa -->
-                    <form class="form-inline my-2 my-lg-0 mr-auto ed-search-form">
-                        <div class="input-group ed-search">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-white border-right-0">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                            </div>
-                            <input class="form-control border-left-0" type="search" placeholder="Pesquisar">
-                        </div>
-                    </form>
 
                     <!-- Links mobile -->
                     <ul class="navbar-nav d-md-none mt-3">
@@ -128,15 +124,19 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">Quizzes</a>
+                            <a class="nav-link" href="{% url 'quizzes:lista_quizzes' %}">Quizzes</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">Ranking</a>
+                            <a class="nav-link" href="{% url 'ranking_estudante' %}">Ranking</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">Meu Perfil</a>
+                            <a class="nav-link" href="{% url 'desafios:inicio_desafios' %}">Desafios</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'perfil_estudante' %}">Meu Perfil</a>
                         </li>
                     </ul>
 
@@ -171,7 +171,7 @@
 
                                 <a class="dropdown-item" href="{% url 'meu_perfil' %}">
                                     <i class="icon-user mr-2"></i>
-                                    Meu Perfil
+                                    Informações Pessoais
                                 </a>
 
                                 <a class="dropdown-item" href="{% url 'logout' %}">

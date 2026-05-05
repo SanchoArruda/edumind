@@ -9,9 +9,7 @@ from django.db.models.functions import Coalesce
 
 from .forms import LoginForm, CadastroEstudanteForm, UsuarioAdminForm
 from .models import Usuario, TipoUsuario
-
 from .utils import calcular_progresso_nivel
-from django.db.models import Avg
 
 
 def usuario_e_admin(user):
@@ -20,6 +18,7 @@ def usuario_e_admin(user):
         and user.tipo_usuario
         and user.tipo_usuario.perfil.lower() == "administrador"
     )
+
 
 class UsuarioLoginView(LoginView):
     template_name = "usuarios/login.html"
@@ -64,15 +63,23 @@ def dashboard_estudante(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
         return redirect("login")
 
-    from quizzes.models import Quiz, TentativaQuiz
-    from .utils import calcular_progresso_nivel
+    from quizzes.models import Tentativa
 
-    tentativas = TentativaQuiz.objects.filter(
+    tentativas = Tentativa.objects.filter(
         usuario=request.user,
-        concluida=True
+        concluida=True,
+        tipo_tentativa="QUIZ",
     ).select_related("quiz", "quiz__disciplina")
 
-    quizzes_disponiveis = Quiz.objects.all().select_related("disciplina")[:3]
+    tentativas_desafios = Tentativa.objects.filter(
+        usuario=request.user,
+        concluida=True,
+        tipo_tentativa="DESAFIO",
+    ).select_related("desafio")
+
+    # --------------------------
+    # DADOS DOS QUIZZES
+    # --------------------------
 
     total_quizzes_feitos = tentativas.count()
     total_acertos = sum(t.quantidade_acertos for t in tentativas)
@@ -92,8 +99,15 @@ def dashboard_estudante(request):
         .order_by("quiz__disciplina__nome")
     )
 
-    labels_area = [item["quiz__disciplina__nome"] for item in desempenho_por_area_qs]
-    dados_area = [round(item["media_acerto"], 1) for item in desempenho_por_area_qs]
+    labels_area = [
+        item["quiz__disciplina__nome"]
+        for item in desempenho_por_area_qs
+    ]
+
+    dados_area = [
+        round(item["media_acerto"], 1)
+        for item in desempenho_por_area_qs
+    ]
 
     desempenho_detalhado = [
         {
@@ -107,30 +121,64 @@ def dashboard_estudante(request):
     pior_area = None
 
     if desempenho_detalhado:
-        melhor_area = max(desempenho_detalhado, key=lambda item: item["media_acerto"])
-        pior_area = min(desempenho_detalhado, key=lambda item: item["media_acerto"])
+        melhor_area = max(
+            desempenho_detalhado,
+            key=lambda item: item["media_acerto"]
+        )
+        pior_area = min(
+            desempenho_detalhado,
+            key=lambda item: item["media_acerto"]
+        )
+
+    # --------------------------
+    # DADOS DOS DESAFIOS
+    # --------------------------
+
+    desafios_enade_concluidos = tentativas_desafios.filter(
+        aprovado=True,
+        desafio__tipo_prova="ENADE",
+    ).count()
+
+    desafios_poscomp_concluidos = tentativas_desafios.filter(
+        aprovado=True,
+        desafio__tipo_prova="POSCOMP",
+    ).count()
+
+    total_estrelas_desafios = tentativas_desafios.aggregate(
+        total=Coalesce(
+            Sum("pontuacao"),
+            Value(0.0),
+            output_field=FloatField()
+        )
+    )["total"]
 
     contexto = {
+        # Quizzes
         "total_quizzes_feitos": total_quizzes_feitos,
         "total_acertos": total_acertos,
         "total_erros": total_erros,
         "total_questoes": total_questoes,
         "taxa_acerto": taxa_acerto,
         "xp_total": xp_total,
-        "quizzes_disponiveis": quizzes_disponiveis,
-        "tentativas_recentes": tentativas[:5],
 
+        # Nível
         "nivel_atual": progresso_nivel["nivel_atual"],
         "xp_no_nivel": progresso_nivel["xp_no_nivel"],
         "xp_para_proximo_nivel": progresso_nivel["xp_para_proximo_nivel"],
         "xp_faltante": progresso_nivel["xp_faltante"],
         "percentual_nivel": progresso_nivel["percentual_nivel"],
 
+        # Desempenho por área — quizzes
         "labels_area": labels_area,
         "dados_area": dados_area,
         "desempenho_detalhado": desempenho_detalhado,
         "melhor_area": melhor_area,
         "pior_area": pior_area,
+
+        # Desafios
+        "desafios_enade_concluidos": desafios_enade_concluidos,
+        "desafios_poscomp_concluidos": desafios_poscomp_concluidos,
+        "total_estrelas_desafios": total_estrelas_desafios,
     }
 
     return render(request, "usuarios/estudante/dashboard_estudante.html", contexto)
@@ -141,13 +189,19 @@ def perfil_estudante(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
         return redirect("login")
 
-    from quizzes.models import TentativaQuiz
-    from .utils import calcular_progresso_nivel
+    from quizzes.models import Tentativa
 
-    tentativas = TentativaQuiz.objects.filter(
+    tentativas = Tentativa.objects.filter(
         usuario=request.user,
-        concluida=True
+        concluida=True,
+        tipo_tentativa="QUIZ",
     ).select_related("quiz", "quiz__disciplina")
+
+    tentativas_desafios = Tentativa.objects.filter(
+        usuario=request.user,
+        concluida=True,
+        tipo_tentativa="DESAFIO",
+    ).select_related("desafio")
 
     total_quizzes = tentativas.count()
     total_acertos = sum(t.quantidade_acertos for t in tentativas)
@@ -161,6 +215,29 @@ def perfil_estudante(request):
 
     progresso_nivel = calcular_progresso_nivel(xp_total)
 
+    # --------------------------
+    # DADOS DOS DESAFIOS
+    # --------------------------
+
+    total_desafios_concluidos = tentativas_desafios.filter(aprovado=True).count()
+
+    melhor_estrelas_desafio = (
+        tentativas_desafios.order_by("-pontuacao")
+        .values_list("pontuacao", flat=True)
+        .first()
+        or 0
+    )
+
+    desafios_enade_concluidos = tentativas_desafios.filter(
+        aprovado=True,
+        desafio__tipo_prova="ENADE",
+    ).count()
+
+    desafios_poscomp_concluidos = tentativas_desafios.filter(
+        aprovado=True,
+        desafio__tipo_prova="POSCOMP",
+    ).count()
+
     contexto = {
         "total_quizzes": total_quizzes,
         "total_acertos": total_acertos,
@@ -169,38 +246,43 @@ def perfil_estudante(request):
         "taxa_acerto": taxa_acerto,
         "xp_total": xp_total,
         "tentativas": tentativas[:10],
-
         "nivel_atual": progresso_nivel["nivel_atual"],
         "xp_no_nivel": progresso_nivel["xp_no_nivel"],
         "xp_para_proximo_nivel": progresso_nivel["xp_para_proximo_nivel"],
         "xp_faltante": progresso_nivel["xp_faltante"],
         "percentual_nivel": progresso_nivel["percentual_nivel"],
+
+        # Desafios
+        "tentativas_desafios": tentativas_desafios[:10],
+        "total_desafios_concluidos": total_desafios_concluidos,
+        "melhor_estrelas_desafio": melhor_estrelas_desafio,
+        "desafios_enade_concluidos": desafios_enade_concluidos,
+        "desafios_poscomp_concluidos": desafios_poscomp_concluidos,
     }
 
     return render(request, "usuarios/estudante/perfil_estudante.html", contexto)
 
 
-#-----------------------
-#admin 
-#----------------------- 
+# -----------------------
+# admin
+# -----------------------
 
-
-# parte central do dashboard de admin
 
 @login_required
 def dashboard_admin(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "administrador":
         return redirect("login")
 
-    from quizzes.models import Quiz, Questao, TentativaQuiz
+    from quizzes.models import Quiz, Questao, Tentativa
     from disciplinas.models import Disciplina
 
     estudantes = Usuario.objects.filter(
         tipo_usuario__perfil__iexact="Estudante"
     )
 
-    tentativas = TentativaQuiz.objects.filter(
-        concluida=True
+    tentativas = Tentativa.objects.filter(
+        concluida=True,
+        tipo_tentativa="QUIZ",
     ).select_related("usuario", "quiz")
 
     media_geral = tentativas.aggregate(
@@ -299,15 +381,17 @@ def admin_excluir_estudante(request, usuario_id):
     )
 
 
-#admin- desempenho
 @login_required
 def admin_desempenho_geral(request):
     if not usuario_e_admin(request.user):
         return redirect("login")
 
-    from quizzes.models import TentativaQuiz
+    from quizzes.models import Tentativa
 
-    tentativas = TentativaQuiz.objects.filter(concluida=True).select_related(
+    tentativas = Tentativa.objects.filter(
+        concluida=True,
+        tipo_tentativa="QUIZ",
+    ).select_related(
         "usuario",
         "quiz",
         "quiz__disciplina",
@@ -408,9 +492,10 @@ def admin_desempenho_geral(request):
         contexto,
     )
 
-#--------------------------
-#RANKING ESTUDANTE
-#--------------------------
+
+# --------------------------
+# RANKING ESTUDANTE
+# --------------------------
 
 
 @login_required
@@ -418,12 +503,13 @@ def ranking_estudante(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
         return redirect("login")
 
-    from quizzes.models import TentativaQuiz
-    from django.db.models import Sum, Count, IntegerField, FloatField, Value
-    from django.db.models.functions import Coalesce
+    from quizzes.models import Tentativa
 
     ranking_qs = (
-        TentativaQuiz.objects.filter(concluida=True)
+        Tentativa.objects.filter(
+            concluida=True,
+            tipo_tentativa="QUIZ",
+        )
         .values(
             "usuario__id",
             "usuario__nome",
@@ -479,10 +565,9 @@ def ranking_estudante(request):
     return render(request, "usuarios/estudante/ranking_estudante.html", contexto)
 
 
-
-#--------------------
+# --------------------
 # PERFIL - ESTUDANTE
-#--------------------
+# --------------------
 
 @login_required
 def meu_perfil(request):

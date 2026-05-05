@@ -1,4 +1,5 @@
 {% extends "base/base_admin.html" %}
+{% load static %}
 
 {% block title %}
     {% if quiz %}Editar Quiz{% else %}Novo Quiz{% endif %} - EduMind
@@ -30,51 +31,65 @@
         <form method="post">
             {% csrf_token %}
 
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
             <div class="form-group">
-                <label class="font-weight-bold">Título</label>
-                <input
-                    type="text"
-                    name="titulo"
-                    class="form-control"
-                    placeholder="Ex: Quiz de Banco de Dados"
-                    value="{{ quiz.titulo|default:'' }}"
-                    required
-                >
+                <label class="font-weight-bold" for="{{ form.titulo.id_for_label }}">
+                    {{ form.titulo.label }}
+                </label>
+                {{ form.titulo }}
+                {% if form.titulo.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.titulo.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label class="font-weight-bold">Descrição</label>
-                <textarea
-                    name="descricao"
-                    class="form-control"
-                    rows="3"
-                    placeholder="Descreva o objetivo do quiz"
-                >{{ quiz.descricao|default:'' }}</textarea>
+                <label class="font-weight-bold" for="{{ form.descricao.id_for_label }}">
+                    {{ form.descricao.label }}
+                </label>
+                {{ form.descricao }}
+                {% if form.descricao.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.descricao.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label class="font-weight-bold">Disciplina / Área</label>
-                <select name="disciplina" id="disciplinaSelect" class="form-control" required>
-                    <option value="">Selecione uma disciplina</option>
-                    {% for disciplina in disciplinas %}
-                        <option value="{{ disciplina.id }}"
-                            {% if quiz and quiz.disciplina.id == disciplina.id %}selected{% endif %}>
-                            {{ disciplina.nome }}
-                        </option>
-                    {% endfor %}
-                </select>
+                <label class="font-weight-bold" for="{{ form.disciplina.id_for_label }}">
+                    {{ form.disciplina.label }}
+                </label>
+                {{ form.disciplina }}
+                {% if form.disciplina.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.disciplina.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label class="font-weight-bold">Tipo da Prova</label>
-                <select name="tipo_prova" class="form-control" required>
-                    <option value="">Selecione o tipo</option>
-                    {% for valor, rotulo in tipos_prova %}
-                        <option value="{{ valor }}"
-                            {% if quiz and quiz.tipo_prova == valor %}selected{% endif %}>
-                            {{ rotulo }}
-                        </option>
-                    {% endfor %}
+                <label class="font-weight-bold" for="{{ form.tipo_prova.id_for_label }}">
+                    {{ form.tipo_prova.label }}
+                </label>
+                {{ form.tipo_prova }}
+                {% if form.tipo_prova.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.tipo_prova.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="font-weight-bold">Incluir questões marcadas como Ambos?</label>
+                <select id="incluirAmbos" class="form-control">
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
                 </select>
             </div>
 
@@ -82,14 +97,15 @@
 
             <h5 class="font-weight-bold mb-2">Selecionar Questões</h5>
             <p class="text-muted">
-                Após escolher uma disciplina, serão exibidas apenas as questões cadastradas nessa área.
+                Após escolher a disciplina e o tipo de prova, serão exibidas apenas as questões compatíveis.
             </p>
 
-            <div class="border rounded p-3 mb-4" style="max-height: 300px; overflow-y: auto;">
+            <div class="border rounded p-3 mb-4" style="max-height: 320px; overflow-y: auto;">
 
                 {% for questao in questoes %}
                     <label class="questao-item d-none align-items-start border-bottom py-3"
-                           data-disciplina="{{ questao.disciplina.id }}">
+                           data-disciplina="{{ questao.disciplina.id }}"
+                           data-tipo-prova="{{ questao.tipo_prova }}">
 
                         <input type="checkbox"
                                name="questoes"
@@ -100,7 +116,14 @@
                         <div>
                             <strong>{{ questao.enunciado|truncatechars:100 }}</strong>
                             <br>
-                            <small class="text-muted">{{ questao.disciplina.nome }}</small>
+
+                            <small class="text-muted d-block">
+                                {{ questao.disciplina.nome }}
+                            </small>
+
+                            <small class="text-muted d-block">
+                                {{ questao.get_nivel_dificuldade_display }} · {{ questao.get_tipo_prova_display }}
+                            </small>
                         </div>
                     </label>
                 {% empty %}
@@ -108,7 +131,7 @@
                 {% endfor %}
 
                 <p id="nenhumaQuestaoMsg" class="text-muted text-center mb-0 py-4">
-                    Selecione uma disciplina para visualizar as questões disponíveis.
+                    Selecione a disciplina e o tipo de prova para visualizar as questões disponíveis.
                 </p>
             </div>
 
@@ -125,46 +148,8 @@
     </div>
 </div>
 
-<script>
-    const disciplinaSelect = document.getElementById("disciplinaSelect");
-    const questoes = document.querySelectorAll(".questao-item");
-    const nenhumaQuestaoMsg = document.getElementById("nenhumaQuestaoMsg");
+{% endblock %}
 
-    function filtrarQuestoes() {
-        const disciplinaId = disciplinaSelect.value;
-        let quantidadeVisivel = 0;
-
-        questoes.forEach((item) => {
-            const pertenceDisciplina = item.dataset.disciplina === disciplinaId;
-            const checkbox = item.querySelector("input[type='checkbox']");
-
-            if (disciplinaId && pertenceDisciplina) {
-                item.classList.remove("d-none");
-                item.classList.add("d-flex");
-                quantidadeVisivel++;
-            } else {
-                item.classList.add("d-none");
-                item.classList.remove("d-flex");
-
-                if (checkbox && !pertenceDisciplina) {
-                    checkbox.checked = checkbox.checked && pertenceDisciplina;
-                }
-            }
-        });
-
-        if (!disciplinaId) {
-            nenhumaQuestaoMsg.textContent = "Selecione uma disciplina para visualizar as questões disponíveis.";
-            nenhumaQuestaoMsg.classList.remove("d-none");
-        } else if (quantidadeVisivel === 0) {
-            nenhumaQuestaoMsg.textContent = "Nenhuma questão cadastrada para esta disciplina.";
-            nenhumaQuestaoMsg.classList.remove("d-none");
-        } else {
-            nenhumaQuestaoMsg.classList.add("d-none");
-        }
-    }
-
-    disciplinaSelect.addEventListener("change", filtrarQuestoes);
-    filtrarQuestoes();
-</script>
-
+{% block extra_js %}
+<script src="{% static 'js/quizzes/admin/admin_form_quiz.js' %}"></script>
 {% endblock %}

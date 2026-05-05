@@ -1,0 +1,98 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}{{ desafio.titulo }} - EduMind{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/quizzes/estudante/responder_quiz.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="quiz-player">
+    <div class="quiz-player__top">
+        <div>
+            <h1 class="quiz-player__title">{{ desafio.titulo }}</h1>
+            <p class="quiz-player__subtitle">
+                {{ desafio.tipo_prova }} · {{ total_questoes }} questões
+            </p>
+        </div>
+
+        <div class="quiz-player__meta">
+            <div class="quiz-timer">
+                <i class="icon-clock"></i>
+                <span id="quizTimer">00:00</span>
+            </div>
+
+            <div class="quiz-counter">
+                <span id="currentQuestionNumber">1</span> / {{ total_questoes }}
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-progress">
+        <div class="quiz-progress__bar">
+            <div class="quiz-progress__fill" id="quizProgressFill"></div>
+        </div>
+    </div>
+
+    <form method="post"
+          id="quizForm"
+          class="quiz-form"
+          data-total-questions="{{ total_questoes }}">
+        {% csrf_token %}
+
+        <input type="hidden" name="tempo_gasto_segundos" id="tempoGastoSegundos" value="0">
+        <input type="hidden" id="tempoTotalSegundos" value="{{ desafio.tempo_total_segundos }}">
+
+        {% for questao in questoes %}
+            <section class="quiz-step {% if forloop.first %}active{% endif %}" data-step="{{ forloop.counter0 }}">
+                <div class="quiz-card">
+                    <div class="quiz-card__header">
+                        <span class="quiz-card__badge">Questão {{ forloop.counter }}</span>
+                    </div>
+
+                    <h2 class="quiz-card__question">{{ questao.enunciado }}</h2>
+
+                    <div class="quiz-options">
+                        {% for alternativa in questao.alternativas.all %}
+                            <div class="quiz-option">
+                                <input
+                                    type="radio"
+                                    name="questao_{{ questao.id }}"
+                                    id="alternativa_{{ alternativa.id }}"
+                                    value="{{ alternativa.id }}"
+                                    class="quiz-option__input"
+                                >
+                                <label for="alternativa_{{ alternativa.id }}" class="quiz-option__label">
+                                    <span class="quiz-option__letter">{{ alternativa.letra }}</span>
+                                    <span class="quiz-option__text">{{ alternativa.texto }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endfor %}
+
+        <div class="quiz-actions">
+            <button type="button" id="prevQuestionBtn" class="quiz-btn quiz-btn--secondary">
+                <i class="icon-arrow-left"></i>
+                <span>Anterior</span>
+            </button>
+
+            <div class="quiz-actions__status">
+                <span id="answeredCounter">0</span> de {{ total_questoes }} respondidas
+            </div>
+
+            <button type="button" id="nextQuestionBtn" class="quiz-btn quiz-btn--primary">
+                <span>Próxima</span>
+                <i class="icon-arrow-right"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/desafios/responder_desafio.js' %}"></script>
+{% endblock %}

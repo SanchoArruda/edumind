@@ -9,8 +9,9 @@ urlpatterns = [
     path('usuarios/', include('usuarios.urls')),
     path('quizzes/', include('quizzes.urls')),
 
-    path('test/', TemplateView.as_view(template_name='base_dashboard.html'), name='home'),
 
-     path('disciplinas/', include('disciplinas.urls')),
+    path('disciplinas/', include('disciplinas.urls')),
+
+     path("desafios/", include("desafios.urls")),
     
 ]

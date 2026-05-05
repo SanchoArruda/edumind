@@ -1,0 +1,116 @@
+{% extends "base/base_admin.html" %}
+{% load static %}
+
+{% block title %}Gerenciar Desafios - EduMind{% endblock %}
+
+{% block menu_admin_desafios %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/desafios/admin/admin_lista_desafios.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="desafios-admin-header mb-4">
+    <h1 class="desafios-admin-title mb-1">Gerenciar Desafios</h1>
+    <p class="desafios-admin-subtitle mb-0">
+        {{ total_desafios }} desafios cadastrados
+    </p>
+</div>
+
+<div class="desafios-admin-topbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div class="desafios-admin-filtros mb-3 mb-md-0">
+        <a href="{% url 'desafios:admin_lista_desafios' %}"
+           class="desafio-filtro-btn {% if not filtro_tipo %}active{% endif %}">
+            Todos
+        </a>
+
+        <a href="{% url 'desafios:admin_lista_desafios' %}?tipo=ENADE"
+           class="desafio-filtro-btn {% if filtro_tipo == 'ENADE' %}active{% endif %}">
+            ENADE
+        </a>
+
+        <a href="{% url 'desafios:admin_lista_desafios' %}?tipo=POSCOMP"
+           class="desafio-filtro-btn {% if filtro_tipo == 'POSCOMP' %}active{% endif %}">
+            POSCOMP
+        </a>
+    </div>
+
+    <div>
+        <a href="{% url 'desafios:admin_criar_desafio' %}" class="btn ed-btn-primary px-4 py-2">
+            + Novo Desafio
+        </a>
+    </div>
+</div>
+
+<div class="desafios-admin-lista">
+    {% for desafio in desafios %}
+        <div class="desafio-admin-card mb-3">
+            <div class="desafio-admin-card__left">
+                <div class="desafio-admin-ordem {% if desafio.tipo_prova == 'POSCOMP' %}desafio-admin-ordem--poscomp{% else %}desafio-admin-ordem--enade{% endif %}">
+                    {{ desafio.ordem }}
+                </div>
+            </div>
+
+            <div class="desafio-admin-card__body">
+                <div class="desafio-admin-card__top">
+                    <div class="desafio-admin-card__titulo-area">
+                        <h4 class="desafio-admin-card__titulo mb-1">
+                            Desafio {{ desafio.ordem }} — {{ desafio.titulo }}
+                        </h4>
+
+                        <div class="desafio-admin-badges">
+                            <span class="desafio-admin-badge desafio-admin-badge--tipo {% if desafio.tipo_prova == 'POSCOMP' %}desafio-admin-badge--poscomp{% else %}desafio-admin-badge--enade{% endif %}">
+                                {{ desafio.tipo_prova }}
+                            </span>
+
+                            {% if desafio.nivel == 1 %}
+                                <span class="desafio-admin-badge desafio-admin-badge--facil">
+                                    {{ desafio.get_nivel_display }}
+                                </span>
+                            {% elif desafio.nivel == 2 %}
+                                <span class="desafio-admin-badge desafio-admin-badge--medio">
+                                    {{ desafio.get_nivel_display }}
+                                </span>
+                            {% else %}
+                                <span class="desafio-admin-badge desafio-admin-badge--dificil">
+                                    {{ desafio.get_nivel_display }}
+                                </span>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div class="desafio-admin-card__acoes">
+                        <a href="{% url 'desafios:admin_editar_desafio' desafio.id %}" class="btn btn-sm btn-outline-primary mr-2">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'desafios:admin_excluir_desafio' desafio.id %}" class="btn btn-sm btn-outline-danger">
+                            Excluir
+                        </a>
+                    </div>
+                </div>
+
+                <div class="desafio-admin-card__meta">
+                    <span>{{ desafio.quantidade_questoes }} questões</span>
+                    <span>{{ desafio.tempo_formatado }}</span>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <h5 class="font-weight-bold">Nenhum desafio encontrado</h5>
+                <p class="text-muted mb-4">
+                    Ainda não há desafios cadastrados para este filtro.
+                </p>
+                <a href="{% url 'desafios:admin_criar_desafio' %}" class="btn ed-btn-primary px-4 py-2">
+                    + Criar primeiro desafio
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -21,7 +21,6 @@ urlpatterns = [
     path("admin/questoes/<int:questao_id>/excluir/", views.admin_excluir_questao, name="admin_excluir_questao"),
 
     path("admin/quizzes/<int:quiz_id>/questoes/", views.admin_lista_questoes, name="admin_lista_questoes"),
-    path("admin/quizzes/<int:quiz_id>/questoes/nova/", views.admin_criar_questao, name="admin_criar_questao"),
 
 
 ]

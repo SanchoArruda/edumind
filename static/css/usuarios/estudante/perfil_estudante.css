@@ -1,0 +1,210 @@
+.perfil-hero-card {
+    border-radius: 26px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #ffffff;
+    box-shadow: 0 18px 38px rgba(79, 70, 229, 0.20);
+    padding: 28px;
+    overflow: hidden;
+    position: relative;
+}
+
+.perfil-hero-card::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    right: -55px;
+    top: -55px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.perfil-hero-content {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.perfil-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-right: 22px;
+    flex-shrink: 0;
+}
+
+.perfil-nome {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.perfil-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.perfil-badges span {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.perfil-dados-btn {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-weight: 800;
+    transition: 0.2s ease;
+}
+
+.perfil-dados-btn:hover {
+    background: #ffffff;
+    color: #4f46e5;
+    transform: translateY(-1px);
+}
+
+.perfil-progress-card {
+    border-radius: 20px;
+}
+
+.perfil-level-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #c56b09;
+    background: #fff4e3;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.perfil-progress-bar {
+    height: 12px;
+    border-radius: 999px;
+    background: #e8ebf2;
+    overflow: hidden;
+}
+
+.perfil-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+}
+
+.perfil-section-title {
+    color: #111827;
+    font-weight: 800;
+}
+
+.perfil-table-card {
+    border-radius: 22px;
+}
+
+.perfil-table thead th {
+    color: #7f8aa3;
+    font-size: 0.86rem;
+    font-weight: 800;
+    border-top: 0;
+    border-bottom: 1px solid #edf1f7;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.perfil-table tbody td {
+    color: #65738c;
+    vertical-align: middle;
+    border-top: 1px solid #edf1f7;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.perfil-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.perfil-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.perfil-badge--purple {
+    color: #5b4ee6;
+    background: rgba(91, 78, 230, 0.12);
+}
+
+.perfil-badge--enade {
+    color: #2563eb;
+    background: #eef6ff;
+}
+
+.perfil-badge--poscomp {
+    color: #7c3aed;
+    background: #f4edff;
+}
+
+.perfil-badge--stars {
+    color: #d97706;
+    background: #fff4e3;
+}
+
+.perfil-badge--success {
+    color: #14955b;
+    background: #eaf8f0;
+}
+
+.perfil-badge--neutral {
+    color: #6b7280;
+    background: #f3f4f6;
+}
+
+.perfil-empty-state {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .perfil-hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .perfil-avatar {
+        margin-right: 0;
+        margin-bottom: 18px;
+    }
+
+    .perfil-hero-action {
+        width: 100%;
+    }
+
+    .perfil-dados-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .perfil-nome {
+        font-size: 1.6rem;
+    }
+}

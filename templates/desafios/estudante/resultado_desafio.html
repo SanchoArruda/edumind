@@ -1,0 +1,166 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Resultado do Desafio - EduMind{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/desafios/estudante/resultado_desafio.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h1 class="font-weight-bold mb-1">Resultado do Desafio</h1>
+        <p class="text-muted mb-0">
+            {{ desafio.titulo }} · {{ desafio.tipo_prova }}
+        </p>
+    </div>
+</div>
+
+<div class="card ed-card border-0 resultado-resumo-card mb-4">
+    <div class="card-body text-center py-5 px-4">
+
+        <div class="resultado-emoji-box mb-3">
+            <div class="resultado-emoji-circle">
+                <span class="resultado-emoji">{{ emoji_resultado }}</span>
+            </div>
+        </div>
+
+        <h2 class="font-weight-bold mb-2">
+            {{ mensagem_resultado }}
+        </h2>
+
+        <p class="text-muted mb-3">
+            Desafio {{ desafio.ordem }} — {{ desafio.titulo }}
+        </p>
+
+        <div class="resultado-estrelas mb-4">
+            {% for estrela in estrelas_preenchidas %}
+                <span class="estrela estrela-preenchida">★</span>
+            {% endfor %}
+
+            {% for estrela in estrelas_vazias %}
+                <span class="estrela estrela-vazia">☆</span>
+            {% endfor %}
+        </div>
+
+        <div class="row justify-content-center resultado-metricas mb-4">
+            <div class="col-md-3 col-6 mb-3">
+                <div class="resultado-metrica-item">
+                    <h3 class="font-weight-bold resultado-metrica-valor text-danger mb-1">
+                        {{ percentual_acertos|floatformat:0 }}%
+                    </h3>
+                    <p class="text-muted mb-0">Aproveitamento</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <div class="resultado-metrica-item resultado-metrica-item--divisor">
+                    <h3 class="font-weight-bold resultado-metrica-valor mb-1">
+                        {{ quantidade_acertos }}/{{ total_questoes }}
+                    </h3>
+                    <p class="text-muted mb-0">Acertos</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <div class="resultado-metrica-item">
+                    <h3 class="font-weight-bold resultado-metrica-valor text-warning mb-1">
+                        {{ estrelas }} ★
+                    </h3>
+                    <p class="text-muted mb-0">Estrelas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-center">
+            <a href="{% url 'desafios:lista_desafios' %}?tipo_prova={{ desafio.tipo_prova }}" class="btn btn-outline-secondary px-4 py-3 mb-2 mb-sm-0 mr-sm-2 resultado-btn">
+                Voltar aos Desafios
+            </a>
+
+            {% if tentativa.aprovado and proximo_desafio %}
+                <a href="{% url 'desafios:iniciar_desafio' proximo_desafio.id %}" class="btn ed-btn-primary px-4 py-3 resultado-btn">
+                    Ir para o Próximo Desafio
+                </a>
+            {% else %}
+                <a href="{% url 'dashboard_estudante' %}" class="btn ed-btn-primary px-4 py-3 resultado-btn">
+                    Ver Dashboard
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <h3 class="font-weight-bold mb-1">Revisão das Questões</h3>
+    <p class="text-muted mb-0">
+        Revise suas respostas e veja as explicações.
+    </p>
+</div>
+
+{% for item in revisao_questoes %}
+    <div class="card ed-card border-0 resultado-questao-card mb-4">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap">
+                <div class="d-flex align-items-start pr-3">
+                    <div class="resultado-questao-numero mr-3 {% if item.acertou %}resultado-questao-numero--acerto{% else %}resultado-questao-numero--erro{% endif %}">
+                        {{ item.numero }}
+                    </div>
+
+                    <h5 class="font-weight-bold mb-0 pt-1">
+                        {{ item.questao.enunciado }}
+                    </h5>
+                </div>
+
+                {% if item.acertou %}
+                    <span class="badge badge-success px-3 py-2 resultado-badge mt-2 mt-md-0">
+                        Acertou
+                    </span>
+                {% else %}
+                    <span class="badge badge-danger px-3 py-2 resultado-badge mt-2 mt-md-0">
+                        Errou
+                    </span>
+                {% endif %}
+            </div>
+
+            {% for alternativa in item.alternativas %}
+                {% if alternativa.id|stringformat:"s" == item.alternativa_correta_id %}
+                    <div class="resultado-alternativa resultado-alternativa--correta mb-2">
+                        <strong>{{ alternativa.letra }})</strong> {{ alternativa.texto }}
+                        <div class="small mt-1 font-weight-bold">Resposta correta</div>
+                    </div>
+
+                {% elif alternativa.id|stringformat:"s" == item.alternativa_marcada_id %}
+                    <div class="resultado-alternativa resultado-alternativa--errada mb-2">
+                        <strong>{{ alternativa.letra }})</strong> {{ alternativa.texto }}
+                        <div class="small mt-1 font-weight-bold">Sua resposta</div>
+                    </div>
+
+                {% else %}
+                    <div class="resultado-alternativa resultado-alternativa--neutra mb-2">
+                        <strong>{{ alternativa.letra }})</strong> {{ alternativa.texto }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if item.explicacao %}
+                <div class="resultado-explicacao mt-3">
+                    <strong>Explicação:</strong> {{ item.explicacao }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% empty %}
+    <div class="card ed-card border-0">
+        <div class="card-body text-center py-5">
+            <h5 class="font-weight-bold">Nenhuma questão encontrada</h5>
+            <p class="text-muted mb-0">
+                Não foi possível carregar a revisão deste desafio.
+            </p>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}

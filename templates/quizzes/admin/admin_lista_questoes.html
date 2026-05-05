@@ -15,7 +15,7 @@
     </div>
 
     <div class="col-md-4 text-md-right mt-3 mt-md-0">
-        <a href="{% url 'quizzes:admin_criar_questao' quiz.id %}" class="btn ed-btn-primary px-4 py-3">
+        <a href="{% url 'quizzes:admin_criar_questao_geral' %}" class="btn ed-btn-primary px-4 py-3">
             + Nova Questão
         </a>
     </div>
@@ -67,7 +67,7 @@
                     Cadastre questões para que os estudantes possam responder este quiz.
                 </p>
 
-                <a href="{% url 'quizzes:admin_criar_questao' quiz.id %}" class="btn ed-btn-primary px-4 py-3">
+                <a href="{% url 'quizzes:admin_criar_questao_geral' %}" class="btn ed-btn-primary px-4 py-3">
                     + Cadastrar primeira questão
                 </a>
             </div>

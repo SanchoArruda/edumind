@@ -1,0 +1,28 @@
+{% extends "base/base_admin.html" %}
+
+{% block title %}Excluir Desafio - EduMind{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card ed-card border-0">
+            <div class="card-body p-5 text-center">
+                <h3 class="font-weight-bold mb-3">Excluir desafio</h3>
+                <p class="text-muted mb-4">
+                    Tem certeza que deseja excluir o desafio <strong>{{ desafio.titulo }}</strong>?
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <a href="{% url 'desafios:admin_lista_desafios' %}" class="btn btn-outline-secondary px-4 py-2 mr-2">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-outline-danger px-4 py-2">
+                        Excluir
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

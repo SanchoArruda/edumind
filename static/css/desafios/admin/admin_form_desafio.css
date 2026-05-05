@@ -1,0 +1,30 @@
+.questoes-box {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.questao-item {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.questao-item:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.questao-item .form-check-label {
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.questao-item .form-check-input {
+    margin-top: 0.3rem;
+}
+
+@media (max-width: 767.98px) {
+    .questoes-box {
+        max-height: 340px;
+    }
+}

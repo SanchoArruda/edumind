@@ -2,12 +2,14 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from disciplinas.models import Disciplina
-from .models import Quiz, Questao, Alternativa, TentativaQuiz
+from .models import Quiz, Questao, Alternativa, Tentativa
 from .utils import calcular_xp_tentativa
-from django.db.models import Q
+
+from .forms import QuestaoForm, QuizForm
 
 
 def usuario_e_admin(user):
@@ -58,29 +60,30 @@ def lista_quizzes(request):
 def iniciar_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
 
-    tentativa = TentativaQuiz.objects.create(
+    tentativa = Tentativa.objects.create(
         usuario=request.user,
         quiz=quiz,
+        tipo_tentativa="QUIZ",
         pontuacao=0,
         quantidade_acertos=0,
         quantidade_erros=0,
         percentual_acertos=0,
         desempenho_geral="",
         concluida=False,
+        aprovado=False,
     )
 
     return redirect("quizzes:responder_quiz", tentativa_id=tentativa.id)
 
 
-from datetime import timedelta
-
 @login_required
 def responder_quiz(request, tentativa_id):
     tentativa = get_object_or_404(
-        TentativaQuiz.objects.select_related("quiz", "quiz__disciplina", "usuario")
+        Tentativa.objects.select_related("quiz", "quiz__disciplina", "usuario")
         .prefetch_related("quiz__questoes__alternativas"),
         id=tentativa_id,
         usuario=request.user,
+        tipo_tentativa="QUIZ",
     )
 
     if tentativa.concluida:
@@ -138,6 +141,7 @@ def responder_quiz(request, tentativa_id):
         tentativa.desempenho_geral = desempenho_geral
         tentativa.tempo_gasto = timedelta(seconds=tempo_gasto_segundos)
         tentativa.concluida = True
+        tentativa.aprovado = False
         tentativa.save()
 
         return redirect("quizzes:resultado_quiz", tentativa_id=tentativa.id)
@@ -155,10 +159,11 @@ def responder_quiz(request, tentativa_id):
 @login_required
 def resultado_quiz(request, tentativa_id):
     tentativa = get_object_or_404(
-        TentativaQuiz.objects.select_related("quiz", "quiz__disciplina", "usuario")
+        Tentativa.objects.select_related("quiz", "quiz__disciplina", "usuario")
         .prefetch_related("quiz__questoes__alternativas"),
         id=tentativa_id,
-        usuario=request.user
+        usuario=request.user,
+        tipo_tentativa="QUIZ",
     )
 
     quiz = tentativa.quiz
@@ -207,7 +212,6 @@ def resultado_quiz(request, tentativa_id):
         "xp_ganho": tentativa.pontuacao,
         "revisao_questoes": revisao_questoes,
         "emoji_resultado": emoji_resultado,
-
     }
 
     return render(request, "quizzes/estudante/resultado_quiz.html", contexto)
@@ -236,43 +240,30 @@ def admin_criar_quiz(request):
     if not usuario_e_admin(request.user):
         return redirect("login")
 
-    disciplinas = Disciplina.objects.all()
     questoes = Questao.objects.select_related("disciplina").all()
 
     if request.method == "POST":
-        titulo = request.POST.get("titulo")
-        descricao = request.POST.get("descricao")
-        disciplina_id = request.POST.get("disciplina")
+        form = QuizForm(request.POST)
         questoes_ids = request.POST.getlist("questoes")
-        tipo_prova = request.POST.get("tipo_prova")
 
-        if not titulo or not disciplina_id:
-            messages.error(request, "Preencha o título e a disciplina.")
-            return redirect("quizzes:admin_criar_quiz")
+        if form.is_valid():
+            quiz = form.save()
 
-        disciplina = get_object_or_404(Disciplina, id=disciplina_id)
+            if questoes_ids:
+                questoes_selecionadas = Questao.objects.filter(
+                    id__in=questoes_ids,
+                    disciplina=quiz.disciplina
+                )
+                quiz.questoes.set(questoes_selecionadas)
 
-        quiz = Quiz.objects.create(
-            titulo=titulo,
-            descricao=descricao,
-            disciplina=disciplina,
-            tipo_prova=tipo_prova
-        )
-
-        if questoes_ids:
-            questoes_selecionadas = Questao.objects.filter(
-                id__in=questoes_ids,
-                disciplina=disciplina
-            )
-            quiz.questoes.set(questoes_selecionadas)
-
-        messages.success(request, "Quiz criado com sucesso.")
-        return redirect("quizzes:admin_lista_quizzes")
+            messages.success(request, "Quiz criado com sucesso.")
+            return redirect("quizzes:admin_lista_quizzes")
+    else:
+        form = QuizForm()
 
     contexto = {
-        "disciplinas": disciplinas,
+        "form": form,
         "questoes": questoes,
-        "tipos_prova": Quiz.TIPO_PROVA_CHOICES,
         "questoes_marcadas": set(),
     }
 
@@ -295,70 +286,6 @@ def admin_lista_questoes(request, quiz_id):
     }
 
     return render(request, "quizzes/admin/admin_lista_questoes.html", contexto)
-
-
-@login_required
-def admin_criar_questao(request, quiz_id):
-    if not usuario_e_admin(request.user):
-        return redirect("login")
-
-    quiz = get_object_or_404(
-        Quiz.objects.select_related("disciplina"),
-        id=quiz_id
-    )
-
-    if request.method == "POST":
-        enunciado = request.POST.get("enunciado")
-        explicacao_resposta = request.POST.get("explicacao_resposta")
-
-        letras = request.POST.getlist("letra[]")
-        textos = request.POST.getlist("texto[]")
-        correta = request.POST.get("correta")
-
-        if not enunciado:
-            messages.error(request, "Informe o enunciado da questão.")
-            return redirect("quizzes:admin_criar_questao", quiz_id=quiz.id)
-
-        alternativas_validas = [texto for texto in textos if texto.strip()]
-
-        if len(alternativas_validas) < 2:
-            messages.error(request, "Cadastre pelo menos duas alternativas.")
-            return redirect("quizzes:admin_criar_questao", quiz_id=quiz.id)
-
-        if len(alternativas_validas) > 5:
-            messages.error(request, "Cadastre no máximo cinco alternativas.")
-            return redirect("quizzes:admin_criar_questao", quiz_id=quiz.id)
-
-        if not correta:
-            messages.error(request, "Marque uma alternativa correta.")
-            return redirect("quizzes:admin_criar_questao", quiz_id=quiz.id)
-
-        questao = Questao.objects.create(
-            disciplina=quiz.disciplina,
-            enunciado=enunciado,
-            explicacao_resposta=explicacao_resposta
-        )
-
-        quiz.questoes.add(questao)
-
-        for letra, texto in zip(letras, textos):
-            if texto.strip():
-                Alternativa.objects.create(
-                    questao=questao,
-                    letra=letra,
-                    texto=texto,
-                    correta=(letra == correta)
-                )
-
-        messages.success(request, "Questão cadastrada com sucesso.")
-        return redirect("quizzes:admin_lista_questoes", quiz_id=quiz.id)
-
-    contexto = {
-        "quiz": quiz,
-        "letras": ["A", "B", "C", "D"],
-    }
-
-    return render(request, "quizzes/admin/admin_criar_questao.html", contexto)
 
 
 @login_required
@@ -386,57 +313,40 @@ def admin_criar_questao_geral(request):
     if not usuario_e_admin(request.user):
         return redirect("login")
 
-    disciplinas = Disciplina.objects.all()
-
     if request.method == "POST":
-        disciplina_id = request.POST.get("disciplina")
-        enunciado = request.POST.get("enunciado")
-        explicacao_resposta = request.POST.get("explicacao_resposta")
+        form = QuestaoForm(request.POST)
 
         letras = request.POST.getlist("letra[]")
         textos = request.POST.getlist("texto[]")
         correta = request.POST.get("correta")
 
-        if not disciplina_id:
-            messages.error(request, "Selecione a disciplina da questão.")
-            return redirect("quizzes:admin_criar_questao_geral")
-
-        if not enunciado:
-            messages.error(request, "Informe o enunciado da questão.")
-            return redirect("quizzes:admin_criar_questao_geral")
-
         alternativas_validas = [texto for texto in textos if texto.strip()]
 
         if len(alternativas_validas) < 2:
             messages.error(request, "Cadastre pelo menos duas alternativas.")
-            return redirect("quizzes:admin_criar_questao_geral")
-
-        if not correta:
+        elif len(alternativas_validas) > 5:
+            messages.error(request, "Cadastre no máximo cinco alternativas.")
+        elif not correta:
             messages.error(request, "Marque uma alternativa correta.")
-            return redirect("quizzes:admin_criar_questao_geral")
+        elif form.is_valid():
+            questao = form.save()
 
-        disciplina = get_object_or_404(Disciplina, id=disciplina_id)
+            for letra, texto in zip(letras, textos):
+                if texto.strip():
+                    Alternativa.objects.create(
+                        questao=questao,
+                        letra=letra,
+                        texto=texto,
+                        correta=(letra == correta)
+                    )
 
-        questao = Questao.objects.create(
-            disciplina=disciplina,
-            enunciado=enunciado,
-            explicacao_resposta=explicacao_resposta
-        )
-
-        for letra, texto in zip(letras, textos):
-            if texto.strip():
-                Alternativa.objects.create(
-                    questao=questao,
-                    letra=letra,
-                    texto=texto,
-                    correta=(letra == correta)
-                )
-
-        messages.success(request, "Questão cadastrada com sucesso.")
-        return redirect("quizzes:admin_todas_questoes")
+            messages.success(request, "Questão cadastrada com sucesso.")
+            return redirect("quizzes:admin_todas_questoes")
+    else:
+        form = QuestaoForm()
 
     contexto = {
-        "disciplinas": disciplinas,
+        "form": form,
         "letras": ["A", "B", "C", "D"],
     }
 
@@ -453,64 +363,46 @@ def admin_editar_questao(request, questao_id):
         id=questao_id
     )
 
-    disciplinas = Disciplina.objects.all()
     alternativas = list(questao.alternativas.all().order_by("letra"))
 
     if request.method == "POST":
-        disciplina_id = request.POST.get("disciplina")
-        enunciado = request.POST.get("enunciado")
-        explicacao_resposta = request.POST.get("explicacao_resposta")
+        form = QuestaoForm(request.POST, instance=questao)
 
         letras = request.POST.getlist("letra[]")
         textos = request.POST.getlist("texto[]")
         correta = request.POST.get("correta")
 
-        if not disciplina_id:
-            messages.error(request, "Selecione a disciplina da questão.")
-            return redirect("quizzes:admin_editar_questao", questao_id=questao.id)
-
-        if not enunciado:
-            messages.error(request, "Informe o enunciado da questão.")
-            return redirect("quizzes:admin_editar_questao", questao_id=questao.id)
-
         alternativas_validas = [texto for texto in textos if texto.strip()]
 
         if len(alternativas_validas) < 2:
             messages.error(request, "Cadastre pelo menos duas alternativas.")
-            return redirect("quizzes:admin_editar_questao", questao_id=questao.id)
-
-        if len(alternativas_validas) > 5:
+        elif len(alternativas_validas) > 5:
             messages.error(request, "Cadastre no máximo cinco alternativas.")
-            return redirect("quizzes:admin_editar_questao", questao_id=questao.id)
-
-        if not correta:
+        elif not correta:
             messages.error(request, "Marque uma alternativa correta.")
-            return redirect("quizzes:admin_editar_questao", questao_id=questao.id)
-        
-        disciplina = get_object_or_404(Disciplina, id=disciplina_id)
+        elif form.is_valid():
+            questao = form.save()
 
-        questao.disciplina = disciplina
-        questao.enunciado = enunciado
-        questao.explicacao_resposta = explicacao_resposta
-        questao.save()
+            questao.alternativas.all().delete()
 
-        questao.alternativas.all().delete()
+            for letra, texto in zip(letras, textos):
+                if texto.strip():
+                    Alternativa.objects.create(
+                        questao=questao,
+                        letra=letra,
+                        texto=texto,
+                        correta=(letra == correta)
+                    )
 
-        for letra, texto in zip(letras, textos):
-            if texto.strip():
-                Alternativa.objects.create(
-                    questao=questao,
-                    letra=letra,
-                    texto=texto,
-                    correta=(letra == correta)
-                )
+            messages.success(request, "Questão atualizada com sucesso.")
+            return redirect("quizzes:admin_todas_questoes")
 
-        messages.success(request, "Questão atualizada com sucesso.")
-        return redirect("quizzes:admin_todas_questoes")
+    else:
+        form = QuestaoForm(instance=questao)
 
     contexto = {
+        "form": form,
         "questao": questao,
-        "disciplinas": disciplinas,
         "alternativas": alternativas,
         "letras": ["A", "B", "C", "D"],
     }
@@ -533,7 +425,6 @@ def admin_excluir_questao(request, questao_id):
     return redirect("quizzes:admin_todas_questoes")
 
 
-
 @login_required
 def admin_editar_quiz(request, quiz_id):
     if not usuario_e_admin(request.user):
@@ -544,44 +435,32 @@ def admin_editar_quiz(request, quiz_id):
         id=quiz_id
     )
 
-    disciplinas = Disciplina.objects.all()
     questoes = Questao.objects.select_related("disciplina").all()
     questoes_marcadas = set(quiz.questoes.values_list("id", flat=True))
 
     if request.method == "POST":
-        titulo = request.POST.get("titulo")
-        descricao = request.POST.get("descricao")
-        disciplina_id = request.POST.get("disciplina")
-        tipo_prova = request.POST.get("tipo_prova")
+        form = QuizForm(request.POST, instance=quiz)
         questoes_ids = request.POST.getlist("questoes")
 
-        if not titulo or not disciplina_id or not tipo_prova:
-            messages.error(request, "Preencha o título, a disciplina e o tipo da prova.")
-            return redirect("quizzes:admin_editar_quiz", quiz_id=quiz.id)
+        if form.is_valid():
+            quiz = form.save()
 
-        disciplina = get_object_or_404(Disciplina, id=disciplina_id)
+            questoes_selecionadas = Questao.objects.filter(
+                id__in=questoes_ids,
+                disciplina=quiz.disciplina
+            )
+            quiz.questoes.set(questoes_selecionadas)
 
-        quiz.titulo = titulo
-        quiz.descricao = descricao
-        quiz.disciplina = disciplina
-        quiz.tipo_prova = tipo_prova
-        quiz.save()
-
-        questoes_selecionadas = Questao.objects.filter(
-            id__in=questoes_ids,
-            disciplina=disciplina
-        )
-        quiz.questoes.set(questoes_selecionadas)
-
-        messages.success(request, "Quiz atualizado com sucesso.")
-        return redirect("quizzes:admin_lista_quizzes")
+            messages.success(request, "Quiz atualizado com sucesso.")
+            return redirect("quizzes:admin_lista_quizzes")
+    else:
+        form = QuizForm(instance=quiz)
 
     contexto = {
+        "form": form,
         "quiz": quiz,
-        "disciplinas": disciplinas,
         "questoes": questoes,
         "questoes_marcadas": questoes_marcadas,
-        "tipos_prova": Quiz.TIPO_PROVA_CHOICES,
     }
 
     return render(request, "quizzes/admin/admin_form_quiz.html", contexto)
@@ -607,5 +486,3 @@ def admin_excluir_quiz(request, quiz_id):
     }
 
     return render(request, "quizzes/admin/admin_confirmar_exclusao_quiz.html", contexto)
-
-

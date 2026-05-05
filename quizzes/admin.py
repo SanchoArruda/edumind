@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Quiz, Questao, Alternativa, TentativaQuiz
+from .models import Quiz, Questao, Alternativa, Tentativa
 
 
 class AlternativaInline(admin.TabularInline):
@@ -37,19 +37,32 @@ class AlternativaAdmin(admin.ModelAdmin):
     list_filter = ("correta", "letra")
 
 
-@admin.register(TentativaQuiz)
-class TentativaQuizAdmin(admin.ModelAdmin):
+@admin.register(Tentativa)
+class TentativaAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "tipo_tentativa",
         "usuario",
         "quiz",
+        "desafio",
         "pontuacao",
         "quantidade_acertos",
         "quantidade_erros",
         "percentual_acertos",
         "concluida",
+        "aprovado",
         "data_tentativa",
     )
-    search_fields = ("usuario__username", "usuario__nome", "quiz__titulo")
-    list_filter = ("concluida", "quiz", "data_tentativa")
+    search_fields = (
+        "usuario__username",
+        "usuario__nome",
+        "quiz__titulo",
+        "desafio__titulo",
+    )
+    list_filter = (
+        "tipo_tentativa",
+        "concluida",
+        "aprovado",
+        "data_tentativa",
+    )
     ordering = ("-data_tentativa",)

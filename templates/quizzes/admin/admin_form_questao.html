@@ -1,10 +1,15 @@
 {% extends "base/base_admin.html" %}
+{% load static %}
 
 {% block title %}
     {% if questao %}Editar Questão{% else %}Nova Questão{% endif %} - EduMind
 {% endblock %}
 
 {% block menu_admin_questoes %}active{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'quizzes/css/admin/admin_form_questao.css' %}">
+{% endblock %}
 
 {% block content %}
 
@@ -14,7 +19,7 @@
             {% if questao %}Editar Questão{% else %}Nova Questão{% endif %}
         </h1>
         <p class="text-muted mb-0">
-            Cadastre o enunciado, alternativas e resposta correta.
+            Cadastre o enunciado, tipo de prova, nível de dificuldade, alternativas e resposta correta.
         </p>
     </div>
 
@@ -30,23 +35,68 @@
         <form method="post">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label class="font-weight-bold">Área de Conhecimento / Disciplina</label>
-                <select name="disciplina" class="form-control" required>
-                    <option value="">Selecione a disciplina</option>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
 
-                    {% for disciplina in disciplinas %}
-                        <option value="{{ disciplina.id }}"
-                            {% if questao and questao.disciplina.id == disciplina.id %}selected{% endif %}>
-                            {{ disciplina.nome }}
-                        </option>
-                    {% endfor %}
-                </select>
+            <div class="form-group">
+                <label class="font-weight-bold" for="{{ form.disciplina.id_for_label }}">
+                    {{ form.disciplina.label }}
+                </label>
+
+                {{ form.disciplina }}
+
+                {% if form.disciplina.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.disciplina.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="font-weight-bold" for="{{ form.tipo_prova.id_for_label }}">
+                        {{ form.tipo_prova.label }}
+                    </label>
+
+                    {{ form.tipo_prova }}
+
+                    {% if form.tipo_prova.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.tipo_prova.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="font-weight-bold" for="{{ form.nivel_dificuldade.id_for_label }}">
+                        {{ form.nivel_dificuldade.label }}
+                    </label>
+
+                    {{ form.nivel_dificuldade }}
+
+                    {% if form.nivel_dificuldade.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.nivel_dificuldade.errors }}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="font-weight-bold">Enunciado</label>
-                <textarea name="enunciado" class="form-control" rows="4" placeholder="Digite o enunciado da questão..." required>{% if questao %}{{ questao.enunciado }}{% endif %}</textarea>
+                <label class="font-weight-bold" for="{{ form.enunciado.id_for_label }}">
+                    {{ form.enunciado.label }}
+                </label>
+
+                {{ form.enunciado }}
+
+                {% if form.enunciado.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.enunciado.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             <h5 class="font-weight-bold mt-4 mb-3">Alternativas</h5>
@@ -145,9 +195,19 @@
             <small class="text-muted d-block mt-2">
                 A questão deve ter entre 2 e 5 alternativas.
             </small>
+
             <div class="form-group mt-4">
-                <label class="font-weight-bold">Explicação</label>
-                <textarea name="explicacao_resposta" class="form-control" rows="4" placeholder="Explicação da resposta correta...">{% if questao %}{{ questao.explicacao_resposta }}{% endif %}</textarea>
+                <label class="font-weight-bold" for="{{ form.explicacao_resposta.id_for_label }}">
+                    {{ form.explicacao_resposta.label }}
+                </label>
+
+                {{ form.explicacao_resposta }}
+
+                {% if form.explicacao_resposta.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.explicacao_resposta.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="text-right mt-4">
@@ -163,101 +223,8 @@
     </div>
 </div>
 
-
-<script>
-    const container = document.getElementById("alternativas-container");
-    const btnAdicionar = document.getElementById("adicionar-alternativa");
-    const letras = ["A", "B", "C", "D", "E"];
-
-    function atualizarLetras() {
-        const itens = container.querySelectorAll(".alternativa-item");
-
-        itens.forEach((item, index) => {
-            const letra = letras[index];
-
-            item.querySelector(".letra-alternativa").textContent = letra + ")";
-            item.querySelector("input[name='letra[]']").value = letra;
-
-            const texto = item.querySelector("input[name='texto[]']");
-            texto.placeholder = "Alternativa " + letra;
-
-            const radio = item.querySelector("input[name='correta']");
-            radio.value = letra;
-        });
-
-        btnAdicionar.disabled = itens.length >= 5;
-
-        const botoesRemover = container.querySelectorAll(".remover-alternativa");
-        botoesRemover.forEach((botao) => {
-            botao.disabled = itens.length <= 2;
-        });
-    }
-
-    btnAdicionar.addEventListener("click", function () {
-        const total = container.querySelectorAll(".alternativa-item").length;
-
-        if (total >= 5) {
-            return;
-        }
-
-        const proximaLetra = letras[total];
-
-        const html = `
-            <div class="border rounded p-3 mb-3 alternativa-item">
-                <div class="row align-items-center">
-                    <div class="col-md-1 col-2">
-                        <strong class="letra-alternativa">${proximaLetra})</strong>
-                        <input type="hidden" name="letra[]" value="${proximaLetra}">
-                    </div>
-
-                    <div class="col-md-8 col-10">
-                        <input
-                            type="text"
-                            name="texto[]"
-                            class="form-control"
-                            placeholder="Alternativa ${proximaLetra}"
-                        >
-                    </div>
-
-                    <div class="col-md-2 col-8 mt-3 mt-md-0">
-                        <label class="mb-0">
-                            <input
-                                type="radio"
-                                name="correta"
-                                value="${proximaLetra}"
-                                required
-                            >
-                            Correta
-                        </label>
-                    </div>
-
-                    <div class="col-md-1 col-4 mt-3 mt-md-0 text-right">
-                        <button type="button" class="btn btn-sm btn-light border text-danger remover-alternativa">
-                            ×
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        container.insertAdjacentHTML("beforeend", html);
-        atualizarLetras();
-    });
-
-    container.addEventListener("click", function (event) {
-        if (event.target.classList.contains("remover-alternativa")) {
-            const itens = container.querySelectorAll(".alternativa-item");
-
-            if (itens.length <= 2) {
-                return;
-            }
-
-            event.target.closest(".alternativa-item").remove();
-            atualizarLetras();
-        }
-    });
-
-    atualizarLetras();
-</script>
+{% block extra_js %}
+  <script src="{% static 'js/quizzes/admin/admin_form_questao.js' %}"></script>
+{% endblock %}
 
 {% endblock %}

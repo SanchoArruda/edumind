@@ -1,0 +1,195 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Desafios - EduMind{% endblock %}
+
+{% block menu_desafios %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/desafios/estudante/inicio_desafios.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="desafios-page-header mb-4">
+    <div>
+        <h1 class="font-weight-bold mb-1">Desafios</h1>
+        <p class="text-muted mb-0">
+            Teste seus conhecimentos em desafios cronometrados e treine para o ENADE ou POSCOMP.
+        </p>
+    </div>
+</div>
+
+<div class="card ed-card border-0">
+    <div class="card-body p-4 p-md-4">
+        <h5 class="font-weight-bold mb-4">Selecione a prova que deseja treinar:</h5>
+
+        <form method="get" action="{% url 'desafios:lista_desafios' %}" id="formEscolhaProva">
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <input
+                        type="radio"
+                        name="tipo_prova"
+                        value="ENADE"
+                        id="tipo_prova_enade"
+                        class="desafio-radio-input"
+                    >
+
+                    <label for="tipo_prova_enade" class="desafio-opcao-card desafio-opcao-enade w-100 mb-0">
+                        <div class="desafio-opcao-top">
+                            <div class="desafio-opcao-icon desafio-icon-enade">
+                                <i class="icon-graduation"></i>
+                            </div>
+                        </div>
+
+                        <h3 class="desafio-opcao-titulo">ENADE</h3>
+                        <p class="desafio-opcao-subtitulo">
+                            Exame Nacional de Desempenho dos Estudantes — Área de Computação
+                        </p>
+
+                        <div class="desafio-opcao-info">
+                            <div class="desafio-info-item">
+                                <i class="icon-clock"></i>
+                                <span>4h (240 min)  ~175 min para as objetivas</span>
+                            </div>
+
+                            <div class="desafio-info-item">
+                                <i class="icon-target"></i>
+                                <span>35 questões objetivas  ~5 min/questão</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="col-lg-6">
+                    <input
+                        type="radio"
+                        name="tipo_prova"
+                        value="POSCOMP"
+                        id="tipo_prova_poscomp"
+                        class="desafio-radio-input"
+                    >
+
+                    <label for="tipo_prova_poscomp" class="desafio-opcao-card desafio-opcao-poscomp w-100 mb-0">
+                        <div class="desafio-opcao-top">
+                            <div class="desafio-opcao-icon desafio-icon-poscomp">
+                                <i class="icon-book-open"></i>
+                            </div>
+                        </div>
+
+                        <h3 class="desafio-opcao-titulo">POSCOMP</h3>
+                        <p class="desafio-opcao-subtitulo">
+                            Prova de Conhecimento em Computação
+                        </p>
+
+                        <div class="desafio-opcao-info">
+                            <div class="desafio-info-item">
+                                <i class="icon-clock"></i>
+                                <span>4h (240 min) ~230 min para as objetivas</span>
+                            </div>
+
+                            <div class="desafio-info-item">
+                                <i class="icon-target"></i>
+                                <span>70 questões objetivas ~3 min 17 seg por questão </span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+        <div class="card ed-card border-0 desafio-dicas-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start mb-4">
+                    <div class="desafio-dicas-icon mr-3">
+                        💡
+                    </div>
+
+                    <div>
+                        <h5 class="font-weight-bold mb-1">Dicas para os desafios</h5>
+                        <p class="text-muted mb-0">
+                            Use os desafios para treinar com mais foco e simular a pressão da prova.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="desafio-dica-item">
+                    <span class="desafio-dica-marcador">1</span>
+                    <p>
+                        Conclua cada desafio para desbloquear o próximo.
+                    </p>
+                </div>
+
+                <div class="desafio-dica-item">
+                    <span class="desafio-dica-marcador">2</span>
+                    <p>
+                        Desafios concluídos podem ser refeitos para melhorar sua pontuação.
+                    </p>
+                </div>
+
+                <div class="desafio-dica-item mb-0">
+                    <span class="desafio-dica-marcador">3</span>
+                    <p>
+                        Gerencie bem o tempo: ele faz parte do treinamento para a prova.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card ed-card border-0 desafio-estrelas-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start mb-4">
+                    <div class="desafio-estrelas-icon mr-3">
+                        ★
+                    </div>
+
+                    <div>
+                        <h5 class="font-weight-bold mb-1">Regra das estrelas</h5>
+                        <p class="text-muted mb-0">
+                            Seu desempenho no desafio é convertido em estrelas.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="desafio-estrelas-lista">
+                    <div>
+                        <span>0 estrela</span>
+                        <strong>0%</strong>
+                    </div>
+
+                    <div>
+                        <span>1 a 3 estrelas</span>
+                        <strong>até 59%</strong>
+                    </div>
+
+                    <div>
+                        <span>4 estrelas</span>
+                        <strong>60% a 79%</strong>
+                    </div>
+
+                    <div>
+                        <span>5 estrelas</span>
+                        <strong>80% a 100%</strong>
+                    </div>
+                </div>
+
+                <div class="desafio-desbloqueio-alert mt-3">
+                    <strong>4 ou 5 estrelas</strong> desbloqueiam o próximo desafio.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/desafios/inicio_desafios.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+.alternativa-item {
+    background-color: #ffffff;
+    transition: 0.2s ease;
+}
+
+.alternativa-item:hover {
+    background-color: #f8f9fa;
+}
+
+.letra-alternativa {
+    font-size: 1rem;
+    color: #495057;
+}
+
+.remover-alternativa:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
