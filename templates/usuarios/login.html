@@ -1,106 +1,152 @@
+{% extends "base/base_publica.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduMind - Login</title>
 
-    <link rel="icon" type="image/png" href="{% static 'images/logo-compact.png' %}">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/login.css' %}" rel="stylesheet">
-</head>
-<body>
+{% block title %}EduMind - Login{% endblock %}
 
-    <main class="login-page">
-        <div class="login-grid">
-            <section class="login-banner">
-                <div class="login-banner-content">
-                    <div class="logo-box">
+{% block extra_css %}
+<link href="{% static 'css/login.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<main class="login-page">
+    <div class="login-grid">
+
+        <section class="login-banner">
+            <div class="login-banner-content">
+
+                <a href="{% url 'home' %}" class="login-brand">
+                    <div class="login-brand-mark">
                         <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
                     </div>
 
-                    <h1>EduMind</h1>
+                    <div>
+                        <span>EduMind</span>
+                        <small>Preparação ENADE & POSCOMP</small>
+                    </div>
+                </a>
+
+                <div class="login-banner-text">
+                    <span class="login-badge">
+                        Plataforma gamificada de preparação acadêmica
+                    </span>
+
+                    <h1>
+                        Continue sua preparação com quizzes, desafios e acompanhamento.
+                    </h1>
 
                     <p>
-                        Prepare-se para o ENADE e POSCOMP com quizzes inteligentes.
-                        Estude, pratique e evolua.
+                        Acesse sua conta para praticar questões, acompanhar seu desempenho,
+                        evoluir com XP e treinar para o ENADE e POSCOMP.
                     </p>
+                </div>
 
-                    <div class="login-stats">
-                        <div class="stat-item">
-                            <strong>500+</strong>
-                            <span>Questões</span>
+                <div class="login-feature-list">
+                    <div class="login-feature-item">
+                        <div class="login-feature-icon">📝</div>
+                        <div>
+                            <strong>Quizzes por disciplina</strong>
+                            <span>Pratique por área de conhecimento.</span>
                         </div>
-                        <div class="stat-item">
-                            <strong>50+</strong>
-                            <span>Quizzes</span>
+                    </div>
+
+                    <div class="login-feature-item">
+                        <div class="login-feature-icon">⚡</div>
+                        <div>
+                            <strong>Desafios cronometrados</strong>
+                            <span>Treine com pressão de tempo.</span>
                         </div>
-                        <div class="stat-item">
-                            <strong>1.2k</strong>
-                            <span>Estudantes</span>
+                    </div>
+
+                    <div class="login-feature-item">
+                        <div class="login-feature-icon">📈</div>
+                        <div>
+                            <strong>Acompanhamento de desempenho</strong>
+                            <span>Veja XP, histórico, ranking e evolução.</span>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <section class="login-form-side">
-                <div class="login-form-wrapper">
-                    <div class="login-form-box">
+            </div>
+        </section>
+
+        <section class="login-form-side">
+            <div class="login-form-wrapper">
+
+                <div class="login-form-box">
+                    <div class="login-form-header">
                         <h2>Bem-vindo de volta</h2>
-                        <p class="login-subtitle">
+                        <p>
                             Acesse sua conta para continuar estudando.
                         </p>
+                    </div>
 
-                        <form method="post" class="custom-login-form">
-                            {% csrf_token %}
+                    <form method="post" class="custom-login-form">
+                        {% csrf_token %}
 
-                            {% if form.non_field_errors %}
-                                <div class="alert alert-danger mb-3">
-                                    {% for error in form.non_field_errors %}
-                                        <div>{{ error }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-
-                            <div class="form-group-custom">
-                                <label for="{{ form.username.id_for_label }}">Usuário</label>
-                                {{ form.username }}
-                                {% for error in form.username.errors %}
-                                    <small class="text-danger d-block mt-1">{{ error }}</small>
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mb-4">
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
                                 {% endfor %}
                             </div>
+                        {% endif %}
 
-                            <div class="form-group-custom">
-                                <div class="label-row">
-                                    <label for="{{ form.password.id_for_label }}">Senha</label>
-                                    <a href="#" class="forgot-link">Esqueceu a senha?</a>
-                                </div>
-                                {{ form.password }}
-                                {% for error in form.password.errors %}
-                                    <small class="text-danger d-block mt-1">{{ error }}</small>
-                                {% endfor %}
+                        <div class="form-group-custom">
+                            <label for="{{ form.username.id_for_label }}">
+                                Usuário
+                            </label>
+
+                            {{ form.username }}
+
+                            {% for error in form.username.errors %}
+                                <small class="text-danger d-block mt-1">
+                                    {{ error }}
+                                </small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group-custom">
+                            <div class="label-row">
+                                <label for="{{ form.password.id_for_label }}">
+                                    Senha
+                                </label>
+
+                                <a href="#" class="forgot-link">
+                                    Esqueceu a senha?
+                                </a>
                             </div>
 
-                            <button type="submit" class="btn-login">
-                                Entrar
-                            </button>
-                        </form>
+                            {{ form.password }}
 
+                            {% for error in form.password.errors %}
+                                <small class="text-danger d-block mt-1">
+                                    {{ error }}
+                                </small>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn-login">
+                            Entrar
+                        </button>
+                    </form>
+
+                    <div class="login-footer-links">
                         <p class="register-link">
                             Ainda não tem conta?
                             <a href="{% url 'cadastro' %}">Criar conta</a>
                         </p>
+
+                        <a href="{% url 'home' %}" class="back-home-link">
+                            Voltar para o início
+                        </a>
                     </div>
                 </div>
-            </section>
-        </div>
-    </main>
 
-    <script src="{% static 'plugins/common/common.min.js' %}"></script>
-    <script src="{% static 'js/custom.min.js' %}"></script>
-    <script src="{% static 'js/settings.js' %}"></script>
-    <script src="{% static 'js/gleek.js' %}"></script>
-    <script src="{% static 'js/styleSwitcher.js' %}"></script>
-</body>
-</html>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+{% endblock %}

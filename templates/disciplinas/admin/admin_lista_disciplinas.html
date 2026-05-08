@@ -6,64 +6,83 @@
 
 {% block content %}
 
-<div class="row align-items-center mb-4">
+<div class="row align-items-center admin-page-header">
     <div class="col-md-8">
-        <h1 class="font-weight-bold mb-1">Gerenciar Disciplinas</h1>
-        <p class="text-muted mb-0">
-            {{ total_disciplinas }} disciplinas cadastradas
+        <h1 class="admin-page-title">Gerenciar Disciplinas</h1>
+        <p class="admin-page-subtitle">
+            {{ total_disciplinas }} disciplinas cadastradas no sistema.
         </p>
     </div>
 
-    <div class="col-md-4 text-md-right mt-3 mt-md-0">
-        <a href="{% url 'disciplinas:admin_criar_disciplina' %}" class="btn ed-btn-primary px-4 py-3">
+    <div class="col-md-4 admin-page-actions mt-3 mt-md-0">
+        <a href="{% url 'disciplinas:admin_criar_disciplina' %}" class="btn admin-btn-primary">
             + Nova Disciplina
         </a>
     </div>
 </div>
 
-<div class="card ed-card border-0">
-    <div class="card-body">
+<div class="card admin-card">
+    <div class="card-body admin-card-body">
 
-        {% for disciplina in disciplinas %}
-            <div class="border rounded p-4 mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="font-weight-bold mb-1">{{ disciplina.nome }}</h5>
-                        <small class="text-muted">
-                            -----------
-                        </small>
-                    </div>
+        {% if disciplinas %}
+            <div class="table-responsive">
+                <table class="table admin-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
 
-                    <div class="d-flex align-items-center">
-                        <a href="{% url 'disciplinas:admin_editar_disciplina' disciplina.id %}"
-                           class="btn btn-sm btn-outline-primary mr-2">
-                            <i class="icon-note mr-1"></i> Editar
-                        </a>
+                    <tbody>
+                        {% for disciplina in disciplinas %}
+                            <tr>
+                                <td>
+                                    <div class="admin-table-title">
+                                        {{ disciplina.nome }}
+                                    </div>
+                                    <div class="admin-table-muted">
+                                        ID {{ disciplina.id }}
+                                    </div>
+                                </td>
 
-                        <form method="post"
-                              action="{% url 'disciplinas:admin_excluir_disciplina' disciplina.id %}"
-                              class="mb-0"
-                              onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?');">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="icon-trash mr-1"></i> Excluir
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                                <td>
+                                    <div class="admin-actions">
+                                        <a href="{% url 'disciplinas:admin_editar_disciplina' disciplina.id %}"
+                                           class="btn btn-sm btn-outline-primary admin-action-btn">
+                                            <i class="icon-note mr-1"></i>
+                                            Editar
+                                        </a>
+
+                                        <form method="post"
+                                              action="{% url 'disciplinas:admin_excluir_disciplina' disciplina.id %}"
+                                              class="mb-0"
+                                              onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger admin-action-btn">
+                                                <i class="icon-trash mr-1"></i>
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        {% empty %}
+        {% else %}
             <div class="text-center py-5">
-                <h5 class="font-weight-bold">Nenhuma disciplina cadastrada</h5>
+                <h5 class="font-weight-bold mb-2">Nenhuma disciplina cadastrada</h5>
                 <p class="text-muted mb-4">
-                    Cadastre disciplinas para vincular questões e quizzes.
+                    Cadastre disciplinas para vincular questões, quizzes e desafios.
                 </p>
 
-                <a href="{% url 'disciplinas:admin_criar_disciplina' %}" class="btn ed-btn-primary px-4 py-3">
+                <a href="{% url 'disciplinas:admin_criar_disciplina' %}" class="btn admin-btn-primary">
                     + Nova Disciplina
                 </a>
             </div>
-        {% endfor %}
+        {% endif %}
 
     </div>
 </div>

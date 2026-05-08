@@ -16,7 +16,7 @@ urlpatterns = [
     path("admin/estudantes/<int:usuario_id>/excluir/", admin_excluir_estudante, name="admin_excluir_estudante"),
 
     #admin - desempenho
-    path("admin/desempenho-geral/", admin_desempenho_geral, name="admin_desempenho_geral"),
+    #path("admin/desempenho-geral/", admin_desempenho_geral, name="admin_desempenho_geral"),
 
     #Estudante - ranking
     path("ranking/", ranking_estudante, name="ranking_estudante"),

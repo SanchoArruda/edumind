@@ -65,11 +65,20 @@
             </div>
 
             <div class="col-md-3 col-6 mb-3">
-                <div class="resultado-metrica-item">
+                <div class="resultado-metrica-item resultado-metrica-item--divisor">
                     <h3 class="font-weight-bold resultado-metrica-valor text-warning mb-1">
                         {{ estrelas }} ★
                     </h3>
                     <p class="text-muted mb-0">Estrelas</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <div class="resultado-metrica-item resultado-metrica-item--divisor">
+                    <h3 class="font-weight-bold resultado-metrica-tempo mb-1">
+                        {{ tentativa.tempo_formatado }}
+                    </h3>
+                    <p class="text-muted mb-0">Tempo gasto</p>
                 </div>
             </div>
         </div>

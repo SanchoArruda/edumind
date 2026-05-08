@@ -7,6 +7,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum, Avg, Count, IntegerField, FloatField, Value
 from django.db.models.functions import Coalesce
 
+from quizzes.models import Quiz, Questao, Tentativa
+from disciplinas.models import Disciplina
+from desafios.models import Desafio
+
 from .forms import LoginForm, CadastroEstudanteForm, UsuarioAdminForm
 from .models import Usuario, TipoUsuario
 from .utils import calcular_progresso_nivel
@@ -47,7 +51,7 @@ def cadastro_estudante(request):
                 nome=form.cleaned_data["nome"],
                 email=form.cleaned_data["email"],
                 password=form.cleaned_data["password"],
-                tipo_usuario=tipo_estudante
+                tipo_usuario=tipo_estudante,
             )
 
             messages.success(request, "Cadastro realizado com sucesso.")
@@ -62,8 +66,6 @@ def cadastro_estudante(request):
 def dashboard_estudante(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
         return redirect("login")
-
-    from quizzes.models import Tentativa
 
     tentativas = Tentativa.objects.filter(
         usuario=request.user,
@@ -189,8 +191,6 @@ def perfil_estudante(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
         return redirect("login")
 
-    from quizzes.models import Tentativa
-
     tentativas = Tentativa.objects.filter(
         usuario=request.user,
         concluida=True,
@@ -264,38 +264,35 @@ def perfil_estudante(request):
 
 
 # -----------------------
-# admin
+# ADMIN
 # -----------------------
 
 
 @login_required
 def dashboard_admin(request):
-    if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "administrador":
+    if not usuario_e_admin(request.user):
         return redirect("login")
 
-    from quizzes.models import Quiz, Questao, Tentativa
-    from disciplinas.models import Disciplina
-
     estudantes = Usuario.objects.filter(
-        tipo_usuario__perfil__iexact="Estudante"
+        tipo_usuario__perfil__iexact="Estudante",
+        is_active=True,
     )
 
     tentativas = Tentativa.objects.filter(
         concluida=True,
-        tipo_tentativa="QUIZ",
-    ).select_related("usuario", "quiz")
-
-    media_geral = tentativas.aggregate(
-        media=Avg("percentual_acertos")
-    )["media"] or 0
+    ).select_related(
+        "usuario",
+        "quiz",
+        "desafio",
+    )
 
     contexto = {
         "total_estudantes": estudantes.count(),
         "total_quizzes": Quiz.objects.count(),
         "total_questoes": Questao.objects.count(),
+        "total_desafios": Desafio.objects.count(),
         "total_disciplinas": Disciplina.objects.count(),
         "total_tentativas": tentativas.count(),
-        "media_geral": round(media_geral, 1),
         "tentativas_recentes": tentativas.order_by("-id")[:5],
     }
 
@@ -332,11 +329,12 @@ def admin_editar_estudante(request, usuario_id):
     estudante = get_object_or_404(
         Usuario.objects.select_related("tipo_usuario"),
         id=usuario_id,
-        tipo_usuario__perfil__iexact="Estudante"
+        tipo_usuario__perfil__iexact="Estudante",
     )
 
     if request.method == "POST":
         form = UsuarioAdminForm(request.POST, instance=estudante)
+
         if form.is_valid():
             form.save()
             messages.success(request, "Estudante atualizado com sucesso.")
@@ -362,7 +360,7 @@ def admin_excluir_estudante(request, usuario_id):
     estudante = get_object_or_404(
         Usuario.objects.select_related("tipo_usuario"),
         id=usuario_id,
-        tipo_usuario__perfil__iexact="Estudante"
+        tipo_usuario__perfil__iexact="Estudante",
     )
 
     if request.method == "POST":
@@ -385,8 +383,6 @@ def admin_excluir_estudante(request, usuario_id):
 def admin_desempenho_geral(request):
     if not usuario_e_admin(request.user):
         return redirect("login")
-
-    from quizzes.models import Tentativa
 
     tentativas = Tentativa.objects.filter(
         concluida=True,
@@ -503,8 +499,6 @@ def ranking_estudante(request):
     if not request.user.tipo_usuario or request.user.tipo_usuario.perfil.lower() != "estudante":
         return redirect("login")
 
-    from quizzes.models import Tentativa
-
     ranking_qs = (
         Tentativa.objects.filter(
             concluida=True,
@@ -566,7 +560,7 @@ def ranking_estudante(request):
 
 
 # --------------------
-# PERFIL - ESTUDANTE
+# PERFIL - USUÁRIO
 # --------------------
 
 @login_required

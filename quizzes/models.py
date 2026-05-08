@@ -148,3 +148,21 @@ class Tentativa(models.Model):
         if self.tipo_tentativa == "DESAFIO" and self.desafio:
             return f"{self.usuario} - Desafio: {self.desafio.titulo}"
         return f"{self.usuario} - Tentativa {self.id}"
+    
+    @property
+    def tempo_formatado(self):
+        if not self.tempo_gasto:
+            return "Não registrado"
+
+        total_segundos = int(self.tempo_gasto.total_seconds())
+
+        minutos = total_segundos // 60
+        segundos = total_segundos % 60
+
+        if minutos > 0 and segundos > 0:
+            return f"{minutos} min e {segundos} seg"
+
+        if minutos > 0:
+            return f"{minutos} min"
+
+        return f"{segundos} seg"

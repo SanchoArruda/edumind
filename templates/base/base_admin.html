@@ -9,10 +9,12 @@
 
     <title>{% block title %}Admin - EduMind{% endblock %}</title>
 
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo-compact.png' %}">
 
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base/variables.css' %}" rel="stylesheet">
     <link href="{% static 'css/base/dashboard.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/admin/admin_global.css' %}">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -27,14 +29,16 @@
 
             <!-- Logo -->
             <div class="d-flex align-items-center px-4 py-4">
-                <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-3">
-                    <i class="icon-graduation"></i>
-                </div>
+                <a href="{% url 'dashboard_admin' %}" class="d-flex align-items-center text-decoration-none">
+                    <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-3">
+                        <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
+                    </div>
 
-                <div>
-                    <h4 class="mb-0 font-weight-bold ed-brand-title">EduMind</h4>
-                    <small class="text-muted">Painel Administrativo</small>
-                </div>
+                    <div>
+                        <h4 class="mb-0 font-weight-bold ed-brand-title">EduMind</h4>
+                        <small class="text-muted">Painel Administrativo</small>
+                    </div>
+                </a>
             </div>
 
             <!-- Menu -->
@@ -45,7 +49,7 @@
                 </div>
                 
                 <a href="{% url 'dashboard_admin' %}"
-                class="d-flex align-items-center justify-content-between px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_dashboard %}{% endblock %}">
+                   class="d-flex align-items-center justify-content-between px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_dashboard %}{% endblock %}">
                     <span>
                         <i class="icon-grid mr-3"></i>
                         Dashboard
@@ -54,42 +58,42 @@
                 </a>
 
                 <a href="{% url 'quizzes:admin_lista_quizzes' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_quizzes %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_quizzes %}{% endblock %}">
                     <i class="icon-book-open mr-3"></i>
                     <span>Gerenciar Quizzes</span>
                 </a>
 
                 <a href="{% url 'quizzes:admin_todas_questoes' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_questoes %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_questoes %}{% endblock %}">
                     <i class="icon-question mr-3"></i>
                     <span>Gerenciar Questões</span>
                 </a>
 
                 <a href="{% url 'disciplinas:admin_lista_disciplinas' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_disciplinas %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_disciplinas %}{% endblock %}">
                     <i class="icon-folder mr-3"></i>
                     <span>Disciplinas</span>
                 </a>
 
                 <a href="{% url 'desafios:admin_lista_desafios' %}"
-                    class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_desafios %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_desafios %}{% endblock %}">
                     <i class="icon-energy mr-3"></i>
                     <span>Gerenciar Desafios</span>
                 </a>
 
                 <a href="{% url 'admin_lista_estudantes' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_estudantes %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_estudantes %}{% endblock %}">
                     <i class="icon-user-follow mr-3"></i>
                     <span>Estudantes</span>
                 </a>
 
+                {% comment %}
                 <a href="{% url 'admin_desempenho_geral' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_desempenho %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_admin_desempenho %}{% endblock %}">
                     <i class="icon-chart mr-3"></i>
                     <span>Desempenho Geral</span>
                 </a>
-
-                   
+                {% endcomment %}
 
             </nav>
 
@@ -111,9 +115,13 @@
                 <!-- Logo mobile -->
                 <a class="navbar-brand d-md-none d-flex align-items-center" href="{% url 'dashboard_admin' %}">
                     <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-2">
-                        <i class="icon-graduation"></i>
+                        <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
                     </div>
-                    <strong class="ed-brand-title">EduMind Admin</strong>
+
+                    <div>
+                        <strong class="ed-brand-title d-block">EduMind</strong>
+                        <small class="text-muted">Admin</small>
+                    </div>
                 </a>
 
                 <!-- Botão mobile -->
@@ -154,12 +162,18 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin_lista_estudantes' %}">Estudantes</a>
+                            <a class="nav-link" href="{% url 'desafios:admin_lista_desafios' %}">Gerenciar Desafios</a>
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_lista_estudantes' %}">Estudantes</a>
+                        </li>
+
+                        {% comment %}
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin_desempenho_geral' %}">Desempenho Geral</a>
                         </li>
+                        {% endcomment %}
                     </ul>
 
                     <!-- Usuário -->

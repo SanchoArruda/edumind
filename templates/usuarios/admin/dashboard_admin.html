@@ -12,21 +12,26 @@
 {% block content %}
 
 <div class="admin-dashboard">
-    <div class="row align-items-center mb-4">
-        <div class="col-12">
-            <h1 class="admin-dashboard__title">Painel Administrativo</h1>
-            <p class="admin-dashboard__subtitle">Gerencie a plataforma EduMind</p>
+
+    <div class="row align-items-center admin-page-header">
+        <div class="col-md-8">
+            <h1 class="admin-page-title">Painel Administrativo</h1>
+            <p class="admin-page-subtitle">
+                Gerencie os principais recursos da plataforma EduMind.
+            </p>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card ed-card border-0 admin-stat-card">
+
+        <div class="col-md-6 col-xl mb-4">
+            <div class="card admin-card admin-stat-card">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="admin-stat-card__label">Usuários</p>
+                        <p class="admin-stat-card__label">Estudantes Ativos</p>
                         <h2 class="admin-stat-card__value">{{ total_estudantes }}</h2>
                     </div>
+
                     <div class="admin-stat-card__icon admin-stat-card__icon--purple">
                         <i class="icon-user"></i>
                     </div>
@@ -34,13 +39,14 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card ed-card border-0 admin-stat-card">
+        <div class="col-md-6 col-xl mb-4">
+            <div class="card admin-card admin-stat-card">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="admin-stat-card__label">Quizzes</p>
+                        <p class="admin-stat-card__label">Quizzes Disponíveis</p>
                         <h2 class="admin-stat-card__value">{{ total_quizzes }}</h2>
                     </div>
+
                     <div class="admin-stat-card__icon admin-stat-card__icon--violet">
                         <i class="icon-book-open"></i>
                     </div>
@@ -48,13 +54,14 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card ed-card border-0 admin-stat-card">
+        <div class="col-md-6 col-xl mb-4">
+            <div class="card admin-card admin-stat-card">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="admin-stat-card__label">Questões</p>
+                        <p class="admin-stat-card__label">Questões Cadastradas</p>
                         <h2 class="admin-stat-card__value">{{ total_questoes }}</h2>
                     </div>
+
                     <div class="admin-stat-card__icon admin-stat-card__icon--orange">
                         <i class="icon-question"></i>
                     </div>
@@ -62,36 +69,60 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card ed-card border-0 admin-stat-card">
+        <div class="col-md-6 col-xl mb-4">
+            <div class="card admin-card admin-stat-card">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="admin-stat-card__label">Média Geral</p>
-                        <h2 class="admin-stat-card__value">{{ media_geral|floatformat:0 }}%</h2>
-                        <small class="admin-stat-card__small">{{ total_tentativas }} tentativas</small>
+                        <p class="admin-stat-card__label">Desafios Disponíveis</p>
+                        <h2 class="admin-stat-card__value">{{ total_desafios }}</h2>
                     </div>
+
+                    <div class="admin-shortcut-card__icon admin-shortcut-card__icon--blue mr-3">
+                        <i class="icon-energy"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl mb-4">
+            <div class="card admin-card admin-stat-card">
+                <div class="card-body d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="admin-stat-card__label">Tentativas Concluídas</p>
+                        <h2 class="admin-stat-card__value">{{ total_tentativas }}</h2>
+                        <small class="admin-stat-card__small">
+                            Quizzes e desafios finalizados
+                        </small>
+                    </div>
+
                     <div class="admin-stat-card__icon admin-stat-card__icon--green">
                         <i class="icon-chart"></i>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="row">
+
         <div class="col-lg-6 mb-4">
             <a href="{% url 'quizzes:admin_todas_questoes' %}" class="admin-shortcut text-decoration-none">
-                <div class="card ed-card border-0 admin-shortcut-card">
+                <div class="card admin-card admin-shortcut-card">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="admin-shortcut-card__icon admin-shortcut-card__icon--violet mr-3">
                                 <i class="icon-question"></i>
                             </div>
+
                             <div>
                                 <h4 class="admin-shortcut-card__title">Gerenciar Questões</h4>
-                                <p class="admin-shortcut-card__text">Adicionar, editar e remover questões</p>
+                                <p class="admin-shortcut-card__text">
+                                    Adicionar, editar e remover questões
+                                </p>
                             </div>
                         </div>
+
                         <div class="admin-shortcut-card__arrow">
                             <i class="icon-arrow-right"></i>
                         </div>
@@ -102,17 +133,47 @@
 
         <div class="col-lg-6 mb-4">
             <a href="{% url 'quizzes:admin_lista_quizzes' %}" class="admin-shortcut text-decoration-none">
-                <div class="card ed-card border-0 admin-shortcut-card">
+                <div class="card admin-card admin-shortcut-card">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="admin-shortcut-card__icon admin-shortcut-card__icon--purple mr-3">
                                 <i class="icon-book-open"></i>
                             </div>
+
                             <div>
                                 <h4 class="admin-shortcut-card__title">Gerenciar Quizzes</h4>
-                                <p class="admin-shortcut-card__text">Criar e organizar quizzes</p>
+                                <p class="admin-shortcut-card__text">
+                                    Criar e organizar quizzes
+                                </p>
                             </div>
                         </div>
+
+                        <div class="admin-shortcut-card__arrow">
+                            <i class="icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <a href="{% url 'desafios:admin_lista_desafios' %}" class="admin-shortcut text-decoration-none">
+                <div class="card admin-card admin-shortcut-card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="admin-shortcut-card__icon admin-shortcut-card__icon--blue mr-3">
+                                <i class="icon-energy"></i>
+                            </div>
+
+
+                            <div>
+                                <h4 class="admin-shortcut-card__title">Gerenciar Desafios</h4>
+                                <p class="admin-shortcut-card__text">
+                                    Criar desafios ENADE e POSCOMP
+                                </p>
+                            </div>
+                        </div>
+
                         <div class="admin-shortcut-card__arrow">
                             <i class="icon-arrow-right"></i>
                         </div>
@@ -123,17 +184,21 @@
 
         <div class="col-lg-6 mb-4">
             <a href="{% url 'disciplinas:admin_lista_disciplinas' %}" class="admin-shortcut text-decoration-none">
-                <div class="card ed-card border-0 admin-shortcut-card">
+                <div class="card admin-card admin-shortcut-card">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="admin-shortcut-card__icon admin-shortcut-card__icon--green mr-3">
                                 <i class="icon-folder"></i>
                             </div>
+
                             <div>
                                 <h4 class="admin-shortcut-card__title">Disciplinas</h4>
-                                <p class="admin-shortcut-card__text">Organizar as áreas de conhecimento</p>
+                                <p class="admin-shortcut-card__text">
+                                    Organizar as áreas de conhecimento
+                                </p>
                             </div>
                         </div>
+
                         <div class="admin-shortcut-card__arrow">
                             <i class="icon-arrow-right"></i>
                         </div>
@@ -144,17 +209,21 @@
 
         <div class="col-lg-6 mb-4">
             <a href="{% url 'admin_lista_estudantes' %}" class="admin-shortcut text-decoration-none">
-                <div class="card ed-card border-0 admin-shortcut-card">
+                <div class="card admin-card admin-shortcut-card">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="admin-shortcut-card__icon admin-shortcut-card__icon--orange mr-3">
                                 <i class="icon-people"></i>
                             </div>
+
                             <div>
                                 <h4 class="admin-shortcut-card__title">Estudantes</h4>
-                                <p class="admin-shortcut-card__text">Visualizar usuários cadastrados</p>
+                                <p class="admin-shortcut-card__text">
+                                    Visualizar usuários cadastrados
+                                </p>
                             </div>
                         </div>
+
                         <div class="admin-shortcut-card__arrow">
                             <i class="icon-arrow-right"></i>
                         </div>
@@ -162,32 +231,81 @@
                 </div>
             </a>
         </div>
+
     </div>
 
-    <div class="card ed-card border-0 admin-recent-card">
-        <div class="card-body">
-            <h3 class="admin-recent-card__title">Tentativas Recentes</h3>
+    <div class="card admin-card admin-recent-card">
+        <div class="card-body admin-card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="admin-recent-card__title mb-1">Tentativas Recentes</h3>
+                    <p class="admin-recent-card__subtitle mb-0">
+                        Últimas tentativas concluídas pelos estudantes.
+                    </p>
+                </div>
+            </div>
 
             {% if tentativas_recentes %}
                 <div class="table-responsive">
-                    <table class="table admin-dashboard-table mb-0">
+                    <table class="table admin-table mb-0">
                         <thead>
                             <tr>
                                 <th>Estudante</th>
-                                <th>Quiz</th>
+                                <th>Atividade</th>
+                                <th>Tipo</th>
                                 <th>Acertos</th>
                                 <th>Percentual</th>
                                 <th>Data</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {% for tentativa in tentativas_recentes %}
                                 <tr>
-                                    <td>{{ tentativa.usuario.username }}</td>
-                                    <td>{{ tentativa.quiz.titulo }}</td>
-                                    <td>{{ tentativa.quantidade_acertos }}</td>
-                                    <td>{{ tentativa.percentual_acertos|floatformat:0 }}%</td>
-                                    <td>{{ tentativa.data_criacao|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <div class="admin-table-title">
+                                            {{ tentativa.usuario.nome|default:tentativa.usuario.username }}
+                                        </div>
+                                        <div class="admin-table-muted">
+                                            {{ tentativa.usuario.username }}
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        {% if tentativa.tipo_tentativa == "DESAFIO" and tentativa.desafio %}
+                                            {{ tentativa.desafio.titulo }}
+                                        {% elif tentativa.quiz %}
+                                            {{ tentativa.quiz.titulo }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if tentativa.tipo_tentativa == "DESAFIO" %}
+                                            <span class="admin-badge admin-badge-blue">
+                                                Desafio
+                                            </span>
+                                        {% else %}
+                                            <span class="admin-badge admin-badge-purple">
+                                                Quiz
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ tentativa.quantidade_acertos }}
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-badge admin-badge-gray">
+                                            {{ tentativa.percentual_acertos|floatformat:0 }}%
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                       {{ tentativa.data_tentativa|date:"d/m/Y H:i" }}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -195,11 +313,12 @@
                 </div>
             {% else %}
                 <div class="admin-recent-card__empty">
-                    Nenhuma tentativa registrada
+                    Nenhuma tentativa registrada.
                 </div>
             {% endif %}
         </div>
     </div>
+
 </div>
 
 {% endblock %}

@@ -1,0 +1,272 @@
+/* =========================
+   ADMIN - ESTRUTURA GERAL
+========================= */
+
+.admin-page-header {
+    margin-bottom: 28px;
+}
+
+.admin-page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.admin-page-subtitle {
+    color: #8290a8;
+    font-size: 0.98rem;
+    margin-bottom: 0;
+}
+
+.admin-page-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.admin-card {
+    background: #ffffff;
+    border: 0;
+    border-radius: 22px;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.05);
+}
+
+.admin-card-body {
+    padding: 26px;
+}
+
+/* =========================
+   BOTÕES
+========================= */
+
+.admin-btn-primary {
+    border: 0;
+    border-radius: 12px;
+    padding: 13px 22px;
+    background: linear-gradient(135deg, #5b4ee6, #6d5dfc);
+    color: #ffffff;
+    font-weight: 800;
+    box-shadow: 0 12px 24px rgba(91, 78, 230, 0.22);
+    transition: 0.2s ease;
+}
+
+.admin-btn-primary:hover {
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 16px 28px rgba(91, 78, 230, 0.28);
+}
+
+.admin-btn-outline {
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* =========================
+   BUSCA / FILTROS
+========================= */
+
+.admin-filter-card {
+    background: #ffffff;
+    border: 0;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.05);
+    margin-bottom: 22px;
+}
+
+.admin-search-input {
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #dfe5f1;
+    padding-left: 44px;
+}
+
+.admin-search-wrap {
+    position: relative;
+}
+
+.admin-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    z-index: 2;
+}
+
+/* =========================
+   TABELAS
+========================= */
+
+.admin-table {
+    margin-bottom: 0;
+}
+
+.admin-table thead th {
+    border-top: 0;
+    border-bottom: 1px solid #edf1f7;
+    color: #7f8aa3;
+    font-size: 0.88rem;
+    font-weight: 800;
+    padding: 16px 14px;
+}
+
+.admin-table tbody td {
+    border-top: 1px solid #edf1f7;
+    color: #65738c;
+    vertical-align: middle;
+    padding: 18px 14px;
+}
+
+.admin-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.admin-table-title {
+    color: #1f2937;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.admin-table-muted {
+    color: #8490a8;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   LISTA EM CARDS
+========================= */
+
+.admin-list-card {
+    background: #ffffff;
+    border: 1px solid #e6edf7;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.05);
+    transition: 0.2s ease;
+}
+
+.admin-list-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(31, 41, 55, 0.08);
+}
+
+.admin-list-title {
+    color: #1f2937;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.admin-list-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.admin-badge-blue {
+    background: #eef6ff;
+    color: #2563eb;
+}
+
+.admin-badge-purple {
+    background: #f4edff;
+    color: #7c3aed;
+}
+
+.admin-badge-green {
+    background: #ecfdf3;
+    color: #16a064;
+}
+
+.admin-badge-orange {
+    background: #fff4e3;
+    color: #d97706;
+}
+
+.admin-badge-red {
+    background: #fff0f2;
+    color: #d94b5f;
+}
+
+.admin-badge-gray {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+/* =========================
+   AÇÕES
+========================= */
+
+.admin-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.admin-action-btn {
+    border-radius: 9px;
+    font-weight: 700;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 768px) {
+    .admin-page-title {
+        font-size: 1.6rem;
+    }
+
+    .admin-page-actions {
+        justify-content: flex-start;
+        margin-top: 16px;
+    }
+
+    .admin-card-body {
+        padding: 20px;
+    }
+
+    .admin-actions {
+        justify-content: flex-start;
+        margin-top: 14px;
+    }
+
+    .admin-list-card {
+        padding: 18px;
+    }
+}
+
+.admin-item-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    background: #eef0ff;
+    color: #5b4ee6;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dde2ff;
+}

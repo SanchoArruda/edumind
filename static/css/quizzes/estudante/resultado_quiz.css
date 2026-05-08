@@ -19,7 +19,7 @@
 }
 
 .resultado-metricas {
-    max-width: 760px;
+    max-width: 840px;
     margin: 0 auto;
 }
 
@@ -30,12 +30,19 @@
 
 .resultado-metrica-item--divisor {
     border-left: 1px solid #e9edf5;
-    border-right: 1px solid #e9edf5;
+    border-right: 0;
 }
 
 .resultado-metrica-valor {
     font-size: 2.4rem;
     line-height: 1.1;
+}
+
+.resultado-metrica-tempo {
+    font-size: 1.8rem;
+    line-height: 1.15;
+    color: #111827;
+    font-weight: 800;
 }
 
 .resultado-questao-card {
@@ -100,6 +107,10 @@
     color: #344054;
 }
 
+.resultado-btn {
+    border-radius: 20px;
+}
+
 @media (max-width: 767.98px) {
     .resultado-emoji-circle {
         width: 82px;
@@ -118,8 +129,8 @@
     .resultado-metrica-valor {
         font-size: 2rem;
     }
-}
 
-.resultado-btn{
-    border-radius: 20px;
+    .resultado-metrica-tempo {
+        font-size: 1.35rem;
+    }
 }

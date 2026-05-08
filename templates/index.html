@@ -1,153 +1,233 @@
+{% extends "base/base_publica.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduMind - Início</title>
 
-    <link rel="icon" type="image/png" href="{% static 'images/logo-compact.png' %}">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/index.css' %}" rel="stylesheet">
-</head>
-<body>
+{% block title %}EduMind - Início{% endblock %}
 
-    <header class="public-header">
-        <div class="container public-navbar">
-            <a href="{% url 'home' %}" class="brand">
+{% block extra_css %}
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<header class="public-header">
+    <div class="container public-navbar">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-mark">
                 <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
+            </div>
+
+            <div class="brand-text">
                 <span>EduMind</span>
-            </a>
+                <small>Preparação ENADE & POSCOMP</small>
+            </div>
+        </a>
 
-            <nav class="public-nav">
-                <a href="{% url 'login' %}" class="btn btn-outline">Entrar</a>
-                <a href="{% url 'cadastro' %}" class="btn btn-primary">Criar conta</a>
-            </nav>
-        </div>
-    </header>
+        <nav class="public-nav">
+            <a href="{% url 'login' %}" class="btn btn-outline">Entrar</a>
+            <a href="{% url 'cadastro' %}" class="btn btn-primary">Criar conta</a>
+        </nav>
+    </div>
+</header>
 
-    <main class="hero-section">
-        <div class="container hero-grid">
-            <section class="hero-content">
-                <span class="hero-badge">Plataforma de preparação acadêmica</span>
+<main class="hero-section">
+    <div class="container hero-grid">
 
-                <h1>
-                    Estude para o ENADE e POSCOMP com mais prática,
-                    organização e acompanhamento.
-                </h1>
+        <section class="hero-content">
+            <span class="hero-badge">
+                Plataforma gamificada de preparação acadêmica
+            </span>
 
-                <p>
-                    O EduMind ajuda estudantes a resolver quizzes por disciplina,
-                    acompanhar desempenho, visualizar evolução e manter a preparação
-                    mais estruturada.
-                </p>
+            <h1>
+                Prepare-se para o ENADE e POSCOMP com quizzes, desafios e acompanhamento de desempenho.
+            </h1>
 
-                <div class="hero-actions">
-                    <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg">
-                        Começar agora
-                    </a>
-                    <a href="{% url 'login' %}" class="btn btn-outline btn-lg">
-                        Já tenho conta
-                    </a>
-                </div>
-            </section>
+            <p>
+                O EduMind reúne questões, quizzes por disciplina, desafios cronometrados,
+                ranking, XP e histórico de desempenho para apoiar estudantes da área de Computação
+                durante a preparação acadêmica.
+            </p>
 
-            <section class="hero-card">
-                <div class="hero-card-icon">
+            <div class="hero-actions">
+                <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg">
+                    Começar agora
+                </a>
+
+                <a href="{% url 'login' %}" class="btn btn-outline btn-lg">
+                    Já tenho conta
+                </a>
+            </div>
+
+            <div class="hero-points">
+                <span>✓ Quizzes por disciplina</span>
+                <span>✓ Desafios ENADE e POSCOMP</span>
+                <span>✓ Evolução por XP e ranking</span>
+            </div>
+        </section>
+
+        <section class="hero-preview-card">
+            <div class="preview-top">
+                <div class="preview-logo">
                     <img src="{% static 'images/logo-compact.png' %}" alt="Logo EduMind">
                 </div>
 
-                <h2>Aprendizado com foco em evolução</h2>
-
-                <p>
-                    Pratique com quizzes, acompanhe seu histórico e evolua com mais
-                    clareza em um ambiente pensado para sua preparação.
-                </p>
-
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <strong>500+</strong>
-                        <span>Questões</span>
-                    </div>
-                    <div class="stat-item">
-                        <strong>50+</strong>
-                        <span>Quizzes</span>
-                    </div>
-                    <div class="stat-item">
-                        <strong>1.2k</strong>
-                        <span>Estudantes</span>
-                    </div>
+                <div>
+                    <h2>Ambiente de prática</h2>
+                    <p>Treine, acompanhe sua evolução e avance nos desafios.</p>
                 </div>
-            </section>
-        </div>
-    </main>
-
-    <section class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Funcionalidades principais</h2>
-                <p>
-                    Um ambiente de apoio ao estudante com foco em prática,
-                    desempenho e evolução.
-                </p>
             </div>
 
-            <div class="features-grid">
-                <article class="feature-card">
-                    <div class="feature-icon">📝</div>
-                    <h3>Quizzes por disciplina</h3>
-                    <p>
-                        Resolva quizzes organizados por disciplina e tipo de exame,
-                        facilitando o estudo direcionado.
-                    </p>
-                </article>
+            <div class="preview-progress-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>Progresso do estudante</strong>
+                    <span>🔥 Nv. 1</span>
+                </div>
 
-                <article class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h3>Acompanhamento de desempenho</h3>
-                    <p>
-                        Visualize resultados, histórico e progresso ao longo da sua
-                        preparação.
-                    </p>
-                </article>
+                <div class="preview-progress-bar">
+                    <div class="preview-progress-fill"></div>
+                </div>
 
-                <article class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Ranking e motivação</h3>
-                    <p>
-                        Acompanhe rankings e mantenha o engajamento durante a prática
-                        dos quizzes.
-                    </p>
-                </article>
+                <small>XP, acertos e histórico acompanhados automaticamente.</small>
+            </div>
+
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <span class="preview-icon preview-icon-blue">📝</span>
+                    <strong>Quizzes</strong>
+                    <small>Prática por área</small>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-icon preview-icon-purple">⚡</span>
+                    <strong>Desafios</strong>
+                    <small>Tempo limitado</small>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-icon preview-icon-orange">★</span>
+                    <strong>Estrelas</strong>
+                    <small>Desempenho</small>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-icon preview-icon-green">📈</span>
+                    <strong>Relatórios</strong>
+                    <small>Evolução</small>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<section class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Funcionalidades</span>
+            <h2>Recursos principais do EduMind</h2>
+            <p>
+                Um ambiente de estudo voltado para prática, acompanhamento e motivação do estudante.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <article class="feature-card">
+                <div class="feature-icon feature-icon-blue">📝</div>
+                <h3>Quizzes por disciplina</h3>
+                <p>
+                    Resolva quizzes organizados por área de conhecimento e tipo de prova,
+                    com foco em ENADE e POSCOMP.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon feature-icon-purple">⚡</div>
+                <h3>Desafios cronometrados</h3>
+                <p>
+                    Treine em desafios com tempo limitado, simulando a pressão de uma prova real.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon feature-icon-orange">★</div>
+                <h3>Estrelas e desbloqueio</h3>
+                <p>
+                    Avance nos desafios conforme seu desempenho e acompanhe sua pontuação por estrelas.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon feature-icon-green">📈</div>
+                <h3>Acompanhamento de desempenho</h3>
+                <p>
+                    Veja taxa de acerto, XP, histórico de tentativas e desempenho por disciplina.
+                </p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="how-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Como funciona</span>
+            <h2>Um fluxo simples para evoluir nos estudos</h2>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <span>1</span>
+                <h3>Escolha uma prova</h3>
+                <p>Treine com foco no ENADE ou no POSCOMP.</p>
+            </div>
+
+            <div class="step-card">
+                <span>2</span>
+                <h3>Responda quizzes</h3>
+                <p>Pratique por disciplina e acompanhe seus acertos.</p>
+            </div>
+
+            <div class="step-card">
+                <span>3</span>
+                <h3>Complete desafios</h3>
+                <p>Teste seus conhecimentos com tempo limitado.</p>
+            </div>
+
+            <div class="step-card">
+                <span>4</span>
+                <h3>Acompanhe sua evolução</h3>
+                <p>Veja XP, ranking, histórico e desempenho por área.</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-box">
-                <h2>Pronto para começar sua preparação?</h2>
-                <p>
-                    Crie sua conta e comece a praticar com quizzes e acompanhamento do seu desempenho.
-                </p>
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box">
+            <span class="cta-badge">EduMind</span>
+            <h2>Comece sua preparação com mais organização.</h2>
+            <p>
+                Crie sua conta para acessar quizzes, desafios e acompanhar seu desempenho.
+            </p>
+
+            <div class="cta-actions">
                 <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg">
                     Criar conta
                 </a>
+
+                <a href="{% url 'login' %}" class="btn btn-outline btn-lg">
+                    Entrar
+                </a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <footer class="public-footer">
-        <div class="container footer-content">
-            <span>© 2026 EduMind. Todos os direitos reservados.</span>
-            <span>Preparação acadêmica com foco em evolução.</span>
-        </div>
-    </footer>
+<footer class="public-footer">
+    <div class="container footer-content">
+        <span>© 2026 EduMind.</span>
+        <span>Preparação acadêmica para ENADE e POSCOMP.</span>
+    </div>
+</footer>
 
-    <script src="{% static 'plugins/common/common.min.js' %}"></script>
-    <script src="{% static 'js/custom.min.js' %}"></script>
-    <script src="{% static 'js/settings.js' %}"></script>
-    <script src="{% static 'js/gleek.js' %}"></script>
-    <script src="{% static 'js/styleSwitcher.js' %}"></script>
-</body>
-</html>
+{% endblock %}

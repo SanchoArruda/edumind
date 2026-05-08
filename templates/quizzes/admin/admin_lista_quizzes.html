@@ -6,61 +6,117 @@
 
 {% block content %}
 
-<div class="row align-items-center mb-4">
+<div class="row align-items-center admin-page-header">
     <div class="col-md-8">
-        <h1 class="font-weight-bold mb-1">Gerenciar Quizzes</h1>
-        <p class="text-muted mb-0">
+        <h1 class="admin-page-title">Gerenciar Quizzes</h1>
+        <p class="admin-page-subtitle">
             Cadastre e acompanhe os quizzes disponíveis no sistema.
         </p>
     </div>
 
-    <div class="col-md-4 text-md-right mt-3 mt-md-0">
-        <a href="{% url 'quizzes:admin_criar_quiz' %}" class="btn ed-btn-primary px-4 py-3">
+    <div class="col-md-4 admin-page-actions mt-3 mt-md-0">
+        <a href="{% url 'quizzes:admin_criar_quiz' %}" class="btn admin-btn-primary">
             + Novo Quiz
         </a>
     </div>
 </div>
 
-<div class="card ed-card border-0">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Disciplina</th>
-                        <th>Questões</th>
-                        <th class="text-right">Ações</th>
-                    </tr>
-                </thead>
+<div class="card admin-card">
+    <div class="card-body admin-card-body">
 
-                <tbody>
-                    {% for quiz in quizzes %}
+        {% if quizzes %}
+            <div class="table-responsive">
+                <table class="table admin-table">
+                    <thead>
                         <tr>
-                            <td class="font-weight-bold">{{ quiz.titulo }}</td>
-                            <td>{{ quiz.disciplina.nome }}</td>
-                            <td>{{ quiz.questoes.count }}</td>
-                            <td class="text-right">
-                                <a href="{% url 'quizzes:admin_editar_quiz' quiz.id %}" class="btn btn-sm btn-outline-primary mr-2">
-                                    <i class="icon-note mr-1"></i> Editar
-                                </a>
+                            <th>Quiz</th>
+                            <th>Disciplina</th>
+                            <th>Tipo de Prova</th>
+                            <th>Questões</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
 
-                                <a href="{% url 'quizzes:admin_excluir_quiz' quiz.id %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="icon-trash mr-1"></i> Excluir
-                                </a>
-                    
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center text-muted py-4">
-                                Nenhum quiz cadastrado ainda.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    <tbody>
+                        {% for quiz in quizzes %}
+                            <tr>
+                                <td>
+                                    <div class="admin-table-title">
+                                        {{ quiz.titulo }}
+                                    </div>
+
+                                    {% if quiz.descricao %}
+                                        <div class="admin-table-muted">
+                                            {{ quiz.descricao|truncatechars:80 }}
+                                        </div>
+                                    {% else %}
+                                        <div class="admin-table-muted">
+                                            Sem descrição cadastrada.
+                                        </div>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="admin-badge admin-badge-gray">
+                                        {{ quiz.disciplina.nome }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {% if quiz.tipo_prova == "ENADE" %}
+                                        <span class="admin-badge admin-badge-blue">
+                                            ENADE
+                                        </span>
+                                    {% elif quiz.tipo_prova == "POSCOMP" %}
+                                        <span class="admin-badge admin-badge-purple">
+                                            POSCOMP
+                                        </span>
+                                    {% else %}
+                                        <span class="admin-badge admin-badge-gray">
+                                            {{ quiz.tipo_prova }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="admin-badge admin-badge-green">
+                                        {{ quiz.questoes.count }} questão{{ quiz.questoes.count|pluralize:"ões" }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="admin-actions">
+                                        <a href="{% url 'quizzes:admin_editar_quiz' quiz.id %}"
+                                           class="btn btn-sm btn-outline-primary admin-action-btn">
+                                            <i class="icon-note mr-1"></i>
+                                            Editar
+                                        </a>
+
+                                        <a href="{% url 'quizzes:admin_excluir_quiz' quiz.id %}"
+                                           class="btn btn-sm btn-outline-danger admin-action-btn">
+                                            <i class="icon-trash mr-1"></i>
+                                            Excluir
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <h5 class="font-weight-bold mb-2">Nenhum quiz cadastrado</h5>
+                <p class="text-muted mb-4">
+                    Crie quizzes para organizar questões por disciplina e tipo de prova.
+                </p>
+
+                <a href="{% url 'quizzes:admin_criar_quiz' %}" class="btn admin-btn-primary">
+                    + Novo Quiz
+                </a>
+            </div>
+        {% endif %}
+
     </div>
 </div>
 

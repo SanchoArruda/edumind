@@ -1,162 +1,322 @@
-html, body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    background: #f3f4f6;
-    font-family: "Inter", Arial, sans-serif;
-    color: #111827;
-}
+/* =========================
+   PÁGINA
+========================= */
 
 .register-page {
     min-height: 100vh;
+    padding: 42px 20px;
+    background:
+        radial-gradient(circle at top right, rgba(111, 61, 244, 0.14), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(24, 183, 216, 0.10), transparent 35%),
+        var(--ed-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
 }
 
 .register-wrapper {
     width: 100%;
-    max-width: 520px;
+    max-width: 880px;
 }
+
+/* =========================
+   LOGO / MARCA
+========================= */
 
 .register-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ed-text);
+    margin-bottom: 24px;
+}
+
+.register-brand:hover {
+    text-decoration: none;
+}
+
+.register-brand-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--ed-primary), var(--ed-primary-dark));
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    margin-bottom: 42px;
+    box-shadow: var(--ed-shadow-primary);
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
-.brand-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.brand-icon img {
-    width: 28px;
-    height: 28px;
+.register-brand-mark img {
+    width: 100px;
+    height: 100px;
     object-fit: contain;
+    object-position: center;
+    display: block;
+    transform: translateY(5px);
 }
 
-.register-brand h1 {
+.register-brand-text span {
+    display: block;
+    color: var(--ed-primary);
+    font-size: 1.28rem;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.register-brand-text small {
+    display: block;
+    color: #8290a8;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.register-box {
+    background: #ffffff;
+    border: 1px solid var(--ed-border);
+    border-radius: 28px;
+    padding: 38px;
+    box-shadow: var(--ed-shadow);
+}
+
+.register-header {
+    margin-bottom: 30px;
+}
+
+.register-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: var(--ed-primary-light);
+    color: var(--ed-primary);
+    font-size: 0.86rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+}
+
+.register-header h1 {
+    color: var(--ed-text);
+    font-size: 2.25rem;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin: 0 0 8px;
+}
+
+.register-header p {
+    color: var(--ed-muted);
+    font-size: 1rem;
+    line-height: 1.6;
     margin: 0;
-    font-size: 2rem;
-    font-weight: 800;
-    color: #111827;
 }
 
-.register-brand h1 span {
-    color: #2f43f4;
-}
-
-.register-box h2 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    color: #111827;
-}
-
-.register-subtitle {
-    font-size: 1.15rem;
-    color: #6b7280;
-    margin-bottom: 34px;
-}
+/* =========================
+   FORM
+========================= */
 
 .register-form {
-    width: 100%;
+    margin: 0;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
 }
 
 .form-group-custom {
-    margin-bottom: 22px;
+    margin-bottom: 0;
 }
 
 .form-group-custom label {
     display: block;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 10px;
+    color: var(--ed-text);
+    font-size: 0.92rem;
+    font-weight: 900;
+    margin-bottom: 8px;
 }
 
-.register-form input,
-.register-form select {
+.form-group-custom input,
+.form-group-custom select {
     width: 100%;
-    height: 56px;
-    border: 1px solid #d8dde6;
-    border-radius: 10px;
+    height: 52px;
+    border-radius: 15px;
+    border: 1px solid #dfe5f1;
     background: #ffffff;
+    color: var(--ed-text);
+    font-size: 0.96rem;
+    font-weight: 600;
     padding: 0 16px;
-    font-size: 1rem;
-    color: #111827;
     outline: none;
-    box-shadow: none;
+    transition: all 0.2s ease;
 }
 
-.register-form input:focus,
-.register-form select:focus {
-    border-color: #2f43f4;
+.form-group-custom input::placeholder {
+    color: #a0aec0;
+}
+
+.form-group-custom input:focus,
+.form-group-custom select:focus {
+    border-color: var(--ed-primary);
+    box-shadow: 0 0 0 0.16rem rgba(111, 61, 244, 0.12);
 }
 
 .btn-register {
     width: 100%;
-    height: 56px;
-    border: none;
-    border-radius: 10px;
-    background: #2f43f4;
+    height: 54px;
+    border: 0;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--ed-primary), var(--ed-primary-dark));
     color: #ffffff;
     font-size: 1rem;
-    font-weight: 700;
-    margin-top: 6px;
-    transition: 0.2s ease;
+    font-weight: 900;
+    box-shadow: var(--ed-shadow-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 28px;
 }
 
 .btn-register:hover {
-    background: #2639e9;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 36px rgba(111, 61, 244, 0.30);
+}
+
+/* =========================
+   LINKS
+========================= */
+
+.register-footer-links {
+    margin-top: 26px;
+    text-align: center;
 }
 
 .login-link {
-    text-align: center;
-    margin-top: 28px;
-    color: #6b7280;
-    font-size: 1rem;
+    color: var(--ed-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 12px;
 }
 
 .login-link a {
-    color: #2f43f4;
-    text-decoration: none;
-    font-weight: 700;
+    color: var(--ed-primary);
+    font-weight: 900;
 }
 
 .login-link a:hover {
-    text-decoration: underline;
+    color: var(--ed-primary-dark);
+    text-decoration: none;
 }
 
-@media (max-width: 576px) {
+.back-home-link {
+    display: inline-flex;
+    color: #8290a8;
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.back-home-link:hover {
+    color: var(--ed-primary);
+    text-decoration: none;
+}
+
+/* =========================
+   ALERTAS / ERROS
+========================= */
+
+.alert {
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 768px) {
     .register-page {
-        padding: 32px 16px;
+        padding: 28px 18px;
+        align-items: flex-start;
     }
 
     .register-brand {
-        margin-bottom: 32px;
+        margin-bottom: 22px;
     }
 
-    .register-brand h1 {
-        font-size: 1.8rem;
+    .register-brand-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
     }
 
-    .register-box h2 {
-        font-size: 1.8rem;
+    .register-brand-mark img {
+        width: 96px;
+        height: 96px;
+        transform: translateY(5px);
     }
 
-    .register-subtitle {
-        font-size: 1rem;
+    .register-brand-text span {
+        font-size: 1.16rem;
+    }
+
+    .register-brand-text small {
+        font-size: 0.72rem;
+    }
+
+    .register-box {
+        padding: 28px 22px;
+        border-radius: 24px;
+    }
+
+    .register-header {
+        margin-bottom: 24px;
+    }
+
+    .register-badge {
+        display: none;
+    }
+
+    .register-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .register-header p {
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .form-group-custom input,
+    .form-group-custom select,
+    .btn-register {
+        height: 50px;
+        border-radius: 14px;
+    }
+
+    .btn-register {
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-page {
+        padding: 24px 16px;
+    }
+
+    .register-box {
+        padding: 24px 18px;
     }
 }

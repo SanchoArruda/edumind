@@ -9,10 +9,12 @@
 
     <title>{% block title %}EduMind{% endblock %}</title>
 
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo-compact.png' %}">
 
     <!-- CSS principal do template Bootstrap -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/base/variables.css' %}" rel="stylesheet">
 
     <!-- CSS próprio do dashboard -->
     <link href="{% static 'css/base/dashboard.css' %}" rel="stylesheet">
@@ -30,20 +32,20 @@
 
             <!-- Logo -->
             <div class="d-flex align-items-center px-4 py-4">
-                <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-3">
-                    <i class="icon-graduation"></i>
-                </div>
+                <a href="{% url 'dashboard_estudante' %}" class="d-flex align-items-center text-decoration-none">
+                    <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-3">
+                        <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
+                    </div>
 
-                <div>
-                    <h4 class="mb-0 font-weight-bold ed-brand-title">EduMind</h4>
-                    <small class="text-muted">Preparação ENADE & POSCOMP</small>
-                </div>
+                    <div>
+                        <h4 class="mb-0 font-weight-bold ed-brand-title">EduMind</h4>
+                        <small class="text-muted">Preparação ENADE & POSCOMP</small>
+                    </div>
+                </a>
             </div>
-
 
             <!-- Menu -->
             <nav class="flex-grow-1 px-3 py-3">
-
 
                 <div class="ed-sidebar-section-title">
                     ESTUDANTE
@@ -65,24 +67,22 @@
                 </a>
 
                 <a href="{% url 'desafios:inicio_desafios' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_desafios %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_desafios %}{% endblock %}">
                     <i class="icon-energy mr-3"></i>
                     <span>Desafios</span>
                 </a>
 
                 <a href="{% url 'ranking_estudante' %}"
-                    class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_ranking_estudante %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_ranking_estudante %}{% endblock %}">
                     <i class="icon-trophy mr-3"></i>
                     <span>Ranking</span>
                 </a>
                 
                 <a href="{% url 'perfil_estudante' %}"
-                class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_perfil_estudante %}{% endblock %}">
+                   class="d-flex align-items-center px-3 py-3 mb-2 rounded ed-menu-link {% block menu_perfil_estudante %}{% endblock %}">
                     <i class="icon-user mr-3"></i>
                     <span>Meu Perfil</span>
                 </a>
-
-
 
             </nav>
 
@@ -104,9 +104,13 @@
                 <!-- Mobile logo -->
                 <a class="navbar-brand d-md-none d-flex align-items-center" href="{% url 'dashboard_estudante' %}">
                     <div class="ed-logo-icon d-flex align-items-center justify-content-center mr-2">
-                        <i class="icon-graduation"></i>
+                        <img src="{% static 'images/logo-compact.png' %}" alt="EduMind">
                     </div>
-                    <strong class="ed-brand-title">EduMind</strong>
+
+                    <div>
+                        <strong class="ed-brand-title d-block">EduMind</strong>
+                        <small class="text-muted">Estudante</small>
+                    </div>
                 </a>
 
                 <!-- Botão mobile -->
@@ -115,7 +119,6 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="edumindNavbar">
-
 
                     <!-- Links mobile -->
                     <ul class="navbar-nav d-md-none mt-3">
@@ -128,11 +131,11 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'ranking_estudante' %}">Ranking</a>
+                            <a class="nav-link" href="{% url 'desafios:inicio_desafios' %}">Desafios</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'desafios:inicio_desafios' %}">Desafios</a>
+                            <a class="nav-link" href="{% url 'ranking_estudante' %}">Ranking</a>
                         </li>
 
                         <li class="nav-item">

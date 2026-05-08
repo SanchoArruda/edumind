@@ -1,62 +1,95 @@
 {% extends "base/base_admin.html" %}
 
-{% block title %}{{ titulo }}{% endblock %}
+{% block title %}{{ titulo }} - EduMind{% endblock %}
+
+{% block menu_admin_estudantes %}active{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="mb-4">
-        <h2 class="mb-1">{{ titulo }}</h2>
-        <p class="text-muted mb-0">Edite as informações do estudante.</p>
+
+<div class="row align-items-center admin-page-header">
+    <div class="col-md-8">
+        <h1 class="admin-page-title">
+            {{ titulo }}
+        </h1>
+        <p class="admin-page-subtitle">
+            Edite as informações do estudante cadastrado na plataforma.
+        </p>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} mb-3">
-                {{ message }}
+    <div class="col-md-4 admin-page-actions mt-3 mt-md-0">
+        <a href="{% url 'admin_lista_estudantes' %}" class="btn btn-light border px-4 py-3">
+            Voltar
+        </a>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-4">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="card admin-card">
+    <div class="card-body admin-card-body">
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger mb-4">
+                    <strong>Corrija os erros abaixo:</strong>
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group mb-4">
+                <label class="admin-form-label" for="{{ form.nome.id_for_label }}">
+                    Nome
+                </label>
+                {{ form.nome }}
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
+            <div class="form-group mb-4">
+                <label class="admin-form-label" for="{{ form.username.id_for_label }}">
+                    Usuário
+                </label>
+                {{ form.username }}
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Nome</label>
-                    {{ form.nome }}
-                </div>
+            <div class="form-group mb-4">
+                <label class="admin-form-label" for="{{ form.email.id_for_label }}">
+                    E-mail
+                </label>
+                {{ form.email }}
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Usuário</label>
-                    {{ form.username }}
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    {{ form.email }}
-                </div>
-
-                <div class="form-check mb-4">
+            <div class="form-group mb-4">
+                <div class="form-check">
                     {{ form.is_active }}
-                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                    <label class="form-check-label font-weight-bold" for="{{ form.is_active.id_for_label }}">
                         Usuário ativo
                     </label>
                 </div>
 
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <strong>Corrija os erros abaixo:</strong>
-                        {{ form.errors }}
-                    </div>
-                {% endif %}
+                <small class="form-text text-muted mt-2">
+                    Usuários inativos não poderão acessar a plataforma.
+                </small>
+            </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">{{ botao }}</button>
-                    <a href="{% url 'admin_lista_estudantes' %}" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
-        </div>
+            <div class="d-flex justify-content-end align-items-center mt-4">
+                <a href="{% url 'admin_lista_estudantes' %}" class="btn btn-light border px-4 py-3 mr-2">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn admin-btn-primary">
+                    {{ botao }}
+                </button>
+            </div>
+        </form>
+
     </div>
 </div>
+
 {% endblock %}

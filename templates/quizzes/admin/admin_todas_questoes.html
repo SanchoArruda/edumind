@@ -6,74 +6,101 @@
 
 {% block content %}
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-4">
-    <div>
-        <h1 class="font-weight-bold mb-1">Gerenciar Questões</h1>
-        <p class="text-muted mb-0">
-            {{ total_questoes }} questões cadastradas
+<div class="row align-items-center admin-page-header">
+    <div class="col-md-8">
+        <h1 class="admin-page-title">Gerenciar Questões</h1>
+        <p class="admin-page-subtitle">
+            {{ total_questoes }} questões cadastradas no banco de questões.
         </p>
     </div>
 
-    <div class="mt-3 mt-md-0">
-        <a href="{% url 'quizzes:admin_criar_questao_geral' %}" class="btn ed-btn-primary px-4 py-3 shadow-sm">
+    <div class="col-md-4 admin-page-actions mt-3 mt-md-0">
+        <a href="{% url 'quizzes:admin_criar_questao_geral' %}" class="btn admin-btn-primary">
             + Nova Questão
         </a>
     </div>
 </div>
 
-<div class="card ed-card border-0 mb-4">
-    <div class="card-body py-3">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white border-right-0">
-                    <i class="mdi mdi-magnify"></i>
-                </span>
+<div class="card admin-filter-card">
+    <div class="card-body">
+        <form method="get">
+            <div class="admin-search-wrap">
+                <i class="mdi mdi-magnify admin-search-icon"></i>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    class="form-control admin-search-input"
+                    placeholder="Buscar questões..."
+                >
             </div>
-            <input type="text" class="form-control border-left-0" placeholder="Buscar questões...">
-        </div>
+        </form>
     </div>
 </div>
 
-<div class="d-flex flex-column">
+<div class="admin-list-wrapper">
 
     {% for questao in questoes %}
-        <div class="card ed-card border-0 mb-3 questao-card-admin">
-            <div class="card-body p-4">
+        <div class="admin-list-card mb-3">
+            <div class="row align-items-center">
 
-                <div class="d-flex flex-column flex-lg-row align-items-lg-center">
+                <div class="col-lg-9">
+                    <div class="d-flex align-items-start">
 
-                    <div class="d-flex align-items-start flex-fill">
-
-                        <div class="questao-numero-admin mr-4 flex-shrink-0">
+                        <div class="admin-item-number mr-4 flex-shrink-0">
                             {{ forloop.counter }}
                         </div>
 
-                        <div class="flex-fill pr-lg-4">
-                            <h5 class="font-weight-bold text-dark mb-3 questao-enunciado-admin">
-                                {{ questao.enunciado }}
-                            </h5>
+                        <div class="flex-fill">
+                            <h4 class="admin-list-title">
+                                {{ questao.enunciado|truncatechars:180 }}
+                            </h4>
 
-                            <div class="d-flex flex-wrap align-items-center">
-                                <span class="badge badge-warning text-dark mr-2 mb-2 px-2 py-1">
-                                    {{ questao.get_nivel_dificuldade_display }}
-                                </span>
+                            <div class="admin-list-meta">
 
-                                <span class="badge badge-primary mr-2 mb-2 px-2 py-1">
-                                    {{ questao.get_tipo_prova_display }}
-                                </span>
+                                {% if questao.nivel_dificuldade == "FACIL" %}
+                                    <span class="admin-badge admin-badge-green">
+                                        {{ questao.get_nivel_dificuldade_display }}
+                                    </span>
+                                {% elif questao.nivel_dificuldade == "MEDIA" %}
+                                    <span class="admin-badge admin-badge-orange">
+                                        {{ questao.get_nivel_dificuldade_display }}
+                                    </span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge-red">
+                                        {{ questao.get_nivel_dificuldade_display }}
+                                    </span>
+                                {% endif %}
 
-                                <span class="badge badge-secondary mr-2 mb-2 px-2 py-1">
+                                {% if questao.tipo_prova == "ENADE" %}
+                                    <span class="admin-badge admin-badge-blue">
+                                        {{ questao.get_tipo_prova_display }}
+                                    </span>
+                                {% elif questao.tipo_prova == "POSCOMP" %}
+                                    <span class="admin-badge admin-badge-purple">
+                                        {{ questao.get_tipo_prova_display }}
+                                    </span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge-gray">
+                                        {{ questao.get_tipo_prova_display }}
+                                    </span>
+                                {% endif %}
+
+                                <span class="admin-badge admin-badge-gray">
                                     {{ questao.disciplina.nome }}
                                 </span>
                             </div>
                         </div>
 
                     </div>
+                </div>
 
-                    <div class="d-flex align-items-center justify-content-lg-end mt-3 mt-lg-0 ml-lg-3 questao-acoes-admin">
-                        <a href="{% url 'quizzes:admin_editar_questao' questao.id %}" 
-                           class="btn btn-sm btn-outline-primary mr-2">
-                            <i class="icon-note mr-1"></i> Editar
+                <div class="col-lg-3 mt-3 mt-lg-0">
+                    <div class="admin-actions">
+                        <a href="{% url 'quizzes:admin_editar_questao' questao.id %}"
+                           class="btn btn-sm btn-outline-primary admin-action-btn">
+                            <i class="icon-note mr-1"></i>
+                            Editar
                         </a>
 
                         <form method="post"
@@ -81,26 +108,26 @@
                               class="mb-0"
                               onsubmit="return confirm('Tem certeza que deseja excluir esta questão?');">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="icon-trash mr-1"></i> Excluir
+                            <button type="submit" class="btn btn-sm btn-outline-danger admin-action-btn">
+                                <i class="icon-trash mr-1"></i>
+                                Excluir
                             </button>
                         </form>
                     </div>
-
                 </div>
 
             </div>
         </div>
     {% empty %}
 
-        <div class="card ed-card border-0">
-            <div class="card-body text-center py-5">
-                <h5 class="font-weight-bold">Nenhuma questão cadastrada</h5>
+        <div class="card admin-card">
+            <div class="card-body admin-card-body text-center py-5">
+                <h5 class="font-weight-bold mb-2">Nenhuma questão cadastrada</h5>
                 <p class="text-muted mb-4">
-                    Cadastre a primeira questão para usar nos quizzes.
+                    Cadastre questões para usar nos quizzes e desafios do EduMind.
                 </p>
 
-                <a href="{% url 'quizzes:admin_criar_questao_geral' %}" class="btn ed-btn-primary px-4 py-3">
+                <a href="{% url 'quizzes:admin_criar_questao_geral' %}" class="btn admin-btn-primary">
                     + Nova Questão
                 </a>
             </div>
