@@ -2,16 +2,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
+from .forms import DisciplinaForm
 from .models import Disciplina
 
-
-def usuario_e_admin(user):
-    return (
-        user.is_authenticated
-        and user.tipo_usuario
-        and user.tipo_usuario.perfil.lower() == "administrador"
-    )
-
+from usuarios.utils import usuario_e_admin
 
 @login_required
 def admin_lista_disciplinas(request):
@@ -34,23 +28,22 @@ def admin_criar_disciplina(request):
         return redirect("login")
 
     if request.method == "POST":
-        nome = request.POST.get("nome")
+        form = DisciplinaForm(request.POST)
 
-        if not nome:
-            messages.error(request, "Informe o nome da disciplina.")
-            return redirect("disciplinas:admin_criar_disciplina")
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Disciplina cadastrada com sucesso.")
+            return redirect("disciplinas:admin_lista_disciplinas")
+    else:
+        form = DisciplinaForm()
 
-        if Disciplina.objects.filter(nome__iexact=nome).exists():
-            messages.error(request, "Já existe uma disciplina com esse nome.")
-            return redirect("disciplinas:admin_criar_disciplina")
+    contexto = {
+        "form": form,
+        "titulo_pagina": "Nova Disciplina",
+        "botao_submit": "Cadastrar Disciplina",
+    }
 
-        Disciplina.objects.create(nome=nome)
-
-        messages.success(request, "Disciplina cadastrada com sucesso.")
-        return redirect("disciplinas:admin_lista_disciplinas")
-
-    return render(request, "disciplinas/admin/admin_form_disciplina.html")
-
+    return render(request, "disciplinas/admin/admin_form_disciplina.html", contexto)
 
 
 @login_required
@@ -61,24 +54,20 @@ def admin_editar_disciplina(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, id=disciplina_id)
 
     if request.method == "POST":
-        nome = request.POST.get("nome")
+        form = DisciplinaForm(request.POST, instance=disciplina)
 
-        if not nome:
-            messages.error(request, "Informe o nome da disciplina.")
-            return redirect("disciplinas:admin_editar_disciplina", disciplina_id=disciplina.id)
-
-        if Disciplina.objects.filter(nome__iexact=nome).exclude(id=disciplina.id).exists():
-            messages.error(request, "Já existe uma disciplina com esse nome.")
-            return redirect("disciplinas:admin_editar_disciplina", disciplina_id=disciplina.id)
-
-        disciplina.nome = nome
-        disciplina.save()
-
-        messages.success(request, "Disciplina atualizada com sucesso.")
-        return redirect("disciplinas:admin_lista_disciplinas")
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Disciplina atualizada com sucesso.")
+            return redirect("disciplinas:admin_lista_disciplinas")
+    else:
+        form = DisciplinaForm(instance=disciplina)
 
     contexto = {
-        "disciplina": disciplina
+        "form": form,
+        "disciplina": disciplina,
+        "titulo_pagina": "Editar Disciplina",
+        "botao_submit": "Salvar Alterações",
     }
 
     return render(request, "disciplinas/admin/admin_form_disciplina.html", contexto)

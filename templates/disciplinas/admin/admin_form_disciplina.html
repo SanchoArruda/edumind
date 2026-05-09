@@ -27,19 +27,31 @@
 
 <div class="card ed-card border-0">
     <div class="card-body">
-        <form method="post">
+        <form method="post" novalidate>
             {% csrf_token %}
 
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for erro in form.non_field_errors %}
+                        <div>{{ erro }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="form-group">
-                <label class="font-weight-bold">Nome da disciplina</label>
-                <input 
-                    type="text" 
-                    name="nome" 
-                    class="form-control" 
-                    placeholder="Ex: Banco de Dados"
-                    value="{% if disciplina %}{{ disciplina.nome }}{% endif %}"
-                    required
-                >
+                <label for="{{ form.nome.id_for_label }}" class="font-weight-bold">
+                    {{ form.nome.label }}
+                </label>
+
+                {{ form.nome }}
+
+                {% if form.nome.errors %}
+                    <div class="text-danger small mt-2">
+                        {% for erro in form.nome.errors %}
+                            <div>{{ erro }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="text-right mt-4">

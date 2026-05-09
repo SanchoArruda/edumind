@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (UsuarioLoginView, cadastro_estudante, dashboard_admin, dashboard_estudante, 
                     sair, admin_lista_estudantes, admin_editar_estudante, admin_excluir_estudante,
-                    admin_desempenho_geral, ranking_estudante,  meu_perfil, meu_perfil,perfil_estudante,)
+                    ranking_estudante,  meu_perfil, meu_perfil,perfil_estudante,)
 
 urlpatterns = [
     path('login/', UsuarioLoginView.as_view(), name='login'),

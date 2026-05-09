@@ -1,46 +1,64 @@
 from datetime import timedelta
 
-from .models import Alternativa
+from quizzes.models import Alternativa
 
 
-def calcular_xp_tentativa(quantidade_acertos):
-    return quantidade_acertos * 5
+def calcular_estrelas_desafio(percentual_acertos):
+    if percentual_acertos == 0:
+        return 0
+
+    if percentual_acertos >= 80:
+        return 5
+
+    if percentual_acertos >= 60:
+        return 4
+
+    if percentual_acertos >= 40:
+        return 3
+
+    if percentual_acertos >= 20:
+        return 2
+
+    return 1
 
 
-def calcular_percentual_acertos(quantidade_acertos, total_questoes):
+def obter_mensagem_desafio(estrelas):
+    if estrelas == 5:
+        return "Excelente desempenho!"
+
+    if estrelas == 4:
+        return "Muito bem!"
+
+    if estrelas == 3:
+        return "Bom esforço!"
+
+    if estrelas == 2:
+        return "Você está evoluindo!"
+
+    return "Continue treinando!"
+
+
+def obter_emoji_desafio(estrelas):
+    if estrelas == 5:
+        return "🏆"
+
+    if estrelas == 4:
+        return "🎉"
+
+    if estrelas == 3:
+        return "💪"
+
+    return "📚"
+
+
+def calcular_percentual_desafio(quantidade_acertos, total_questoes):
     if total_questoes <= 0:
         return 0
 
     return round((quantidade_acertos / total_questoes) * 100, 2)
 
 
-def obter_mensagem_resultado_quiz(percentual_acertos):
-    if percentual_acertos == 100:
-        return "Excelente desempenho!"
-
-    if percentual_acertos >= 70:
-        return "Muito bem! Continue assim!"
-
-    if percentual_acertos >= 40:
-        return "Bom esforço! Continue praticando!"
-
-    return "Continue praticando!"
-
-
-def obter_emoji_resultado_quiz(percentual_acertos):
-    if percentual_acertos == 100:
-        return "🏆"
-
-    if percentual_acertos >= 70:
-        return "🎉"
-
-    if percentual_acertos >= 40:
-        return "👏"
-
-    return "💪"
-
-
-def corrigir_respostas_quiz(questoes, post_data):
+def corrigir_respostas_desafio(questoes, post_data):
     quantidade_acertos = 0
     quantidade_erros = 0
     respostas_usuario = {}
@@ -70,10 +88,10 @@ def corrigir_respostas_quiz(questoes, post_data):
     }
 
 
-def finalizar_tentativa_quiz(tentativa, questoes, post_data):
+def finalizar_tentativa_desafio(tentativa, questoes, post_data):
     total_questoes = questoes.count()
 
-    resultado = corrigir_respostas_quiz(
+    resultado = corrigir_respostas_desafio(
         questoes=questoes,
         post_data=post_data,
     )
@@ -82,34 +100,34 @@ def finalizar_tentativa_quiz(tentativa, questoes, post_data):
     quantidade_erros = resultado["quantidade_erros"]
     respostas_usuario = resultado["respostas_usuario"]
 
-    percentual_acertos = calcular_percentual_acertos(
+    percentual_acertos = calcular_percentual_desafio(
         quantidade_acertos=quantidade_acertos,
         total_questoes=total_questoes,
     )
 
-    pontuacao = calcular_xp_tentativa(quantidade_acertos)
-
-    desempenho_geral = obter_mensagem_resultado_quiz(percentual_acertos)
+    estrelas = calcular_estrelas_desafio(percentual_acertos)
+    desempenho_geral = obter_mensagem_desafio(estrelas)
+    aprovado = estrelas >= 4
 
     tempo_gasto_segundos = int(
         post_data.get("tempo_gasto_segundos", 0) or 0
     )
 
     tentativa.respostas = respostas_usuario
-    tentativa.pontuacao = pontuacao
+    tentativa.pontuacao = estrelas
     tentativa.quantidade_acertos = quantidade_acertos
     tentativa.quantidade_erros = quantidade_erros
     tentativa.percentual_acertos = percentual_acertos
     tentativa.desempenho_geral = desempenho_geral
     tentativa.tempo_gasto = timedelta(seconds=tempo_gasto_segundos)
     tentativa.concluida = True
-    tentativa.aprovado = False
+    tentativa.aprovado = aprovado
     tentativa.save()
 
     return tentativa
 
 
-def montar_revisao_quiz(questoes, respostas_usuario):
+def montar_revisao_desafio(questoes, respostas_usuario):
     revisao_questoes = []
 
     for indice, questao in enumerate(questoes, start=1):
@@ -118,7 +136,6 @@ def montar_revisao_quiz(questoes, respostas_usuario):
             (alternativa for alternativa in alternativas if alternativa.correta),
             None
         )
-
         alternativa_marcada_id = respostas_usuario.get(str(questao.id))
 
         acertou = False

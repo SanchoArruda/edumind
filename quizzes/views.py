@@ -1,28 +1,29 @@
-from datetime import timedelta
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from disciplinas.models import Disciplina
-from .models import Quiz, Questao, Alternativa, Tentativa
-from .utils import calcular_xp_tentativa
+
+from usuarios.utils import usuario_e_admin
 
 from .forms import QuestaoForm, QuizForm
+from .models import Quiz, Questao, Alternativa, Tentativa
+from .utils import (
+    finalizar_tentativa_quiz,
+    montar_revisao_quiz,
+    obter_emoji_resultado_quiz,
+)
 
-
-def usuario_e_admin(user):
-    return (
-        user.is_authenticated
-        and user.tipo_usuario
-        and user.tipo_usuario.perfil.lower() == "administrador"
-    )
 
 
 @login_required
 def lista_quizzes(request):
-    quizzes = Quiz.objects.select_related("disciplina").prefetch_related("questoes").all()
+    quizzes = Quiz.objects.select_related(
+        "disciplina"
+    ).prefetch_related(
+        "questoes"
+    ).all()
 
     q = request.GET.get("q", "").strip()
     tipo_prova = request.GET.get("tipo_prova", "").strip()
@@ -79,8 +80,13 @@ def iniciar_quiz(request, quiz_id):
 @login_required
 def responder_quiz(request, tentativa_id):
     tentativa = get_object_or_404(
-        Tentativa.objects.select_related("quiz", "quiz__disciplina", "usuario")
-        .prefetch_related("quiz__questoes__alternativas"),
+        Tentativa.objects.select_related(
+            "quiz",
+            "quiz__disciplina",
+            "usuario"
+        ).prefetch_related(
+            "quiz__questoes__alternativas"
+        ),
         id=tentativa_id,
         usuario=request.user,
         tipo_tentativa="QUIZ",
@@ -94,55 +100,11 @@ def responder_quiz(request, tentativa_id):
     total_questoes = questoes.count()
 
     if request.method == "POST":
-        quantidade_acertos = 0
-        quantidade_erros = 0
-        respostas_usuario = {}
-
-        for questao in questoes:
-            alternativa_id = request.POST.get(f"questao_{questao.id}")
-
-            if alternativa_id:
-                respostas_usuario[str(questao.id)] = int(alternativa_id)
-
-                alternativa = Alternativa.objects.filter(
-                    id=alternativa_id,
-                    questao=questao
-                ).first()
-
-                if alternativa and alternativa.correta:
-                    quantidade_acertos += 1
-                else:
-                    quantidade_erros += 1
-            else:
-                quantidade_erros += 1
-
-        percentual_acertos = 0
-        if total_questoes > 0:
-            percentual_acertos = round((quantidade_acertos / total_questoes) * 100, 2)
-
-        pontuacao = calcular_xp_tentativa(quantidade_acertos)
-
-        if percentual_acertos == 100:
-            desempenho_geral = "Excelente desempenho!"
-        elif percentual_acertos >= 70:
-            desempenho_geral = "Muito bem! Continue assim!"
-        elif percentual_acertos >= 40:
-            desempenho_geral = "Bom esforço! Continue praticando!"
-        else:
-            desempenho_geral = "Continue praticando!"
-
-        tempo_gasto_segundos = int(request.POST.get("tempo_gasto_segundos", 0) or 0)
-
-        tentativa.respostas = respostas_usuario
-        tentativa.pontuacao = pontuacao
-        tentativa.quantidade_acertos = quantidade_acertos
-        tentativa.quantidade_erros = quantidade_erros
-        tentativa.percentual_acertos = percentual_acertos
-        tentativa.desempenho_geral = desempenho_geral
-        tentativa.tempo_gasto = timedelta(seconds=tempo_gasto_segundos)
-        tentativa.concluida = True
-        tentativa.aprovado = False
-        tentativa.save()
+        finalizar_tentativa_quiz(
+            tentativa=tentativa,
+            questoes=questoes,
+            post_data=request.POST,
+        )
 
         return redirect("quizzes:resultado_quiz", tentativa_id=tentativa.id)
 
@@ -159,8 +121,13 @@ def responder_quiz(request, tentativa_id):
 @login_required
 def resultado_quiz(request, tentativa_id):
     tentativa = get_object_or_404(
-        Tentativa.objects.select_related("quiz", "quiz__disciplina", "usuario")
-        .prefetch_related("quiz__questoes__alternativas"),
+        Tentativa.objects.select_related(
+            "quiz",
+            "quiz__disciplina",
+            "usuario"
+        ).prefetch_related(
+            "quiz__questoes__alternativas"
+        ),
         id=tentativa_id,
         usuario=request.user,
         tipo_tentativa="QUIZ",
@@ -170,37 +137,14 @@ def resultado_quiz(request, tentativa_id):
     questoes = quiz.questoes.all()
     respostas_usuario = tentativa.respostas or {}
 
-    revisao_questoes = []
+    revisao_questoes = montar_revisao_quiz(
+        questoes=questoes,
+        respostas_usuario=respostas_usuario,
+    )
 
-    for indice, questao in enumerate(questoes, start=1):
-        alternativas = list(questao.alternativas.all())
-        alternativa_correta = next((a for a in alternativas if a.correta), None)
-        alternativa_marcada_id = respostas_usuario.get(str(questao.id))
-
-        acertou = False
-        if alternativa_correta and alternativa_marcada_id:
-            acertou = str(alternativa_correta.id) == str(alternativa_marcada_id)
-
-        revisao_questoes.append({
-            "numero": indice,
-            "questao": questao,
-            "alternativas": alternativas,
-            "alternativa_correta_id": str(alternativa_correta.id) if alternativa_correta else None,
-            "alternativa_marcada_id": str(alternativa_marcada_id) if alternativa_marcada_id else None,
-            "acertou": acertou,
-            "explicacao": questao.explicacao_resposta,
-        })
-
-    emoji_resultado = "📚"
-
-    if tentativa.percentual_acertos == 100:
-        emoji_resultado = "🏆"
-    elif tentativa.percentual_acertos >= 70:
-        emoji_resultado = "🎉"
-    elif tentativa.percentual_acertos >= 40:
-        emoji_resultado = "👏"
-    else:
-        emoji_resultado = "💪"
+    emoji_resultado = obter_emoji_resultado_quiz(
+        tentativa.percentual_acertos
+    )
 
     contexto = {
         "tentativa": tentativa,
@@ -209,6 +153,7 @@ def resultado_quiz(request, tentativa_id):
         "percentual_acertos": tentativa.percentual_acertos,
         "quantidade_acertos": tentativa.quantidade_acertos,
         "quantidade_erros": tentativa.quantidade_erros,
+        "total_questoes": tentativa.quantidade_acertos + tentativa.quantidade_erros,
         "xp_ganho": tentativa.pontuacao,
         "revisao_questoes": revisao_questoes,
         "emoji_resultado": emoji_resultado,
@@ -226,7 +171,11 @@ def admin_lista_quizzes(request):
     if not usuario_e_admin(request.user):
         return redirect("login")
 
-    quizzes = Quiz.objects.select_related("disciplina").prefetch_related("questoes").all()
+    quizzes = Quiz.objects.select_related(
+        "disciplina"
+    ).prefetch_related(
+        "questoes"
+    ).all()
 
     contexto = {
         "quizzes": quizzes
@@ -254,6 +203,7 @@ def admin_criar_quiz(request):
                     id__in=questoes_ids,
                     disciplina=quiz.disciplina
                 )
+
                 quiz.questoes.set(questoes_selecionadas)
 
             messages.success(request, "Quiz criado com sucesso.")
@@ -276,7 +226,11 @@ def admin_lista_questoes(request, quiz_id):
         return redirect("login")
 
     quiz = get_object_or_404(
-        Quiz.objects.select_related("disciplina").prefetch_related("questoes__alternativas"),
+        Quiz.objects.select_related(
+            "disciplina"
+        ).prefetch_related(
+            "questoes__alternativas"
+        ),
         id=quiz_id
     )
 
@@ -320,14 +274,20 @@ def admin_criar_questao_geral(request):
         textos = request.POST.getlist("texto[]")
         correta = request.POST.get("correta")
 
-        alternativas_validas = [texto for texto in textos if texto.strip()]
+        alternativas_validas = [
+            texto for texto in textos
+            if texto.strip()
+        ]
 
         if len(alternativas_validas) < 2:
             messages.error(request, "Cadastre pelo menos duas alternativas.")
+
         elif len(alternativas_validas) > 5:
             messages.error(request, "Cadastre no máximo cinco alternativas.")
+
         elif not correta:
             messages.error(request, "Marque uma alternativa correta.")
+
         elif form.is_valid():
             questao = form.save()
 
@@ -359,11 +319,17 @@ def admin_editar_questao(request, questao_id):
         return redirect("login")
 
     questao = get_object_or_404(
-        Questao.objects.select_related("disciplina").prefetch_related("alternativas"),
+        Questao.objects.select_related(
+            "disciplina"
+        ).prefetch_related(
+            "alternativas"
+        ),
         id=questao_id
     )
 
-    alternativas = list(questao.alternativas.all().order_by("letra"))
+    alternativas = list(
+        questao.alternativas.all().order_by("letra")
+    )
 
     if request.method == "POST":
         form = QuestaoForm(request.POST, instance=questao)
@@ -372,14 +338,20 @@ def admin_editar_questao(request, questao_id):
         textos = request.POST.getlist("texto[]")
         correta = request.POST.get("correta")
 
-        alternativas_validas = [texto for texto in textos if texto.strip()]
+        alternativas_validas = [
+            texto for texto in textos
+            if texto.strip()
+        ]
 
         if len(alternativas_validas) < 2:
             messages.error(request, "Cadastre pelo menos duas alternativas.")
+
         elif len(alternativas_validas) > 5:
             messages.error(request, "Cadastre no máximo cinco alternativas.")
+
         elif not correta:
             messages.error(request, "Marque uma alternativa correta.")
+
         elif form.is_valid():
             questao = form.save()
 
@@ -431,12 +403,18 @@ def admin_editar_quiz(request, quiz_id):
         return redirect("login")
 
     quiz = get_object_or_404(
-        Quiz.objects.select_related("disciplina").prefetch_related("questoes"),
+        Quiz.objects.select_related(
+            "disciplina"
+        ).prefetch_related(
+            "questoes"
+        ),
         id=quiz_id
     )
 
     questoes = Questao.objects.select_related("disciplina").all()
-    questoes_marcadas = set(quiz.questoes.values_list("id", flat=True))
+    questoes_marcadas = set(
+        quiz.questoes.values_list("id", flat=True)
+    )
 
     if request.method == "POST":
         form = QuizForm(request.POST, instance=quiz)
@@ -449,6 +427,7 @@ def admin_editar_quiz(request, quiz_id):
                 id__in=questoes_ids,
                 disciplina=quiz.disciplina
             )
+
             quiz.questoes.set(questoes_selecionadas)
 
             messages.success(request, "Quiz atualizado com sucesso.")
@@ -472,7 +451,11 @@ def admin_excluir_quiz(request, quiz_id):
         return redirect("login")
 
     quiz = get_object_or_404(
-        Quiz.objects.select_related("disciplina").prefetch_related("questoes"),
+        Quiz.objects.select_related(
+            "disciplina"
+        ).prefetch_related(
+            "questoes"
+        ),
         id=quiz_id
     )
 
