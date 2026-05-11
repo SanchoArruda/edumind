@@ -52,7 +52,7 @@
                         <span class="quiz-card__badge">Questão {{ forloop.counter }}</span>
                     </div>
 
-                    <h2 class="quiz-card__question">{{ questao.enunciado }}</h2>
+                    <h2 class="quiz-card__question">{{ questao.enunciado|linebreaksbr }}</h2>
 
                     <div class="quiz-options">
                         {% for alternativa in questao.alternativas.all %}
