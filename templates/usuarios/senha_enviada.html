@@ -1,0 +1,41 @@
+{% extends "base/base_publica.html" %}
+{% load static %}
+
+{% block title %}E-mail enviado - EduMind{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios/recuperar_senha.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="recovery-page">
+    <div class="card recovery-card recovery-card-lg">
+        <div class="card-body recovery-card-body text-center">
+
+            <div class="recovery-icon">
+                <i class="fa fa-envelope"></i>
+            </div>
+
+            <h3 class="recovery-title">Verifique seu e-mail</h3>
+
+            <p class="recovery-description mb-4">
+                Se o e-mail informado estiver cadastrado no EduMind, você receberá um link para criar uma nova senha.
+            </p>
+
+            <div class="recovery-help-box mb-4">
+                <strong>Não encontrou?</strong><br>
+                Confira a caixa de spam ou lixo eletrônico.
+            </div>
+
+            <a href="{% url 'login' %}" class="btn recovery-btn recovery-btn-inline">
+                Voltar para o login
+            </a>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'usuarios/js/recuperar_senha.js' %}"></script>
+{% endblock %}

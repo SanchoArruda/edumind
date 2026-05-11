@@ -1,0 +1,98 @@
+{% extends "base/base_publica.html" %}
+{% load static %}
+
+{% block title %}Nova senha - EduMind{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios/recuperar_senha.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="recovery-page">
+    <div class="card recovery-card">
+        <div class="card-body recovery-card-body">
+
+            <div class="text-center mb-4">
+                <div class="recovery-icon">
+                    <i class="fa fa-key"></i>
+                </div>
+
+                <h3 class="recovery-title">Criar nova senha</h3>
+                <p class="recovery-description">
+                    Digite sua nova senha para voltar a acessar o EduMind.
+                </p>
+            </div>
+
+            {% if validlink %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="id_new_password1" class="form-label recovery-label">
+                            Nova senha
+                        </label>
+                        <input
+                            type="password"
+                            name="new_password1"
+                            id="id_new_password1"
+                            class="form-control recovery-input js-password-input"
+                            placeholder="Digite a nova senha"
+                            required
+                        >
+                        <div class="recovery-password-hint">
+                            Use uma senha segura e diferente da anterior.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_new_password2" class="form-label recovery-label">
+                            Confirmar nova senha
+                        </label>
+                        <input
+                            type="password"
+                            name="new_password2"
+                            id="id_new_password2"
+                            class="form-control recovery-input js-password-input"
+                            placeholder="Confirme a nova senha"
+                            required
+                        >
+                    </div>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger recovery-alert">
+                            Verifique se as senhas são iguais e seguem os requisitos mínimos.
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="recovery-btn">
+                        Salvar nova senha
+                    </button>
+                </form>
+
+            {% else %}
+
+                <div class="alert alert-danger recovery-alert">
+                    O link de redefinição é inválido, expirou ou já foi utilizado.
+                </div>
+
+                <a href="{% url 'password_reset' %}" class="btn recovery-btn">
+                    Solicitar novo link
+                </a>
+
+            {% endif %}
+
+            <div class="text-center mt-4">
+                <a href="{% url 'login' %}" class="recovery-link">
+                    Voltar para o login
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'usuarios/js/recuperar_senha.js' %}"></script>
+{% endblock %}

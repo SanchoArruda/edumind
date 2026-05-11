@@ -112,9 +112,11 @@
                                     Senha
                                 </label>
 
-                                <a href="#" class="forgot-link">
-                                    Esqueceu a senha?
-                                </a>
+                                <div class="text-end mt-2">
+                                    <a href="{% url 'password_reset' %}" class="text-decoration-none">
+                                        Esqueci minha senha
+                                    </a>
+                                </div>
                             </div>
 
                             {{ form.password }}
