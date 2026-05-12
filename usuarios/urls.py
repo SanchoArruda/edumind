@@ -13,6 +13,7 @@ from .views import (
     ranking_estudante,
     meu_perfil,
     perfil_estudante,
+    teste_email_online,
 )
 
 urlpatterns = [
@@ -39,4 +40,7 @@ urlpatterns = [
     # Estudante - perfil
     path("meu-perfil/", meu_perfil, name="meu_perfil"),
     path("perfil-estudante/", perfil_estudante, name="perfil_estudante"),
+
+
+    path("teste-email/", teste_email_online, name="teste_email_online"),
 ]

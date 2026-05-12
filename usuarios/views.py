@@ -509,3 +509,22 @@ def meu_perfil(request):
     }
 
     return render(request, "usuarios/perfil.html", contexto)
+
+
+
+from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.mail import send_mail
+from django.http import HttpResponse
+
+@staff_member_required
+def teste_email_online(request):
+    send_mail(
+        "Teste EduMind Online",
+        "Este e-mail foi enviado diretamente pelo servidor online do Railway.",
+        settings.DEFAULT_FROM_EMAIL,
+        ["gucairesarruda@gmail.com"],
+        fail_silently=False,
+    )
+
+    return HttpResponse("E-mail de teste enviado pelo servidor online.")
