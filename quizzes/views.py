@@ -7,12 +7,15 @@ from disciplinas.models import Disciplina
 
 from usuarios.utils import usuario_e_admin
 
+import random
+
 from .forms import QuestaoForm, QuizForm
 from .models import Quiz, Questao, Alternativa, Tentativa
 from .utils import (
     finalizar_tentativa_quiz,
     montar_revisao_quiz,
     obter_emoji_resultado_quiz,
+    obter_questoes_ordenadas_da_tentativa,
 )
 
 
@@ -74,6 +77,15 @@ def iniciar_quiz(request, quiz_id):
         aprovado=False,
     )
 
+    questoes_ids = list(
+        quiz.questoes.values_list("id", flat=True)
+    )
+
+    random.shuffle(questoes_ids)
+
+    request.session[f"tentativa_{tentativa.id}_questoes"] = questoes_ids
+    request.session.modified = True
+
     return redirect("quizzes:responder_quiz", tentativa_id=tentativa.id)
 
 
@@ -96,7 +108,7 @@ def responder_quiz(request, tentativa_id):
         return redirect("quizzes:resultado_quiz", tentativa_id=tentativa.id)
 
     quiz = tentativa.quiz
-    questoes = quiz.questoes.all()
+    questoes = obter_questoes_ordenadas_da_tentativa(request, tentativa)
     total_questoes = questoes.count()
 
     if request.method == "POST":
@@ -134,7 +146,7 @@ def resultado_quiz(request, tentativa_id):
     )
 
     quiz = tentativa.quiz
-    questoes = quiz.questoes.all()
+    questoes = obter_questoes_ordenadas_da_tentativa(request, tentativa)
     respostas_usuario = tentativa.respostas or {}
 
     revisao_questoes = montar_revisao_quiz(

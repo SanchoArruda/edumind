@@ -2,6 +2,8 @@ from datetime import timedelta
 
 from .models import Alternativa
 
+from django.db.models import Case, IntegerField, When
+
 
 def calcular_xp_tentativa(quantidade_acertos):
     return quantidade_acertos * 5
@@ -137,3 +139,28 @@ def montar_revisao_quiz(questoes, respostas_usuario):
         })
 
     return revisao_questoes
+
+
+def obter_questoes_ordenadas_da_tentativa(request, tentativa):
+    chave_sessao = f"tentativa_{tentativa.id}_questoes"
+
+    questoes_ids = request.session.get(chave_sessao)
+
+    if not questoes_ids:
+        questoes_ids = list(
+            tentativa.quiz.questoes.values_list("id", flat=True)
+        )
+
+    ordenacao = Case(
+        *[
+            When(id=questao_id, then=posicao)
+            for posicao, questao_id in enumerate(questoes_ids)
+        ],
+        output_field=IntegerField()
+    )
+
+    return tentativa.quiz.questoes.filter(
+        id__in=questoes_ids
+    ).prefetch_related(
+        "alternativas"
+    ).order_by(ordenacao)

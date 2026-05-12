@@ -11,6 +11,8 @@
 
 {% block content %}
 
+<div id="confetti-container"></div>
+
 <div class="row align-items-center mb-4">
     <div class="col-md-8">
         <h1 class="font-weight-bold mb-1">Resultado do Quiz</h1>
@@ -105,7 +107,7 @@
                     </div>
 
                     <h5 class="font-weight-bold mb-0 pt-1">
-                        {{ item.questao.enunciado }}
+                        {{ item.questao.enunciado|linebreaksbr }}
                     </h5>
                 </div>
 
@@ -157,5 +159,10 @@
         </div>
     </div>
 {% endfor %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/quizzes/estudante/resultado_quiz.js' %}"></script>
 
 {% endblock %}
