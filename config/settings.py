@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'usuarios',
     'disciplinas',
     'quizzes',
-    'desafios'
+    'desafios',
 
     #API
     'anymail',
