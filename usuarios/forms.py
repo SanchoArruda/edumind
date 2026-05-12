@@ -3,12 +3,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Usuario
 
 
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from .models import Usuario
+
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
-        label="Usuário",
+        label="Usuário ou e-mail",
         widget=forms.TextInput(attrs={
             "class": "form-control",
-            "placeholder": "Digite seu usuário"
+            "placeholder": "Digite seu usuário ou e-mail",
         })
     )
 
@@ -16,10 +21,28 @@ class LoginForm(AuthenticationForm):
         label="Senha",
         widget=forms.PasswordInput(attrs={
             "class": "form-control",
-            "placeholder": "Digite sua senha"
+            "placeholder": "Digite sua senha",
         })
     )
 
+    error_messages = {
+        "invalid_login": (
+            "Usuário, e-mail ou senha inválidos. Verifique os dados e tente novamente."
+        ),
+        "inactive": "Esta conta está inativa.",
+    }
+
+    def clean(self):
+        username = self.cleaned_data.get("username")
+
+        if username and "@" in username:
+            try:
+                usuario = Usuario.objects.get(email__iexact=username)
+                self.cleaned_data["username"] = usuario.username
+            except Usuario.DoesNotExist:
+                pass
+
+        return super().clean()
 
 class CadastroEstudanteForm(forms.ModelForm):
     password = forms.CharField(
