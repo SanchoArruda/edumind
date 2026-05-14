@@ -101,7 +101,14 @@
                         <div class="text-muted small d-flex flex-wrap align-items-center">
                             <span class="mr-3">
                                 <i class="icon-book-open mr-1"></i>
-                                {{ quiz.questoes.count }} questão{{ quiz.questoes.count|pluralize:"ões" }}
+                                {% with total_questoes=quiz.questoes.count %}
+                                    {{ total_questoes }}
+                                    {% if total_questoes == 1 %}
+                                        questão
+                                    {% else %}
+                                        questões
+                                    {% endif %}
+                                {% endwith %}
                             </span>
                         </div>
 
